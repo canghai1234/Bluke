@@ -52,9 +52,9 @@ import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 enum class TrackpadButtonMode(val displayName: String) {
-    CLICKPAD("Clickpad"),
-    TWO_BUTTONS("2-Button L/R"),
-    THREE_BUTTONS("3-Button L/M/R")
+    CLICKPAD("点击板"),
+    TWO_BUTTONS("双键 左/右"),
+    THREE_BUTTONS("三键 左/中/右")
 }
 
 @SuppressLint("MissingPermission")
@@ -158,13 +158,13 @@ fun TouchpadView(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = "Exit",
+                            contentDescription = "退出",
                             tint = Color.White,
                             modifier = Modifier.size(10.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "Close",
+                            text = "关闭",
                             color = Color.White,
                             fontSize = 9.sp,
                             fontWeight = FontWeight.Bold
@@ -178,8 +178,8 @@ fun TouchpadView(
                             .clip(RoundedCornerShape(6.dp))
                             .background(Color.White.copy(alpha = 0.15f))
                             .combinedClickable(
-                                onClickLabel = "Next input mode",
-                                onLongClickLabel = "Configure input mode cycle",
+                                onClickLabel = "下一个输入模式",
+                                onLongClickLabel = "配置输入模式循环",
                                 onClick = {
                                     val enabledModes = sharedPrefs.enabledInputModes().map(InputMode::id)
                                     val currentIndexInEnabled = enabledModes.indexOf(launchMode)
@@ -199,12 +199,12 @@ fun TouchpadView(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Mouse,
-                            contentDescription = "Switch Mode",
+                            contentDescription = "切换模式",
                             tint = Color.White,
                             modifier = Modifier.size(11.dp)
                         )
                         Text(
-                            text = "Touchpad Mode",
+                            text = "触控板模式",
                             color = Color.White,
                             fontSize = 9.sp,
                             fontWeight = FontWeight.Bold
@@ -214,7 +214,7 @@ fun TouchpadView(
                     // Connection status
                     val connectedDevNow by btManager.connectedDevice.collectAsState()
                     val isConnected = connectedDevNow != null
-                    val deviceName = (connectedDevNow ?: btManager.getReconnectTarget())?.name ?: "No Host"
+                    val deviceName = (connectedDevNow ?: btManager.getReconnectTarget())?.name ?: "无主机"
                     val statusLedColor = if (isConnected) Color(0xFF39FF14) else Color(0xFFFF9800)
                     Box(
                         modifier = Modifier
@@ -258,7 +258,7 @@ fun TouchpadView(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
-                        Icon(Icons.Default.Keyboard, "Modifier key position", tint = Color.White, modifier = Modifier.size(12.dp))
+                        Icon(Icons.Default.Keyboard, "修饰键位置", tint = Color.White, modifier = Modifier.size(12.dp))
                         Text(
                             modifierPosition.displayName,
                             color = Color.White,
@@ -284,20 +284,20 @@ fun TouchpadView(
                         if (showNumpadLed) {
                             Icon(
                                 imageVector = Icons.Default.Dialpad,
-                                contentDescription = "LED Pad",
+                                contentDescription = "数字键盘指示灯",
                                 tint = Color.White,
                                 modifier = Modifier.size(12.dp)
                             )
                         } else {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_dialpad_off),
-                                contentDescription = "LED Pad",
+                                contentDescription = "数字键盘指示灯",
                                 tint = Color.White,
                                 modifier = Modifier.size(12.dp)
                             )
                         }
                         Text(
-                            text = "Numpad",
+                            text = "数字键盘",
                             color = Color.White,
                             fontSize = 9.sp,
                             fontWeight = FontWeight.Bold
@@ -322,7 +322,7 @@ fun TouchpadView(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Mouse,
-                            contentDescription = "Button Mode",
+                            contentDescription = "按键模式",
                             tint = Color.White,
                             modifier = Modifier.size(12.dp)
                         )
@@ -352,7 +352,7 @@ fun TouchpadView(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Speed,
-                            contentDescription = "Sensitivity",
+                            contentDescription = "灵敏度",
                             tint = Color.White,
                             modifier = Modifier.size(12.dp)
                         )
@@ -382,7 +382,7 @@ fun TouchpadView(
                     ) {
                         Icon(
                             imageVector = Icons.Default.KeyboardDoubleArrowUp,
-                            contentDescription = "Scroll Speed",
+                            contentDescription = "滚动速度",
                             tint = Color.White,
                             modifier = Modifier.size(12.dp)
                         )
@@ -414,14 +414,14 @@ fun TouchpadView(
                         if (isVibrationEnabled) {
                             Icon(
                                 imageVector = Icons.Default.Vibration,
-                                contentDescription = "Haptics Vibration",
+                                contentDescription = "触感振动",
                                 tint = Color.White,
                                 modifier = Modifier.size(12.dp)
                             )
                         } else {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_vibration_off),
-                                contentDescription = "Haptics Vibration",
+                                contentDescription = "触感振动",
                                 tint = Color.White,
                                 modifier = Modifier.size(12.dp)
                             )

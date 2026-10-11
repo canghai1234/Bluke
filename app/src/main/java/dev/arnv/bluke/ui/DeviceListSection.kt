@@ -46,10 +46,10 @@ internal fun LazyListScope.DeviceListSection(
     if (currentlyConnectedState != null) {
         item {
             Column(modifier = Modifier.fillMaxWidth()) {
-                SectionTitle("ACTIVE CONNECTION")
+                SectionTitle("当前连接")
                 val deviceMessage = if ((currentlyConnectedState.name != null && statusMessage.contains(currentlyConnectedState.name)) || bluetoothState is BluetoothState.Connected) statusMessage else null
                 DeviceRow(
-                    name = currentlyConnectedState.name ?: "Unknown Host",
+                    name = currentlyConnectedState.name ?: "未知主机",
                     address = currentlyConnectedState.address,
                     showAddress = showMacAddress,
                     isConnected = true,
@@ -68,9 +68,9 @@ internal fun LazyListScope.DeviceListSection(
         if (activeDeviceAttempt != null && statusMessage.isNotEmpty() && statusMessage != "Disconnected") {
             item {
                 Column(modifier = Modifier.fillMaxWidth()) {
-                    SectionTitle("ACTIVE CONNECTION")
+                    SectionTitle("当前连接")
                     DeviceRow(
-                        name = activeDeviceAttempt.name ?: "Unknown Host",
+                        name = activeDeviceAttempt.name ?: "未知主机",
                         address = activeDeviceAttempt.address,
                         showAddress = showMacAddress,
                         isConnected = false,
@@ -95,7 +95,7 @@ internal fun LazyListScope.DeviceListSection(
     if (idleBonded.isNotEmpty()) {
         item {
             Column(modifier = Modifier.fillMaxWidth()) {
-                CollapsibleSectionHeader("PAIRED DEVICES", "${idleBonded.size} devices", isPairedExpanded) {
+                CollapsibleSectionHeader("已配对设备", "${idleBonded.size} 个设备", isPairedExpanded) {
                     onPairedExpandedChange(!isPairedExpanded)
                 }
                 if (isPairedExpanded) {
@@ -103,7 +103,7 @@ internal fun LazyListScope.DeviceListSection(
                         idleBonded.forEachIndexed { index, device ->
                             val deviceMsg = if (device.address == connectionTargetAddress) statusMessage else null
                             DeviceRow(
-                                name = device.name ?: "Unknown Host",
+                                name = device.name ?: "未知主机",
                                 address = device.address,
                                 showAddress = showMacAddress,
                                 isConnected = false,
@@ -121,9 +121,9 @@ internal fun LazyListScope.DeviceListSection(
     } else if (bondedDevices.isEmpty()) {
         item {
             Column(modifier = Modifier.fillMaxWidth()) {
-                SectionTitle("PAIRED DEVICES")
+                SectionTitle("已配对设备")
                 Text(
-                    text = "No paired devices yet.",
+                    text = "暂无已配对设备。",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(start = 12.dp, top = 4.dp)
@@ -141,7 +141,7 @@ internal fun LazyListScope.DeviceListSection(
     if (nonBondedDevices.isNotEmpty() || isScanning) {
         item {
             Column(modifier = Modifier.fillMaxWidth()) {
-                CollapsibleSectionHeader("DISCOVERED DEVICES", "${nonBondedDevices.size} found", isDiscoveredExpanded) {
+                CollapsibleSectionHeader("发现的设备", "发现 ${nonBondedDevices.size} 个", isDiscoveredExpanded) {
                     onDiscoveredExpandedChange(!isDiscoveredExpanded)
                 }
                 if (isDiscoveredExpanded) {
@@ -149,7 +149,7 @@ internal fun LazyListScope.DeviceListSection(
                         nonBondedDevices.forEachIndexed { index, device ->
                             val deviceMsg = if (device.address == connectionTargetAddress) statusMessage else null
                             DeviceRow(
-                                name = device.name ?: "Unnamed Device",
+                                name = device.name ?: "未命名设备",
                                 address = device.address,
                                 showAddress = showMacAddress,
                                 isConnected = false,
@@ -190,7 +190,7 @@ private fun CollapsibleSectionHeader(title: String, count: String, expanded: Boo
             Text(count, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Icon(
                 imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                contentDescription = "Expand",
+                contentDescription = "展开或收起",
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(start = 4.dp).size(18.dp)
             )

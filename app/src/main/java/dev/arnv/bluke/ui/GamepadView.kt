@@ -427,13 +427,13 @@ fun GamepadView(
     if (!modeSwitchBusy && modeSwitchError != null) {
         AlertDialog(
             onDismissRequest = { btManager.dismissGamepadModeSwitchError() },
-            title = { Text("Controller mode change interrupted") },
-            text = { Text(modeSwitchError.orEmpty()) },
+            title = { Text("手柄模式切换中断") },
+            text = { Text(localizedGamepadModeSwitchError(modeSwitchError.orEmpty())) },
             confirmButton = {
-                TextButton(onClick = { btManager.retryGamepadModeSwitch() }) { Text("Retry") }
+                TextButton(onClick = { btManager.retryGamepadModeSwitch() }) { Text("重试") }
             },
             dismissButton = {
-                TextButton(onClick = { btManager.dismissGamepadModeSwitchError() }) { Text("Close") }
+                TextButton(onClick = { btManager.dismissGamepadModeSwitchError() }) { Text("关闭") }
             },
         )
     }
@@ -454,7 +454,7 @@ fun GamepadView(
                     CircularProgressIndicator()
                     Text(
                         if (modeSwitchState == GamepadModeSwitchState.REGISTERING)
-                            "Changing controller mode…" else "Reconnecting to device…",
+                            "正在切换手柄模式……" else "正在重新连接设备……",
                         style = MaterialTheme.typography.titleMedium,
                         textAlign = TextAlign.Center,
                     )
@@ -463,7 +463,7 @@ fun GamepadView(
         }
     }
     val isConnected = connectedDevNow != null
-    val deviceName = (connectedDevNow ?: btManager.getReconnectTarget())?.name ?: "No Host"
+    val deviceName = (connectedDevNow ?: btManager.getReconnectTarget())?.name ?: "无主机"
 
     var buttonMask by remember { mutableIntStateOf(0) }
     var dpadMask by remember { mutableIntStateOf(0) }
@@ -585,9 +585,9 @@ fun GamepadView(
                             .testTag("exit_gamepad_btn"),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(Icons.Default.Close, "Exit", tint = Color.White, modifier = Modifier.size(10.dp))
+                        Icon(Icons.Default.Close, "退出", tint = Color.White, modifier = Modifier.size(10.dp))
                         Spacer(Modifier.width(4.dp))
-                        Text("Close", color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                        Text("关闭", color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Bold)
                     }
 
                     // Mode cycle
@@ -597,8 +597,8 @@ fun GamepadView(
                             .clip(RoundedCornerShape(6.dp))
                             .background(Color.White.copy(alpha = 0.15f))
                             .combinedClickable(
-                                onClickLabel = "Next input mode",
-                                onLongClickLabel = "Configure input mode cycle",
+                                onClickLabel = "下一个输入模式",
+                                onLongClickLabel = "配置输入模式循环",
                                 onClick = {
                                     val enabledModes = sharedPrefs.enabledInputModes().map(InputMode::id)
                                     val idx = enabledModes.indexOf(launchMode)
@@ -614,8 +614,8 @@ fun GamepadView(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
-                        Icon(Icons.Default.SportsEsports, "Switch Mode", tint = Color.White, modifier = Modifier.size(11.dp))
-                        Text("Gamepad Mode", color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                        Icon(Icons.Default.SportsEsports, "切换模式", tint = Color.White, modifier = Modifier.size(11.dp))
+                        Text("手柄模式", color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Bold)
                     }
 
                     // Connection status
@@ -637,8 +637,8 @@ fun GamepadView(
                             .background(Color.White.copy(alpha = 0.15f))
                             .combinedClickable(
                                 enabled = !modeSwitchBusy,
-                                onClickLabel = "Switch controller compatibility",
-                                onLongClickLabel = "Configure controller compatibility",
+                                onClickLabel = "切换手柄兼容模式",
+                                onLongClickLabel = "配置手柄兼容性",
                                 onClick = {
                                     val newMode = dpadOutputMode.next()
                                     if (btManager.changeGamepadMode(newMode)) triggerVibration(15)
@@ -663,7 +663,7 @@ fun GamepadView(
                             modifier = Modifier.size(11.dp)
                         )
                         Text(
-                            text = "Mode: ${dpadOutputMode.label}",
+                            text = "模式：${dpadOutputMode.label}",
                             color = Color.White,
                             fontSize = 9.sp,
                             fontWeight = FontWeight.Bold
@@ -683,8 +683,8 @@ fun GamepadView(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
-                            Icon(Icons.Default.Refresh, "Reset Defaults", tint = Color.White, modifier = Modifier.size(11.dp))
-                            Text("Reset Defaults", color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                            Icon(Icons.Default.Refresh, "恢复默认", tint = Color.White, modifier = Modifier.size(11.dp))
+                            Text("恢复默认", color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Bold)
                         }
                     }
 
@@ -705,12 +705,12 @@ fun GamepadView(
                     ) {
                         Icon(
                             imageVector = if (isEditMode) Icons.Default.Check else Icons.Default.Edit,
-                            contentDescription = "Edit Layout",
+                            contentDescription = "编辑布局",
                             tint = Color.White,
                             modifier = Modifier.size(12.dp)
                         )
                         Text(
-                            text = if (isEditMode) "Done" else "Edit Layout",
+                            text = if (isEditMode) "完成" else "编辑布局",
                             color = Color.White,
                             fontSize = 9.sp,
                             fontWeight = FontWeight.Bold
@@ -731,7 +731,7 @@ fun GamepadView(
                             .testTag("console_selector_pill"),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(Icons.Default.SportsEsports, "Consoles", tint = Color.White, modifier = Modifier.size(11.dp))
+                        Icon(Icons.Default.SportsEsports, "主机", tint = Color.White, modifier = Modifier.size(11.dp))
                         Spacer(Modifier.width(4.dp))
                         Text(config.name, color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Bold)
                     }
@@ -752,9 +752,9 @@ fun GamepadView(
                         contentAlignment = Alignment.Center
                     ) {
                         if (isVibrationEnabled) {
-                            Icon(Icons.Default.Vibration, "Haptics", tint = Color.White, modifier = Modifier.size(12.dp))
+                            Icon(Icons.Default.Vibration, "触觉反馈", tint = Color.White, modifier = Modifier.size(12.dp))
                         } else {
-                            Icon(painterResource(R.drawable.ic_vibration_off), "Haptics", tint = Color.White, modifier = Modifier.size(12.dp))
+                            Icon(painterResource(R.drawable.ic_vibration_off), "触觉反馈", tint = Color.White, modifier = Modifier.size(12.dp))
                         }
                     }
                 }
@@ -1825,7 +1825,7 @@ private fun GamepadCenterButton(
                 } else if (button.label == "SHARE") {
                     Icon(
                         imageVector = Icons.Default.IosShare,
-                        contentDescription = "Share",
+                        contentDescription = "分享",
                         tint = Color.White.copy(alpha = 0.75f),
                         modifier = Modifier.size(11.dp)
                     )
@@ -1948,7 +1948,7 @@ private fun GamepadShareButton(
             ) {
                 Icon(
                     imageVector = Icons.Default.IosShare,
-                    contentDescription = "Share",
+                        contentDescription = "分享",
                     tint = Color.White.copy(alpha = 0.75f),
                     modifier = Modifier.size(12.dp)
                 )
@@ -2060,7 +2060,7 @@ private fun XboxLogoGuideButton(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                    contentDescription = "Logo",
+                        contentDescription = "标志",
                     tint = Color.White.copy(alpha = 0.85f),
                     modifier = Modifier.size(32.dp)
                 )
@@ -2172,7 +2172,7 @@ private fun PlayStationLogoButton(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                    contentDescription = "Logo",
+                        contentDescription = "标志",
                     tint = Color.White.copy(alpha = 0.85f),
                     modifier = Modifier.size(32.dp)
                 )
@@ -2933,7 +2933,7 @@ private fun EditableComponentWrapper(
             ) {
                 Icon(
                     imageVector = Icons.Default.OpenInFull,
-                    contentDescription = "Resize",
+                    contentDescription = "调整大小",
                     tint = Color.White,
                     modifier = Modifier.size(11.dp)
                 )

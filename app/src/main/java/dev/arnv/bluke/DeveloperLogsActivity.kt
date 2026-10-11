@@ -72,24 +72,24 @@ class DeveloperLogsActivity : ComponentActivity() {
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
                         TopAppBar(
-                            title = { Text("Developer Logs") },
+                            title = { Text("开发者日志") },
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
-                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
                                 }
                             },
                             actions = {
                                 IconButton(onClick = { DeveloperLogManager.clearLogs() }) {
-                                    Icon(Icons.Default.Delete, contentDescription = "Clear Logs")
+                                    Icon(Icons.Default.Delete, contentDescription = "清除日志")
                                 }
                                 IconButton(onClick = {
                                     val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                                     val logText = filteredLogs.joinToString("\n") { "[${it.timestamp}] [${it.type}] [${it.tag}] ${it.message}" }
-                                    val clip = ClipData.newPlainText("Developer Logs", logText)
+                                    val clip = ClipData.newPlainText("开发者日志", logText)
                                     clipboard.setPrimaryClip(clip)
-                                    Toast.makeText(context, "Copied to clipboard", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, "已复制到剪贴板", Toast.LENGTH_SHORT).show()
                                 }) {
-                                    Icon(Icons.Default.ContentCopy, contentDescription = "Copy")
+                                    Icon(Icons.Default.ContentCopy, contentDescription = "复制")
                                 }
                                 IconButton(onClick = {
                                     scope.launch {
@@ -99,13 +99,13 @@ class DeveloperLogsActivity : ComponentActivity() {
                                             val file = File(downloadsDir, "bluke_logs_$timeStamp.txt")
                                             val logText = filteredLogs.joinToString("\n") { "[${it.timestamp}] [${it.type}] [${it.tag}] ${it.message}" }
                                             FileWriter(file).use { it.write(logText) }
-                                            Toast.makeText(context, "Saved to Downloads: ${file.name}", Toast.LENGTH_LONG).show()
+                                            Toast.makeText(context, "已保存到下载目录：${file.name}", Toast.LENGTH_LONG).show()
                                         } catch (e: Exception) {
-                                            Toast.makeText(context, "Failed to save: ${e.message}", Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(context, "保存失败：${e.message}", Toast.LENGTH_SHORT).show()
                                         }
                                     }
                                 }) {
-                                    Icon(Icons.Default.Save, contentDescription = "Save to File")
+                                    Icon(Icons.Default.Save, contentDescription = "保存到文件")
                                 }
                             },
                             scrollBehavior = scrollBehavior
@@ -125,7 +125,7 @@ class DeveloperLogsActivity : ComponentActivity() {
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text("Autosave for ADB (files/bluke_dev_logs.txt)", style = MaterialTheme.typography.bodyMedium)
+                            Text("ADB 自动保存（files/bluke_dev_logs.txt）", style = MaterialTheme.typography.bodyMedium)
                             Switch(
                                 checked = isAutoSaveEnabled,
                                 onCheckedChange = { 
@@ -143,7 +143,7 @@ class DeveloperLogsActivity : ComponentActivity() {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp),
-                            placeholder = { Text("Filter logs...") },
+                            placeholder = { Text("筛选日志……") },
                             singleLine = true
                         )
                         

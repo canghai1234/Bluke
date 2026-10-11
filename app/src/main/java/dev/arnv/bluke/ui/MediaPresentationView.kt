@@ -567,13 +567,13 @@ private fun SlideNavigationColumn(
 ) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(gap)) {
         MultimediaActionButton(
-            RemoteAction.Key("Previous slide", Icons.Default.KeyboardArrowUp, KeyboardLayouts.KEY_PAGEUP),
+            RemoteAction.Key("上一张幻灯片", Icons.Default.KeyboardArrowUp, KeyboardLayouts.KEY_PAGEUP),
             btManager,
             Modifier.weight(1f).fillMaxWidth(),
             triggerVibration = triggerVibration,
         )
         MultimediaActionButton(
-            RemoteAction.Key("Next slide", Icons.Default.KeyboardArrowDown, KeyboardLayouts.KEY_PAGEDOWN),
+            RemoteAction.Key("下一张幻灯片", Icons.Default.KeyboardArrowDown, KeyboardLayouts.KEY_PAGEDOWN),
             btManager,
             Modifier.weight(1f).fillMaxWidth(),
             triggerVibration = triggerVibration,
@@ -590,13 +590,13 @@ private fun SlideNavigationRow(
 ) {
     Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(gap)) {
         MultimediaActionButton(
-            RemoteAction.Key("Previous slide", Icons.AutoMirrored.Filled.KeyboardArrowLeft, KeyboardLayouts.KEY_PAGEUP),
+            RemoteAction.Key("上一张幻灯片", Icons.AutoMirrored.Filled.KeyboardArrowLeft, KeyboardLayouts.KEY_PAGEUP),
             btManager,
             Modifier.weight(1f).fillMaxHeight(),
             triggerVibration = triggerVibration,
         )
         MultimediaActionButton(
-            RemoteAction.Key("Next slide", Icons.AutoMirrored.Filled.KeyboardArrowRight, KeyboardLayouts.KEY_PAGEDOWN),
+            RemoteAction.Key("下一张幻灯片", Icons.AutoMirrored.Filled.KeyboardArrowRight, KeyboardLayouts.KEY_PAGEDOWN),
             btManager,
             Modifier.weight(1f).fillMaxHeight(),
             triggerVibration = triggerVibration,
@@ -612,9 +612,9 @@ private fun MouseButtonRow(
     triggerVibration: (Long) -> Unit,
 ) {
     Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(gap)) {
-        MouseHoldButton("Left mouse button", 0x01, btManager, Modifier.weight(1f).fillMaxHeight(), triggerVibration)
-        MouseHoldButton("Middle mouse button", 0x04, btManager, Modifier.weight(1f).fillMaxHeight(), triggerVibration)
-        MouseHoldButton("Right mouse button", 0x02, btManager, Modifier.weight(1f).fillMaxHeight(), triggerVibration)
+        MouseHoldButton("鼠标左键", 0x01, btManager, Modifier.weight(1f).fillMaxHeight(), triggerVibration)
+        MouseHoldButton("鼠标中键", 0x04, btManager, Modifier.weight(1f).fillMaxHeight(), triggerVibration)
+        MouseHoldButton("鼠标右键", 0x02, btManager, Modifier.weight(1f).fillMaxHeight(), triggerVibration)
     }
 }
 
@@ -626,9 +626,9 @@ private fun MouseButtonColumn(
     triggerVibration: (Long) -> Unit,
 ) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(gap)) {
-        MouseHoldButton("Left mouse button", 0x01, btManager, Modifier.weight(1f).fillMaxWidth(), triggerVibration)
-        MouseHoldButton("Middle mouse button", 0x04, btManager, Modifier.weight(1f).fillMaxWidth(), triggerVibration)
-        MouseHoldButton("Right mouse button", 0x02, btManager, Modifier.weight(1f).fillMaxWidth(), triggerVibration)
+        MouseHoldButton("鼠标左键", 0x01, btManager, Modifier.weight(1f).fillMaxWidth(), triggerVibration)
+        MouseHoldButton("鼠标中键", 0x04, btManager, Modifier.weight(1f).fillMaxWidth(), triggerVibration)
+        MouseHoldButton("鼠标右键", 0x02, btManager, Modifier.weight(1f).fillMaxWidth(), triggerVibration)
     }
 }
 
@@ -719,22 +719,22 @@ private sealed interface RemoteAction {
     ) : RemoteAction
 }
 
-private val muteAction = RemoteAction.Consumer("Mute", Icons.AutoMirrored.Filled.VolumeOff, ConsumerControl.MUTE)
-private val volumeUpAction = RemoteAction.Consumer("Volume up", Icons.AutoMirrored.Filled.VolumeUp, ConsumerControl.VOLUME_UP)
-private val volumeDownAction = RemoteAction.Consumer("Volume down", Icons.AutoMirrored.Filled.VolumeDown, ConsumerControl.VOLUME_DOWN)
-private val previousAction = RemoteAction.Consumer("Previous track", Icons.Default.SkipPrevious, ConsumerControl.PREVIOUS_TRACK)
-private val playAction = RemoteAction.Consumer("Play or pause", Icons.Default.PlayArrow, ConsumerControl.PLAY_PAUSE)
-private val nextAction = RemoteAction.Consumer("Next track", Icons.Default.SkipNext, ConsumerControl.NEXT_TRACK)
+private val muteAction = RemoteAction.Consumer("静音", Icons.AutoMirrored.Filled.VolumeOff, ConsumerControl.MUTE)
+private val volumeUpAction = RemoteAction.Consumer("增大音量", Icons.AutoMirrored.Filled.VolumeUp, ConsumerControl.VOLUME_UP)
+private val volumeDownAction = RemoteAction.Consumer("减小音量", Icons.AutoMirrored.Filled.VolumeDown, ConsumerControl.VOLUME_DOWN)
+private val previousAction = RemoteAction.Consumer("上一曲", Icons.Default.SkipPrevious, ConsumerControl.PREVIOUS_TRACK)
+private val playAction = RemoteAction.Consumer("播放或暂停", Icons.Default.PlayArrow, ConsumerControl.PLAY_PAUSE)
+private val nextAction = RemoteAction.Consumer("下一曲", Icons.Default.SkipNext, ConsumerControl.NEXT_TRACK)
 // Upright content is rotated -90 degrees. Use the opposite source glyphs so the rendered
 // Previous/Next symbols retain their intended visual direction without swapping HID commands.
-private val uprightPreviousAction = RemoteAction.Consumer("Previous track", Icons.Default.SkipNext, ConsumerControl.PREVIOUS_TRACK)
-private val uprightNextAction = RemoteAction.Consumer("Next track", Icons.Default.SkipPrevious, ConsumerControl.NEXT_TRACK)
+private val uprightPreviousAction = RemoteAction.Consumer("上一曲", Icons.Default.SkipNext, ConsumerControl.PREVIOUS_TRACK)
+private val uprightNextAction = RemoteAction.Consumer("下一曲", Icons.Default.SkipPrevious, ConsumerControl.NEXT_TRACK)
 private val escapeAction = RemoteAction.Key("Esc", null, KeyboardLayouts.KEY_ESC)
 private val homeAction = RemoteAction.Key("Home", null, KeyboardLayouts.KEY_HOME)
 private val endAction = RemoteAction.Key("End", null, KeyboardLayouts.KEY_END)
 private val pageUpAction = RemoteAction.Key("PgUp", null, KeyboardLayouts.KEY_PAGEUP)
 private val pageDownAction = RemoteAction.Key("PgDn", null, KeyboardLayouts.KEY_PAGEDOWN)
-private val blackAction = RemoteAction.Key("Black", null, KeyboardLayouts.KEY_B)
+private val blackAction = RemoteAction.Key("B", null, KeyboardLayouts.KEY_B)
 
 private val landscapeMediaRows = listOf(
     listOf(muteAction, volumeUpAction, volumeDownAction),
@@ -772,10 +772,10 @@ private fun MultimediaUprightBar(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        UprightToolbarButton("Close Multimedia", onClose) {
+        UprightToolbarButton("关闭多媒体", onClose) {
             Icon(Icons.Default.Close, null, tint = Color.White, modifier = Modifier.size(13.dp))
         }
-        UprightToolbarButton("Switch input mode", onModeChange) {
+        UprightToolbarButton("切换输入模式", onModeChange) {
             Icon(Icons.Default.Mouse, null, tint = Color.White, modifier = Modifier.size(13.dp))
         }
         Box(
@@ -784,12 +784,12 @@ private fun MultimediaUprightBar(
                 .clip(CircleShape)
                 .background(if (isConnected) Color(0xFF39FF14) else Color(0xFFFF9800))
                 .semantics {
-                    contentDescription = if (isConnected) "Host connected" else "Host offline"
+                    contentDescription = if (isConnected) "主机已连接" else "主机离线"
                 },
         )
         ReconnectHostButton(btManager, iconOnly = true)
         Spacer(Modifier.weight(1f))
-        UprightToolbarButton("Pointer sensitivity ${sensitivity}x", onSensitivityChange) {
+        UprightToolbarButton("指针灵敏度 ${sensitivity}x", onSensitivityChange) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -798,7 +798,7 @@ private fun MultimediaUprightBar(
                 Text("${sensitivity}x", color = Color.White, fontSize = 7.sp, fontWeight = FontWeight.Bold)
             }
         }
-        UprightToolbarButton("Scroll sensitivity ${scrollSensitivity}x", onScrollSensitivityChange) {
+        UprightToolbarButton("滚动灵敏度 ${scrollSensitivity}x", onScrollSensitivityChange) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -808,7 +808,7 @@ private fun MultimediaUprightBar(
             }
         }
         UprightToolbarButton(
-            if (isVibrationEnabled) "Disable vibration" else "Enable vibration",
+            if (isVibrationEnabled) "关闭振动" else "开启振动",
             onToggleVibration,
         ) {
             Icon(
@@ -863,9 +863,9 @@ private fun MultimediaTopBar(
     val context = LocalContext.current
     val connectedDevice by btManager.connectedDevice.collectAsState()
     val hostLabel = try {
-        (connectedDevice ?: btManager.getReconnectTarget())?.name ?: "No Host"
+        (connectedDevice ?: btManager.getReconnectTarget())?.name ?: "无主机"
     } catch (_: SecurityException) {
-        if (isConnected) "Host" else "No Host"
+        if (isConnected) "主机" else "无主机"
     }
     Row(
         modifier = Modifier
@@ -881,9 +881,9 @@ private fun MultimediaTopBar(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             ToolbarPill(onClick = onClose) {
-                Icon(Icons.Default.Close, "Close", tint = Color.White, modifier = Modifier.size(12.dp))
+                Icon(Icons.Default.Close, "关闭", tint = Color.White, modifier = Modifier.size(12.dp))
                 Spacer(Modifier.width(4.dp))
-                Text("Close", color = Color.White, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                Text("关闭", color = Color.White, fontSize = 10.sp, fontWeight = FontWeight.Bold)
             }
             ToolbarPill(
                 onClick = {
@@ -895,9 +895,9 @@ private fun MultimediaTopBar(
                     context.startActivity(Intent(context, QuickCycleActivity::class.java))
                 },
             ) {
-                Icon(Icons.Default.Mouse, "Switch mode", tint = Color.White, modifier = Modifier.size(12.dp))
+                Icon(Icons.Default.Mouse, "切换模式", tint = Color.White, modifier = Modifier.size(12.dp))
                 Spacer(Modifier.width(4.dp))
-                Text("Multimedia", color = Color.White, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                Text("多媒体", color = Color.White, fontSize = 10.sp, fontWeight = FontWeight.Bold)
             }
             Box(
                 Modifier
@@ -905,13 +905,13 @@ private fun MultimediaTopBar(
                     .clip(CircleShape)
                     .background(if (isConnected) Color(0xFF39FF14) else Color(0xFFFF9800))
                     .semantics {
-                        contentDescription = if (isConnected) "Host connected" else "Host offline"
+                        contentDescription = if (isConnected) "主机已连接" else "主机离线"
                     },
             )
             Text(hostLabel, color = Color.White, fontSize = 10.sp, fontWeight = FontWeight.Bold)
             ReconnectHostButton(btManager, iconOnly = true)
             if (!isConnected) {
-                Text("[offline]", color = Color.White.copy(alpha = 0.45f), fontSize = 9.sp)
+                Text("[离线]", color = Color.White.copy(alpha = 0.45f), fontSize = 9.sp)
             }
         }
 
@@ -920,12 +920,12 @@ private fun MultimediaTopBar(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             ToolbarPill(onClick = onSensitivityChange) {
-                Icon(Icons.Default.Speed, "Sensitivity", tint = Color.White, modifier = Modifier.size(12.dp))
+                Icon(Icons.Default.Speed, "灵敏度", tint = Color.White, modifier = Modifier.size(12.dp))
                 Spacer(Modifier.width(4.dp))
                 Text("${sensitivity}x", color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Bold)
             }
             ToolbarPill(onClick = onScrollSensitivityChange) {
-                Icon(Icons.Default.KeyboardArrowUp, "Scroll speed", tint = Color.White, modifier = Modifier.size(12.dp))
+                Icon(Icons.Default.KeyboardArrowUp, "滚动速度", tint = Color.White, modifier = Modifier.size(12.dp))
                 Spacer(Modifier.width(4.dp))
                 Text("${scrollSensitivity}x", color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Bold)
             }
@@ -938,7 +938,7 @@ private fun MultimediaTopBar(
                 Box(contentAlignment = Alignment.Center) {
                     Icon(
                         Icons.Default.Vibration,
-                        if (isVibrationEnabled) "Disable vibration" else "Enable vibration",
+                        if (isVibrationEnabled) "关闭振动" else "开启振动",
                         tint = if (isVibrationEnabled) Color.White else Color.White.copy(alpha = 0.4f),
                         modifier = Modifier.size(12.dp),
                     )

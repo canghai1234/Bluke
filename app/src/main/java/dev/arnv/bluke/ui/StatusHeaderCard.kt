@@ -58,6 +58,18 @@ internal fun hidStatusLabel(state: BluetoothState, lifecycle: HidLifecycleState)
     else -> "Offline"
 }
 
+private fun localizedHidStatusLabel(state: BluetoothState, lifecycle: HidLifecycleState): String = when {
+    state is BluetoothState.PermissionRequired -> "权限被拒绝"
+    state is BluetoothState.BluetoothOff -> "蓝牙已关闭"
+    lifecycle is HidLifecycleState.BindingProxy -> "正在启动 HID"
+    lifecycle is HidLifecycleState.Registering -> "正在启动 HID"
+    lifecycle is HidLifecycleState.Connecting -> "正在连接"
+    shouldOfferHidRestart(lifecycle) -> "离线"
+    state is BluetoothState.Connected -> "已连接"
+    state is BluetoothState.PairingMode -> "就绪"
+    else -> "离线"
+}
+
 @Composable
 internal fun StatusHeaderCard(
     bluetoothState: BluetoothState,
@@ -82,18 +94,18 @@ internal fun StatusHeaderCard(
                         modifier = Modifier.size(48.dp).clip(CircleShape).background(MaterialTheme.colorScheme.surface),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(Icons.Default.Bluetooth, contentDescription = "Bluetooth", tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Icon(Icons.Default.Bluetooth, contentDescription = "蓝牙", tint = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     Spacer(modifier = Modifier.width(16.dp))
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = if (isScanning) "Scanning..." else "Ready to Scan",
+                            text = if (isScanning) "正在扫描……" else "准备扫描",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
-                            text = "Scan nearby devices",
+                            text = "扫描附近设备",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -115,7 +127,7 @@ internal fun StatusHeaderCard(
                         Box(modifier = Modifier.size(8.dp).clip(CircleShape).background(statusColor))
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = hidStatusLabel(bluetoothState, hidLifecycleState),
+                            text = localizedHidStatusLabel(bluetoothState, hidLifecycleState),
                             style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -133,11 +145,11 @@ internal fun StatusHeaderCard(
                 ) {
                     Icon(
                         imageVector = if (isScanning) Icons.Default.Close else Icons.Default.PlayArrow,
-                        contentDescription = if (isScanning) "Stop" else "Scan",
+                        contentDescription = if (isScanning) "停止扫描" else "扫描",
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text(if (isScanning) "Stop" else "Scan", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
+                    Text(if (isScanning) "停止" else "扫描", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
                 }
             }
             if (shouldOfferHidRestart(hidLifecycleState)) {
@@ -152,9 +164,9 @@ internal fun StatusHeaderCard(
                     ),
                     contentPadding = PaddingValues(vertical = 12.dp, horizontal = 20.dp)
                 ) {
-                    Icon(Icons.Default.Refresh, contentDescription = "Restart HID", modifier = Modifier.size(18.dp))
+                    Icon(Icons.Default.Refresh, contentDescription = "重启 HID", modifier = Modifier.size(18.dp))
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Restart HID Service", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
+                    Text("重启 HID 服务", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
                 }
             }
         }

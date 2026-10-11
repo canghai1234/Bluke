@@ -208,9 +208,9 @@ fun OnboardingScreen(
                     }
 
                     val buttonText = when (pagerState.currentPage) {
-                        0 -> "Let's Start"
-                        1 -> if (permissionsGranted) "Continue" else "Grant Permissions"
-                        else -> if (timer > 0) "Let's go (${timer}s)" else "Let's go"
+                        0 -> "开始使用"
+                        1 -> if (permissionsGranted) "继续" else "授予权限"
+                        else -> if (timer > 0) "出发（${timer} 秒）" else "出发"
                     }
                     val isEnabled = when (pagerState.currentPage) {
                         0 -> true
@@ -292,7 +292,7 @@ fun WelcomePage() {
         )
         Spacer(Modifier.height(16.dp))
         Text(
-            "Turn your Android device into a completely wireless Bluetooth keyboard for your PC, Mac, or Smart TV.",
+            "将你的 Android 设备变成适用于 PC、Mac 或智能电视的完全无线蓝牙键盘。",
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -318,14 +318,14 @@ fun PermissionsPage(isGranted: Boolean, attempts: Int, openSettings: () -> Unit)
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            "Permissions Needed",
+            "需要的权限",
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary
         )
         Spacer(Modifier.height(16.dp))
         Text(
-            "To act as a keyboard and connect to your devices, we need the following permissions.",
+            "要作为键盘并连接到你的设备，需要以下权限。",
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -345,8 +345,8 @@ fun PermissionsPage(isGranted: Boolean, attempts: Int, openSettings: () -> Unit)
                     Icon(Icons.Default.Bluetooth, null, tint = MaterialTheme.colorScheme.primary)
                     Spacer(Modifier.width(16.dp))
                     Column(modifier = Modifier.weight(1f)) {
-                        Text("Bluetooth", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
-                        Text("Connect to devices as a keyboard.", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text("蓝牙", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
+                        Text("作为键盘连接到其他设备。", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     if (hasBluetooth) {
                         Icon(Icons.Default.Check, null, tint = MaterialTheme.colorScheme.primary)
@@ -364,8 +364,8 @@ fun PermissionsPage(isGranted: Boolean, attempts: Int, openSettings: () -> Unit)
                     Icon(Icons.Default.LocationOn, null, tint = MaterialTheme.colorScheme.primary)
                     Spacer(Modifier.width(16.dp))
                     Column(modifier = Modifier.weight(1f)) {
-                        Text("Location", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
-                        Text("Required by Android to scan for Bluetooth devices.", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text("位置", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
+                        Text("Android 扫描蓝牙设备所需的权限。", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     if (hasLocation) {
                         Icon(Icons.Default.Check, null, tint = MaterialTheme.colorScheme.primary)
@@ -385,7 +385,7 @@ fun PermissionsPage(isGranted: Boolean, attempts: Int, openSettings: () -> Unit)
                     Row(Modifier.padding(16.dp).fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                         Icon(Icons.Default.Check, null, tint = MaterialTheme.colorScheme.onTertiaryContainer)
                         Spacer(Modifier.width(16.dp))
-                        Text("All permissions granted!", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onTertiaryContainer)
+                        Text("所有权限已授予！", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onTertiaryContainer)
                     }
                 }
             } else if (attempts > 0) {
@@ -397,13 +397,13 @@ fun PermissionsPage(isGranted: Boolean, attempts: Int, openSettings: () -> Unit)
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(Icons.Default.Warning, null, tint = MaterialTheme.colorScheme.onErrorContainer)
                             Spacer(Modifier.width(16.dp))
-                            Text("Permissions missing", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onErrorContainer)
+                            Text("缺少权限", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onErrorContainer)
                         }
                         Spacer(Modifier.height(8.dp))
-                        Text("If you denied prompts, you might need to enable them in settings.", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onErrorContainer)
+                        Text("如果你拒绝了权限提示，可能需要在系统设置中手动开启。", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onErrorContainer)
                         Spacer(Modifier.height(8.dp))
                         TextButton(onClick = openSettings) {
-                            Text("Open Settings", color = MaterialTheme.colorScheme.onErrorContainer)
+                            Text("打开设置", color = MaterialTheme.colorScheme.onErrorContainer)
                         }
                     }
                 }
@@ -422,7 +422,7 @@ fun ConnectionGuidePage() {
         horizontalAlignment = Alignment.Start
     ) {
         Text(
-            "How to Connect",
+            "如何连接",
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary
@@ -431,21 +431,21 @@ fun ConnectionGuidePage() {
 
         StepSection(
             icon = Icons.Default.Bluetooth, 
-            title = "New Device",
+            title = "新设备",
             steps = listOf(
-                "Scan for devices from this App.",
-                "Tap 'Connect' on your target PC or TV.",
-                "Accept the pairing prompt on BOTH devices."
+                "在本应用中扫描设备。",
+                "在目标电脑或电视上点击“连接”。",
+                "在两台设备上接受配对提示。"
             )
         )
         Spacer(Modifier.height(24.dp))
         StepSection(
             icon = Icons.Default.BluetoothConnected, 
-            title = "Existing Device",
+            title = "已有设备",
             steps = listOf(
-                "Locate your device under 'Paired Devices'.",
-                "Tap 'Connect'.",
-                "If connection fails, unpair on both devices and retry."
+                "在“已配对设备”下找到你的设备。",
+                "点击“连接”。",
+                "如果连接失败，请在两台设备上取消配对后重试。"
             )
         )
         Spacer(Modifier.height(80.dp))

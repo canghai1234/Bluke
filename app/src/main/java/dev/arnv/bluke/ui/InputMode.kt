@@ -10,10 +10,10 @@ enum class InputMode(
     val preferenceKey: String,
     val displayName: String,
 ) {
-    KEYBOARD(0, "keyboard", "Keyboard"),
-    TOUCHPAD(1, "touchpad", "Touchpad"),
-    GAMEPAD(2, "gamepad", "Gamepad"),
-    MEDIA_PRESENTATION(4, "media_presentation", "Multimedia"),
+    KEYBOARD(0, "keyboard", "键盘"),
+    TOUCHPAD(1, "touchpad", "触控板"),
+    GAMEPAD(2, "gamepad", "手柄"),
+    MEDIA_PRESENTATION(4, "media_presentation", "多媒体"),
     ;
 
     companion object {

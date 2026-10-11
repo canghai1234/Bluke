@@ -172,7 +172,7 @@ fun KeyboardView(
                     } else {
                         key.legend
                     }
-                    val fnLegend = if (isFnActive) fnLegendForKey(key.keyCode) else null
+                    val fnLegend = if (isFnActive) localizedFnLegendForKey(key.keyCode) else null
                     val displayLegend = fnLegend ?: baseDisplayLegend
                     val displayShiftedLegend = if (fnLegend == null) key.shiftedLegend else ""
 

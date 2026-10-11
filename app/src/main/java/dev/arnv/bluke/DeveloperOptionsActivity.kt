@@ -66,10 +66,10 @@ class DeveloperOptionsActivity : ComponentActivity() {
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
                         LargeTopAppBar(
-                            title = { Text("Developer Options") },
+                            title = { Text("开发者选项") },
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
-                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
                                 }
                             },
                             colors = TopAppBarDefaults.largeTopAppBarColors(
@@ -96,7 +96,7 @@ class DeveloperOptionsActivity : ComponentActivity() {
                             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
                         ) {
                             Text(
-                                text = "WARNING: These settings are intended for development use only. They may cause the app to malfunction, mock errors, or degrade your experience.",
+                                text = "警告：这些设置仅供开发使用，可能导致应用异常、模拟错误或影响使用体验。",
                                 color = MaterialTheme.colorScheme.onErrorContainer,
                                 modifier = Modifier.padding(16.dp),
                                 style = MaterialTheme.typography.bodyMedium
@@ -111,7 +111,7 @@ class DeveloperOptionsActivity : ComponentActivity() {
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text("Developer Mode", style = MaterialTheme.typography.titleMedium)
+                            Text("开发者模式", style = MaterialTheme.typography.titleMedium)
                             Switch(
                                 checked = isDevMode,
                                 onCheckedChange = { 
@@ -139,16 +139,16 @@ class DeveloperOptionsActivity : ComponentActivity() {
                         SettingsCardGroup(
                             items = listOf(
                                 SettingsItemData(
-                                    title = "Developer Logs",
-                                    subtitle = "Live Bluetooth packets and OS logs",
+                                    title = "开发者日志",
+                                    subtitle = "实时蓝牙数据包和系统日志",
                                     icon = { Icon(Icons.AutoMirrored.Filled.ListAlt, null) },
                                     onClick = { 
                                         startActivity(Intent(this@DeveloperOptionsActivity, DeveloperLogsActivity::class.java))
                                     }
                                 ),
                                 SettingsItemData(
-                                    title = "Force App Update Popup",
-                                    subtitle = "Mocks an app update on HomeScreen",
+                                    title = "强制显示应用更新弹窗",
+                                    subtitle = "在主界面模拟应用更新",
                                     action = {
                                         Switch(
                                             checked = mockUpdatePopup,
@@ -160,8 +160,8 @@ class DeveloperOptionsActivity : ComponentActivity() {
                                     }
                                 ),
                                 SettingsItemData(
-                                    title = "Force Gamepad Guide",
-                                    subtitle = "Shows the first-use controller guidance on Home",
+                                    title = "强制显示手柄指南",
+                                    subtitle = "在主界面显示首次使用手柄指南",
                                     action = {
                                         Switch(
                                             checked = mockGamepadGuide,
@@ -173,8 +173,8 @@ class DeveloperOptionsActivity : ComponentActivity() {
                                     },
                                 ),
                                 SettingsItemData(
-                                    title = "Force Troubleshooting Nudge",
-                                    subtitle = "Shows the contextual connection-help card on Home",
+                                    title = "强制显示故障排除提示",
+                                    subtitle = "在主界面显示连接帮助卡片",
                                     action = {
                                         Switch(
                                             checked = mockTroubleshootingNudge,
@@ -186,8 +186,8 @@ class DeveloperOptionsActivity : ComponentActivity() {
                                     },
                                 ),
                                 SettingsItemData(
-                                    title = "Home Screen Error State",
-                                    subtitle = "Force UI into specific error state",
+                                    title = "主界面错误状态",
+                                    subtitle = "强制界面进入指定错误状态",
                                     action = {
                                         var expanded by remember { mutableStateOf(false) }
                                         val errorOptions = listOf("None", "Bluetooth Disabled", "Device Unsupported", "HID Unsupported")
@@ -198,14 +198,29 @@ class DeveloperOptionsActivity : ComponentActivity() {
                                             mockHidUnsupported -> "HID Unsupported"
                                             else -> "None"
                                         }
+                                        val currentSelectionLabel = when (currentSelection) {
+                                            "Bluetooth Disabled" -> "蓝牙已关闭"
+                                            "Device Unsupported" -> "设备不支持"
+                                            "HID Unsupported" -> "HID 不支持"
+                                            else -> "无"
+                                        }
                                         Box {
                                             TextButton(onClick = { expanded = true }) {
-                                                Text(currentSelection)
+                                                Text(currentSelectionLabel)
                                             }
                                             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                                                 errorOptions.forEach { option ->
                                                     DropdownMenuItem(
-                                                        text = { Text(option) },
+                                                        text = {
+                                                            Text(
+                                                                when (option) {
+                                                                    "Bluetooth Disabled" -> "蓝牙已关闭"
+                                                                    "Device Unsupported" -> "设备不支持"
+                                                                    "HID Unsupported" -> "HID 不支持"
+                                                                    else -> "无"
+                                                                }
+                                                            )
+                                                        },
                                                         onClick = {
                                                             when (option) {
                                                                 "None" -> {

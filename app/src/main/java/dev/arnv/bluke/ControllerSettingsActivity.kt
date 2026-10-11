@@ -52,9 +52,9 @@ class ControllerSettingsActivity : ComponentActivity() {
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
                         LargeTopAppBar(
-                            title = { Text("Controller") },
+                            title = { Text("手柄") },
                             navigationIcon = {
-                                IconButton(onClick = ::finish) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back") }
+                                IconButton(onClick = ::finish) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "返回") }
                             },
                             scrollBehavior = scrollBehavior,
                         )
@@ -66,10 +66,10 @@ class ControllerSettingsActivity : ComponentActivity() {
                     ) {
                         Spacer(Modifier.height(8.dp))
                         SettingsCardGroup(
-                            title = "Behaviour",
+                            title = "行为",
                             items = listOf(
                                 SettingsItemData(
-                                    title = "Controller compatibility",
+                                    title = "手柄兼容性",
                                     subtitle = dpadMode.description,
                                     icon = { Icon(Icons.Default.Gamepad, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = { showDialog = true },
@@ -80,8 +80,8 @@ class ControllerSettingsActivity : ComponentActivity() {
                 }
                 if (showDialog) {
                     ChoiceDialog(
-                        title = "Controller compatibility",
-                        explanation = "Use Native for Windows/Linux games, Android for games on Android, or Web when a browser game ignores directions. All modes switch live without reconnecting. After updating to the shared controller descriptor, forget both devices and pair again once. Games may not support Share or touchpad-click.",
+                        title = "手柄兼容性",
+                        explanation = "Windows/Linux 游戏请选择原生模式，Android 游戏请选择 Android 模式，浏览器游戏无法识别方向时请选择 Web 模式。所有模式都可以实时切换，无需重新连接。更新到共享手柄描述符后，请在两台设备上忘记 Bluke 并重新配对一次。部分游戏可能不支持 Share 或触控板点击。",
                         choices = GamepadDpadOutputMode.entries.map { it.label },
                         selectedIndex = dpadMode.ordinal,
                         onSelect = { index ->

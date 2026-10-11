@@ -38,8 +38,8 @@ class QuickCycleActivity : ComponentActivity() {
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
                         LargeTopAppBar(
-                            title = { Text("Input mode cycle") },
-                            navigationIcon = { IconButton(onClick = ::finish) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back") } },
+                            title = { Text("输入模式循环") },
+                            navigationIcon = { IconButton(onClick = ::finish) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "返回") } },
                             scrollBehavior = scrollBehavior,
                         )
                     },
@@ -49,13 +49,13 @@ class QuickCycleActivity : ComponentActivity() {
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
                         Text(
-                            "Toolbar taps only visit checked input modes. Configure layout, theme, and sound cycles in their own Keyboard settings lists.",
+                            "工具栏点击只会切换已勾选的输入模式。请在键盘设置中的相应列表里配置布局、主题和声音循环。",
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
                         )
                         SettingsCardGroup(
-                            title = "Input modes",
+                            title = "输入模式",
                             items = InputMode.entries.map { mode ->
                                 SettingsItemData(
                                     title = mode.displayName,

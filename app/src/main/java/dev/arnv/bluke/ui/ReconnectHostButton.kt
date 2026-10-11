@@ -46,7 +46,7 @@ internal fun ReconnectHostButton(btManager: BluetoothKeyboardManager, iconOnly: 
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        Icon(Icons.Default.Refresh, "Reconnect to last host", tint = Color.White, modifier = Modifier.size(12.dp))
-        if (!iconOnly) Text("Reconnect", color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+        Icon(Icons.Default.Refresh, "重新连接最近的主机", tint = Color.White, modifier = Modifier.size(12.dp))
+        if (!iconOnly) Text("重新连接", color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Bold)
     }
 }

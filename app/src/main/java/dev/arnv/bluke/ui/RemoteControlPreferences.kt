@@ -4,9 +4,9 @@ const val HARDWARE_VOLUME_REMOTE_PREFERENCE = "media_hardware_volume_remote"
 const val TOUCHPAD_MODIFIER_POSITION_PREFERENCE = "touchpad_modifier_position"
 
 enum class TouchpadModifierPosition(val preferenceValue: String, val displayName: String) {
-    OFF("off", "Modifiers off"),
-    LEFT("left", "Modifiers left"),
-    RIGHT("right", "Modifiers right"),
+    OFF("off", "修饰键关闭"),
+    LEFT("left", "修饰键在左侧"),
+    RIGHT("right", "修饰键在右侧"),
     ;
 
     fun next(): TouchpadModifierPosition = entries[(ordinal + 1) % entries.size]

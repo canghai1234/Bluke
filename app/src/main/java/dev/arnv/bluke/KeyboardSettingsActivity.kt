@@ -66,10 +66,10 @@ class KeyboardSettingsActivity : ComponentActivity() {
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
                         LargeTopAppBar(
-                            title = { Text("Keyboard") },
+                            title = { Text("键盘") },
                             navigationIcon = {
                                 IconButton(onClick = ::finish) {
-                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
                                 }
                             },
                             scrollBehavior = scrollBehavior,
@@ -81,11 +81,11 @@ class KeyboardSettingsActivity : ComponentActivity() {
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
                         Spacer(Modifier.height(8.dp))
-                        SettingsGroup(title = "Behaviour") {
+                        SettingsGroup(title = "行为") {
                             Column(modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp)) {
-                                Text("Key touch area", style = MaterialTheme.typography.titleMedium)
+                                Text("按键触控范围", style = MaterialTheme.typography.titleMedium)
                                 Text(
-                                    "Broader values make keys easier to hit but can increase adjacent-key presses.",
+                                    "范围越大，按键越容易点击，但也可能增加误触相邻按键的概率。",
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
@@ -99,7 +99,7 @@ class KeyboardSettingsActivity : ComponentActivity() {
                                     steps = 9,
                                 )
                                 Text(
-                                    if (keySensitivity <= 3f) "Precise" else if (keySensitivity >= 8f) "Broad" else "Balanced",
+                                    if (keySensitivity <= 3f) "精确" else if (keySensitivity >= 8f) "宽松" else "平衡",
                                     style = MaterialTheme.typography.labelLarge,
                                     color = MaterialTheme.colorScheme.primary,
                                 )
@@ -108,37 +108,37 @@ class KeyboardSettingsActivity : ComponentActivity() {
                         SettingsCardGroup(
                             items = listOf(
                                 SettingsItemData(
-                                    title = "Typing layout",
-                                    subtitle = "${characterLayout.displayName} · host: ${characterLayout.hostLayoutName}",
+                                    title = "输入布局",
+                                    subtitle = "${characterLayout.displayName} · 主机：${characterLayout.hostLayoutName}",
                                     icon = { Icon(Icons.Default.Keyboard, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = { dialog = KeyboardDialog.TYPING_LAYOUT },
                                 ),
                                 SettingsItemData(
-                                    title = "Caps Lock",
-                                    subtitle = if (lockSyncMode == "host") "Follow host indicators" else "Track locally on this phone",
+                                    title = "大写锁定",
+                                    subtitle = if (lockSyncMode == "host") "跟随主机指示灯" else "仅在本机记录状态",
                                     icon = { Icon(Icons.Default.Settings, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = { dialog = KeyboardDialog.CAPS_LOCK },
                                 ),
                             ),
                         )
                         SettingsCardGroup(
-                            title = "Customization",
+                            title = "自定义",
                             items = listOf(
                                 SettingsItemData(
-                                    title = "Layouts",
-                                    subtitle = "Choose a layout and toolbar cycle choices",
+                                    title = "布局",
+                                    subtitle = "选择键盘布局和工具栏循环选项",
                                     icon = { Icon(Icons.Default.Keyboard, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = { startActivity(Intent(this@KeyboardSettingsActivity, KeyboardLayoutsActivity::class.java)) },
                                 ),
                                 SettingsItemData(
-                                    title = "Themes",
-                                    subtitle = "Keyboard colors, case, and toolbar cycle choices",
+                                    title = "主题",
+                                    subtitle = "键盘颜色、外壳和工具栏循环选项",
                                     icon = { Icon(Icons.Default.Palette, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = { startActivity(Intent(this@KeyboardSettingsActivity, KeyboardThemesActivity::class.java)) },
                                 ),
                                 SettingsItemData(
-                                    title = "Key sound packs",
-                                    subtitle = "Choose, import, and configure toolbar cycle choices",
+                                    title = "按键音效包",
+                                    subtitle = "选择、导入并配置工具栏循环选项",
                                     icon = { Icon(Icons.Default.GraphicEq, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = { startActivity(Intent(this@KeyboardSettingsActivity, SoundPacksActivity::class.java)) },
                                 ),
@@ -150,8 +150,8 @@ class KeyboardSettingsActivity : ComponentActivity() {
 
                 when (dialog) {
                     KeyboardDialog.TYPING_LAYOUT -> ChoiceDialog(
-                        title = "Typing layout",
-                        explanation = "Select the matching input source on the host so punctuation and symbols agree.",
+                        title = "输入布局",
+                        explanation = "选择主机上对应的输入源，确保标点和符号保持一致。",
                         choices = KeyboardCharacterLayout.entries.map { it.displayName },
                         selectedIndex = KeyboardCharacterLayout.entries.indexOf(characterLayout),
                         onSelect = { index ->
@@ -162,9 +162,9 @@ class KeyboardSettingsActivity : ComponentActivity() {
                         onDismiss = { dialog = null },
                     )
                     KeyboardDialog.CAPS_LOCK -> ChoiceDialog(
-                        title = "Caps Lock",
-                        explanation = "Choose where lock-key state is controlled.",
-                        choices = listOf("Host controlled", "Local on this phone"),
+                        title = "大写锁定",
+                        explanation = "选择由哪里控制锁定键状态。",
+                        choices = listOf("主机控制", "本机控制"),
                         selectedIndex = if (lockSyncMode == "host") 0 else 1,
                         onSelect = { index ->
                             lockSyncMode = if (index == 0) "host" else "device"
@@ -210,6 +210,6 @@ internal fun ChoiceDialog(
                 }
             }
         },
-        confirmButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
+        confirmButton = { TextButton(onClick = onDismiss) { Text("取消") } },
     )
 }

@@ -42,6 +42,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
@@ -123,6 +124,16 @@ fun HomeScreen(
         val savedMode = sharedPrefs.getInt("launch_mode", InputMode.KEYBOARD.id)
         mutableIntStateOf(savedMode.takeIf(enabledModes::contains) ?: enabledModes.first())
     }
+    val activeInputMode = InputMode.fromId(launchMode)
+    val inputSurfaceRotationPreferenceKey =
+        "input_surface_rotation_${activeInputMode.preferenceKey}"
+    var inputSurfaceRotationPreference by remember(inputSurfaceRotationPreferenceKey) {
+        mutableStateOf(
+            InputSurfaceRotationPreference.fromPreference(
+                sharedPrefs.getString(inputSurfaceRotationPreferenceKey, null),
+            ),
+        )
+    }
 
     // Sound synth switch state
     var currentSwitch by remember { mutableStateOf(soundSynth.getCurrentSwitch()) }
@@ -132,6 +143,17 @@ fun HomeScreen(
     var isMuted by rememberSaveable { mutableStateOf(!sharedPrefs.getBoolean("key_sound_enabled", true)) }
 
     var devModeRefreshTrigger by remember { mutableIntStateOf(0) }
+
+    fun cycleInputSurfaceRotation() {
+        val nextPreference = inputSurfaceRotationPreference.next()
+        inputSurfaceRotationPreference = nextPreference
+        sharedPrefs.edit {
+            putString(inputSurfaceRotationPreferenceKey, nextPreference.preferenceValue)
+        }
+        if (isHapticsEnabled) {
+            view.performHapticFeedback(android.view.HapticFeedbackConstants.KEYBOARD_TAP)
+        }
+    }
 
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner, sharedPrefs, soundSynth) {
@@ -267,20 +289,20 @@ fun HomeScreen(
             },
             title = {
                 Text(
-                    if (descriptorRefreshRequired) "Bluetooth pairing refresh required"
-                    else "Updated to v$versionName"
+                    if (descriptorRefreshRequired) "需要刷新蓝牙配对"
+                    else "已更新到 v$versionName"
                 )
             },
             text = {
                 Text(
                     if (descriptorRefreshRequired) {
-                        "Bluke now uses one shared HID descriptor for Native, Android and Web, " +
-                            "but Bluetooth hosts cache the old layout. To use the new controls, forget the host on this phone, " +
-                            "remove Bluke on the host, then pair again once. Reinstalling the app alone is not enough. " +
-                            "After this one-time refresh, all controller modes switch live without reconnecting or re-pairing."
+                        "Bluke 现在为原生、Android 和网页模式使用同一个 HID 描述符，" +
+                            "但蓝牙主机会缓存旧布局。要使用新的控制功能，请在本机忘记该主机，" +
+                            "在主机上移除 Bluke，然后重新配对一次。仅重新安装应用还不够。" +
+                            "完成这次刷新后，所有手柄模式都可以实时切换，无需重新连接或重新配对。"
                     } else {
-                        "We've added new features and made significant underlying changes to the controller!\n" +
-                            "For detailed information, see the changelog."
+                        "我们增加了新功能，并对手柄底层实现进行了重要调整！\n" +
+                            "详细信息请查看更新日志。"
                     }
                 )
             },
@@ -295,14 +317,14 @@ fun HomeScreen(
                     }
                     descriptorRefreshRequired = false
                 }) {
-                    Text("Got it")
+                    Text("知道了")
                 }
             },
             dismissButton = {
                 androidx.compose.material3.TextButton(onClick = { 
                     uriHandler.openUri("https://github.com/arnav-kr/Bluke/releases")
                 }) {
-                    Text("Changelog")
+                    Text("更新日志")
                 }
             }
         )
@@ -359,12 +381,12 @@ fun HomeScreen(
                 sharedPrefs.edit { putBoolean("mock_gamepad_guide", false) }
             },
             icon = { Icon(Icons.Default.SportsEsports, contentDescription = null) },
-            title = { Text("Before using the gamepad") },
+            title = { Text("首次使用手柄前") },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text("Choose Native for Windows/Linux games, Android for games on Android, or Web when a browser game ignores directions. Tap the controller mode button to switch; hold it to open settings.")
-                    Text("On Windows, some newer games accept only Xbox XInput controllers. Bluke is a standard Bluetooth HID gamepad, so Steam Input or another compatibility layer may be needed.")
-                    Text("If the host cached an older Bluke controller layout, forget Bluke on both devices and pair again once.")
+                    Text("Windows/Linux 游戏请选择原生模式，Android 游戏请选择 Android 模式，浏览器游戏无法识别方向时请选择 Web 模式。点击手柄模式按钮可切换，长按可打开设置。")
+                    Text("在 Windows 上，部分较新的游戏只接受 Xbox XInput 手柄。Bluke 是标准蓝牙 HID 手柄，可能需要 Steam Input 或其他兼容层。")
+                    Text("如果主机缓存了旧版 Bluke 手柄布局，请在两台设备上忘记 Bluke 并重新配对一次。")
                 }
             },
             confirmButton = {
@@ -380,14 +402,14 @@ fun HomeScreen(
                         pendingGamepadMode = null
                         isKeyboardActive = true
                     },
-                ) { Text("Open gamepad") }
+                ) { Text("打开手柄") }
             },
             dismissButton = {
                 TextButton(onClick = {
                     showGamepadGuide = false
                     pendingGamepadMode = null
                     sharedPrefs.edit { putBoolean("mock_gamepad_guide", false) }
-                }) { Text("Not now") }
+                }) { Text("暂不操作") }
             },
         )
     }
@@ -423,19 +445,30 @@ fun HomeScreen(
     // Show Toast for connection errors, timeouts, rejections, or pairing failures
     LaunchedEffect(btMessage, btState) {
         if (shouldShowBluetoothErrorToast(btState, btMessage)) {
-            android.widget.Toast.makeText(context, btMessage, android.widget.Toast.LENGTH_SHORT).show()
+            android.widget.Toast.makeText(context, localizedBluetoothStatus(btMessage), android.widget.Toast.LENGTH_SHORT).show()
         }
     }
 
-    // Toggle orientation and full-screen layout helper automatically
-    LaunchedEffect(isKeyboardActive) {
+    // Toggle system orientation only when the activity owns the full display.
+    // In split-screen Android owns the window orientation, so the input surface
+    // itself handles the quarter-turn inside the available window.
+    val configuration = LocalConfiguration.current
+    val isMultiWindow = (context as? Activity)?.isInMultiWindowMode == true
+    LaunchedEffect(
+        isKeyboardActive,
+        isMultiWindow,
+        configuration.screenWidthDp,
+        configuration.screenHeightDp,
+    ) {
         val activity = context as? Activity ?: return@LaunchedEffect
         val window = activity.window ?: return@LaunchedEffect
         if (isKeyboardActive) {
-            try {
-                activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-            } catch (e: Exception) {
-                Log.e("HomeScreen", "Error setting orientation to landscape: ${e.message}")
+            if (!isMultiWindow) {
+                try {
+                    activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                } catch (e: Exception) {
+                    Log.e("HomeScreen", "Error setting orientation to landscape: ${e.message}")
+                }
             }
             // Hide System UI for immersive mechanical keypad experience
             try {
@@ -457,11 +490,13 @@ fun HomeScreen(
                 Log.e("HomeScreen", "Error hiding system bars: ${e.message}")
             }
         } else {
-            try {
-                @Suppress("SourceLockedOrientationActivity")
-                activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            } catch (e: Exception) {
-                Log.e("HomeScreen", "Error setting orientation to portrait: ${e.message}")
+            if (!isMultiWindow) {
+                try {
+                    @Suppress("SourceLockedOrientationActivity")
+                    activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                } catch (e: Exception) {
+                    Log.e("HomeScreen", "Error setting orientation to portrait: ${e.message}")
+                }
             }
             // Show system UI normally in config mode
             try {
@@ -620,7 +655,12 @@ fun HomeScreen(
                 SolidColor(caseColorVal)
             }
 
-            when (launchMode) {
+            InputSurfaceFrame(
+                rotationPreference = inputSurfaceRotationPreference,
+                isMultiWindow = isMultiWindow,
+                onCycleRotation = ::cycleInputSurfaceRotation,
+            ) { layoutInfo ->
+                when (launchMode) {
                 1, 2, 4 -> {
                     val darkScheme = darkColorScheme(
                         primary = MaterialTheme.colorScheme.primary,
@@ -667,6 +707,11 @@ fun HomeScreen(
                                     },
                                     sharedPrefs = sharedPrefs,
                                     isConnected = isConnected,
+                                    postureOverride = if (layoutInfo.contentIsLandscape) {
+                                        MultimediaPosture.LANDSCAPE
+                                    } else {
+                                        MultimediaPosture.PORTRAIT_HELD
+                                    },
                                 )
                             }
                         }
@@ -710,13 +755,13 @@ fun HomeScreen(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.Close,
-                                        contentDescription = "Exit",
+                                        contentDescription = "退出",
                                         tint = Color.White,
                                         modifier = Modifier.size(10.dp)
                                     )
                                     Spacer(modifier = Modifier.width(4.dp))
                                     Text(
-                                        text = "Close",
+                                        text = "关闭",
                                         color = Color.White,
                                         fontSize = 9.sp,
                                         fontWeight = FontWeight.Bold
@@ -730,8 +775,8 @@ fun HomeScreen(
                                         .clip(RoundedCornerShape(6.dp))
                                         .background(Color.White.copy(alpha = 0.15f))
                                         .combinedClickable(
-                                            onClickLabel = "Next input mode",
-                                            onLongClickLabel = "Configure input mode cycle",
+                                            onClickLabel = "下一个输入模式",
+                                            onLongClickLabel = "配置输入模式循环",
                                             onClick = {
                                                 val enabledModes = sharedPrefs.enabledInputModes().map(InputMode::id)
                                                 val currentIndexInEnabled = enabledModes.indexOf(launchMode)
@@ -753,12 +798,12 @@ fun HomeScreen(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.Keyboard,
-                                        contentDescription = "Switch Mode",
+                                        contentDescription = "切换模式",
                                         tint = Color.White,
                                         modifier = Modifier.size(11.dp)
                                     )
                                     Text(
-                                        text = "Keyboard Mode",
+                                        text = "键盘模式",
                                         color = Color.White,
                                         fontSize = 9.sp,
                                         fontWeight = FontWeight.Bold
@@ -769,7 +814,7 @@ fun HomeScreen(
                                 val statusLedColor = if (isConnected) Color(0xFF39FF14) else Color(0xFFFF9800)
                                 // Use collected state (not .value) so UI reacts to changes from background
                                 val activeDevice = homeUiState.connectedDevice ?: lastConnectedDevice ?: btManager.getReconnectTarget()
-                                val deviceName = activeDevice?.name ?: "No Host"
+                                val deviceName = activeDevice?.name ?: "无主机"
                                 
                                 Box(
                                     modifier = Modifier
@@ -924,8 +969,8 @@ fun HomeScreen(
                                         .clip(RoundedCornerShape(6.dp))
                                         .background(Color.White.copy(alpha = 0.15f))
                                         .combinedClickable(
-                                            onClickLabel = "Next keyboard layout",
-                                            onLongClickLabel = "Configure keyboard layout cycle",
+                                            onClickLabel = "下一个键盘布局",
+                                            onLongClickLabel = "配置键盘布局循环",
                                             onClick = {
                                                 val savedSet = sharedPrefs.getStringSet(CYCLE_KEYBOARD_GEOMETRIES_PREFERENCE, null)
                                                 val enabledLayouts = if (savedSet == null) {
@@ -948,7 +993,7 @@ fun HomeScreen(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.Keyboard,
-                                        contentDescription = "Layout",
+                                        contentDescription = "布局",
                                         tint = Color.White.copy(alpha = 0.9f),
                                         modifier = Modifier.size(10.dp)
                                     )
@@ -971,8 +1016,8 @@ fun HomeScreen(
                                         .clip(RoundedCornerShape(6.dp))
                                         .background(Color.White.copy(alpha = 0.15f))
                                         .combinedClickable(
-                                            onClickLabel = "Next key sound",
-                                            onLongClickLabel = "Manage key sounds",
+                                            onClickLabel = "下一个按键音",
+                                            onLongClickLabel = "管理按键音",
                                             onClick = {
                                                 val enabledProfiles = soundCycleSelection(
                                                     sharedPrefs,
@@ -992,7 +1037,7 @@ fun HomeScreen(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.MusicNote,
-                                        contentDescription = "Switch",
+                                        contentDescription = "切换音效",
                                         tint = Color.White.copy(alpha = 0.9f),
                                         modifier = Modifier.size(10.dp)
                                     )
@@ -1012,8 +1057,8 @@ fun HomeScreen(
                                         .clip(RoundedCornerShape(6.dp))
                                         .background(Color.White.copy(alpha = 0.15f))
                                         .combinedClickable(
-                                            onClickLabel = "Next keyboard theme",
-                                            onLongClickLabel = "Customize keyboard themes",
+                                            onClickLabel = "下一个键盘主题",
+                                            onLongClickLabel = "自定义键盘主题",
                                             onClick = {
                                                 val availableThemes = keyboardThemeRepository.allThemes()
                                                 val savedThemeIds = sharedPrefs.getStringSet(
@@ -1082,7 +1127,7 @@ fun HomeScreen(
                                 ) {
                                     Icon(
                                         imageVector = if (isMuted) Icons.AutoMirrored.Filled.VolumeOff else Icons.AutoMirrored.Filled.VolumeUp,
-                                        contentDescription = "Mute",
+                                        contentDescription = "静音",
                                         tint = Color.White,
                                         modifier = Modifier.size(14.dp)
                                     )
@@ -1120,6 +1165,7 @@ fun HomeScreen(
                     }
                 }
             }
+            }
         } else {
             // Configuration & Setup Portrait Screen
             Scaffold(
@@ -1149,7 +1195,7 @@ fun HomeScreen(
                             IconButton(onClick = { 
                                 context.startActivity(Intent(context, dev.arnv.bluke.SettingsActivity::class.java))
                             }) {
-                                Icon(Icons.Default.Settings, contentDescription = "Settings")
+                                Icon(Icons.Default.Settings, contentDescription = "设置")
                             }
                         }
                     )
@@ -1282,7 +1328,7 @@ fun HomeScreen(
                                 }
                                 Icon(
                                     imageVector = modeIcon,
-                                    contentDescription = "Cycle Input Mode",
+                                    contentDescription = "循环输入模式",
                                     tint = MaterialTheme.colorScheme.onSecondaryContainer,
                                     modifier = Modifier.size(26.dp)
                                 )
@@ -1307,14 +1353,14 @@ fun HomeScreen(
                                 )
                             ) {
                                 val launchText = when (launchMode) {
-                                    1 -> "Launch Touchpad"
-                                    2 -> "Launch Gamepad"
-                                    4 -> "Launch Multimedia"
-                                    else -> "Launch Keyboard"
+                                    1 -> "启动触控板"
+                                    2 -> "启动手柄"
+                                    4 -> "启动多媒体"
+                                    else -> "启动键盘"
                                 }
                                 Icon(
                                     imageVector = Icons.Default.KeyboardArrowUp,
-                                    contentDescription = "Launch Icon",
+                                    contentDescription = "启动图标",
                                     modifier = Modifier.size(24.dp)
                                 )
                                 Spacer(modifier = Modifier.width(12.dp))
@@ -1356,25 +1402,25 @@ private fun TroubleshootingNudgeCard(
         ) {
             Icon(Icons.AutoMirrored.Filled.HelpOutline, contentDescription = null)
             Column(modifier = Modifier.weight(1f)) {
-                Text("Having trouble connecting?", style = MaterialTheme.typography.titleMedium)
+                Text("连接遇到问题？", style = MaterialTheme.typography.titleMedium)
                 Text(
                     if (offerSettingsPairingHelp) {
-                        "If you paired through Bluetooth settings, forget the pairing on both devices, then use Scan in Bluke to pair and connect again."
+                        "如果你通过系统蓝牙设置完成了配对，请在两台设备上取消配对，然后使用 Bluke 扫描并重新连接。"
                     } else {
-                        "Check both pairing prompts or follow the safe repair steps. A slow attempt does not automatically mean this phone is incompatible."
+                        "请检查两台设备上的配对提示，或按照安全修复步骤操作。连接较慢不代表手机一定不兼容。"
                     },
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSecondaryContainer,
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     if (offerSettingsPairingHelp) {
-                        TextButton(onClick = onScan) { Text("Scan") }
+                        TextButton(onClick = onScan) { Text("扫描") }
                     }
-                    TextButton(onClick = onOpenHelp) { Text("Help") }
+                    TextButton(onClick = onOpenHelp) { Text("帮助") }
                 }
             }
             IconButton(onClick = onDismiss) {
-                Icon(Icons.Default.Close, contentDescription = "Dismiss")
+                Icon(Icons.Default.Close, contentDescription = "关闭提示")
             }
         }
     }

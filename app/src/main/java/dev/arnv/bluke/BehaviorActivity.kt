@@ -39,8 +39,8 @@ class BehaviorActivity : ComponentActivity() {
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
                         LargeTopAppBar(
-                            title = { Text("Controls & connection") },
-                            navigationIcon = { IconButton(onClick = ::finish) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back") } },
+                            title = { Text("控制与连接") },
+                            navigationIcon = { IconButton(onClick = ::finish) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "返回") } },
                             scrollBehavior = scrollBehavior,
                         )
                     },
@@ -51,14 +51,14 @@ class BehaviorActivity : ComponentActivity() {
                     ) {
                         Spacer(Modifier.height(8.dp))
                         SettingsCardGroup(
-                            title = "Behaviour",
+                            title = "行为",
                             items = listOf(
-                                SettingsItemData("Reconnect on launch", "Try the most recently connected host when Bluetooth is ready", { Icon(Icons.Default.BluetoothConnected, null, tint = MaterialTheme.colorScheme.primary) }, { Switch(reconnect, { reconnect = it; preferences.edit { putBoolean("auto_connect", it) } }) }),
-                                SettingsItemData("Hide unnamed devices", "Do not show scan results without a device name", { Icon(Icons.Default.Warning, null, tint = MaterialTheme.colorScheme.primary) }, { Switch(hideUnknown, { hideUnknown = it; preferences.edit { putBoolean("hide_unknown", it) } }) }),
-                                SettingsItemData("Hide unlikely hosts", "Filter devices that do not appear able to accept input", { Icon(Icons.Default.FilterAltOff, null, tint = MaterialTheme.colorScheme.primary) }, { Switch(hideUnlikely, { hideUnlikely = it; preferences.edit { putBoolean("hide_unsupported", it) } }) }),
-                                SettingsItemData("Show MAC addresses", "Useful when similarly named Bluetooth devices are nearby", { Icon(Icons.Default.Fingerprint, null, tint = MaterialTheme.colorScheme.primary) }, { Switch(showMac, { showMac = it; preferences.edit { putBoolean("show_mac", it) } }) }),
-                                SettingsItemData("Keep audio on this phone", "Best-effort workaround when a host takes over phone audio", { Icon(Icons.Default.MusicNote, null, tint = MaterialTheme.colorScheme.primary) }, { Switch(keepAudio, { keepAudio = it; preferences.edit { putBoolean("disconnect_audio_profiles", it) } }) }),
-                                SettingsItemData("Volume buttons control host volume", "Only while Multimedia is open", { Icon(Icons.AutoMirrored.Filled.VolumeUp, null, tint = MaterialTheme.colorScheme.primary) }, { Switch(volumeControlsHost, { volumeControlsHost = it; preferences.edit { putBoolean(HARDWARE_VOLUME_REMOTE_PREFERENCE, it) } }) }),
+                                SettingsItemData("启动时重新连接", "蓝牙就绪后尝试连接最近使用的主机", { Icon(Icons.Default.BluetoothConnected, null, tint = MaterialTheme.colorScheme.primary) }, { Switch(reconnect, { reconnect = it; preferences.edit { putBoolean("auto_connect", it) } }) }),
+                                SettingsItemData("隐藏无名称设备", "不显示没有设备名称的扫描结果", { Icon(Icons.Default.Warning, null, tint = MaterialTheme.colorScheme.primary) }, { Switch(hideUnknown, { hideUnknown = it; preferences.edit { putBoolean("hide_unknown", it) } }) }),
+                                SettingsItemData("隐藏不太可能的主机", "过滤看起来无法接收输入的设备", { Icon(Icons.Default.FilterAltOff, null, tint = MaterialTheme.colorScheme.primary) }, { Switch(hideUnlikely, { hideUnlikely = it; preferences.edit { putBoolean("hide_unsupported", it) } }) }),
+                                SettingsItemData("显示 MAC 地址", "附近存在名称相似的蓝牙设备时很有用", { Icon(Icons.Default.Fingerprint, null, tint = MaterialTheme.colorScheme.primary) }, { Switch(showMac, { showMac = it; preferences.edit { putBoolean("show_mac", it) } }) }),
+                                SettingsItemData("音频保持在本机", "主机接管手机音频时的尽力而为解决方案", { Icon(Icons.Default.MusicNote, null, tint = MaterialTheme.colorScheme.primary) }, { Switch(keepAudio, { keepAudio = it; preferences.edit { putBoolean("disconnect_audio_profiles", it) } }) }),
+                                SettingsItemData("音量键控制主机音量", "仅在多媒体模式开启时生效", { Icon(Icons.AutoMirrored.Filled.VolumeUp, null, tint = MaterialTheme.colorScheme.primary) }, { Switch(volumeControlsHost, { volumeControlsHost = it; preferences.edit { putBoolean(HARDWARE_VOLUME_REMOTE_PREFERENCE, it) } }) }),
                             ),
                         )
                         Spacer(Modifier.height(32.dp))

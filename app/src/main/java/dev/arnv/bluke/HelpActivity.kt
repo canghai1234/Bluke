@@ -53,11 +53,11 @@ class HelpActivity : ComponentActivity() {
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
                         LargeTopAppBar(
-                            title = { Text("Help & Guide") },
+                            title = { Text("帮助与指南") },
                             navigationIcon = {
                                 if (!isFirstRun || timer == 0) {
                                     IconButton(onClick = { finish() }) {
-                                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
                                     }
                                 }
                             },
@@ -82,7 +82,7 @@ class HelpActivity : ComponentActivity() {
                                         .fillMaxWidth()
                                         .padding(16.dp)
                                 ) {
-                                    Text(if (timer > 0) "I Understand ($timer)" else "I Understand")
+                                    Text(if (timer > 0) "我明白了（$timer）" else "我明白了")
                                 }
                             }
                         }
@@ -100,57 +100,57 @@ class HelpActivity : ComponentActivity() {
                         
                         StepSection(
                             icon = Icons.Default.Bluetooth, 
-                            title = "Connect a new host",
+                            title = "连接新主机",
                             steps = listOf(
-                                "Make the computer, TV, tablet, or phone visible in its Bluetooth settings.",
-                                "Scan in Bluke and tap the host name.",
-                                "Accept the matching pairing prompt on both devices.",
-                                "Wait for Bluke's status dot to turn green before sending input."
+                                "在电脑、电视、平板或手机的蓝牙设置中开启可见性。",
+                                "在 Bluke 中扫描并点击主机名称。",
+                                "在两台设备上接受匹配的配对提示。",
+                                "等待 Bluke 的状态指示点变绿后再发送输入。"
                             )
                         )
                         
                         StepSection(
                             icon = Icons.Default.BluetoothConnected, 
-                            title = "Repair a stale pairing",
+                            title = "修复失效配对",
                             steps = listOf(
-                                "Forget the host in this phone's Bluetooth settings.",
-                                "Remove Bluke or this phone from the host's Bluetooth settings.",
-                                "Toggle Bluetooth on both sides, then pair again from Bluke.",
-                                "Reinstalling Bluke alone does not clear the host's cached HID layout."
+                                "在本机蓝牙设置中忘记该主机。",
+                                "在主机蓝牙设置中移除 Bluke 或本机。",
+                                "关闭再重新打开双方的蓝牙，然后从 Bluke 重新配对。",
+                                "仅重新安装 Bluke 不会清除主机缓存的 HID 布局。"
                             )
                         )
                         
                         StepSection(
                             icon = Icons.Default.Warning, 
-                            title = "Pairing was refused",
+                            title = "配对被拒绝",
                             isWarning = true,
                             steps = listOf(
-                                "A refusal means the host or phone rejected the request; it does not prove HID is unsupported.",
-                                "Retry once and accept every prompt on both devices.",
-                                "If it repeats, use the full repair steps above."
+                                "被拒绝只表示主机或手机拒绝了请求，并不能证明设备不支持 HID。",
+                                "重试一次，并在两台设备上接受所有提示。",
+                                "如果问题重复出现，请按上面的完整步骤修复。"
                             )
                         )
 
                         StepSection(
                             icon = Icons.Default.ErrorOutline, 
-                            title = "Controller and browser games",
+                            title = "手柄与浏览器游戏",
                             isWarning = true,
                             steps = listOf(
-                                "Choose Native for Windows/Linux games, Android for Android games, or Web when a browser game ignores directions.",
-                                "Tap the controller mode button to cycle Native / Android / Web. Hold it to open Controller compatibility settings. All modes switch live without reconnecting. After updating to the shared controller descriptor, forget both devices and pair again once; subsequent mode switches need no re-pairing.",
-                                "For Steam, enable the controller in Steam Input and verify it in Steam's controller test or the operating system's game-controller panel.",
-                                "Bluke is a generic HID gamepad, not an Xbox XInput device. Some newer Windows games accept only XInput without a compatibility layer."
+                                "Windows/Linux 游戏请选择原生模式，Android 游戏请选择 Android 模式，浏览器游戏无法识别方向时请选择 Web 模式。",
+                                "点击手柄模式按钮可在原生 / Android / Web 之间切换，长按可打开手柄兼容性设置。所有模式都可以实时切换，无需重新连接。更新到共享手柄描述符后，请在两台设备上忘记 Bluke 并重新配对一次；之后切换模式无需再次配对。",
+                                "使用 Steam 时，请在 Steam Input 中启用手柄，并在 Steam 手柄测试或系统游戏手柄面板中确认。",
+                                "Bluke 是通用 HID 手柄，不是 Xbox XInput 设备。部分较新的 Windows 游戏没有兼容层时只接受 XInput。"
                             )
                         )
 
                         StepSection(
                             icon = Icons.Default.Warning,
-                            title = "Platform limitations",
+                            title = "平台限制",
                             steps = listOf(
-                                "Support depends on the phone firmware exposing Android's Bluetooth HID Device role.",
-                                "Apple hosts may pair but can restrict composite keyboard, pointer, or gamepad functions; behavior varies by iOS/iPadOS release.",
-                                "Host audio routing prevention is a best-effort workaround for Linux and may be undone by the host or phone firmware.",
-                                "If Android repeatedly rejects HID registration, use Retry once. The incompatible-device screen appears only after the registration attempt ceiling."
+                                "是否支持取决于手机固件是否提供 Android 蓝牙 HID Device 角色。",
+                                "Apple 主机可能可以配对，但会限制组合键盘、指针或手柄功能；具体行为取决于 iOS/iPadOS 版本。",
+                                "阻止主机接管音频是针对 Linux 的尽力而为解决方案，可能被主机或手机固件覆盖。",
+                                "如果 Android 反复拒绝 HID 注册，请点击一次重试。达到注册尝试上限后才会显示不兼容设备页面。"
                             )
                         )
                         

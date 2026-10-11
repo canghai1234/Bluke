@@ -75,8 +75,8 @@ class KeyboardLayoutsActivity : ComponentActivity() {
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
                         LargeTopAppBar(
-                            title = { Text("Keyboard layouts") },
-                            navigationIcon = { IconButton(onClick = ::finish) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back") } },
+                            title = { Text("键盘布局") },
+                            navigationIcon = { IconButton(onClick = ::finish) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "返回") } },
                             scrollBehavior = scrollBehavior,
                         )
                     },
@@ -88,7 +88,7 @@ class KeyboardLayoutsActivity : ComponentActivity() {
                     ) {
                         item {
                             Text(
-                                "Tap a layout to use it. Check the layouts included when tapping the keyboard toolbar button.",
+                                "点击布局即可使用。点击键盘工具栏按钮时，只会循环切换已勾选的布局。",
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.padding(bottom = 12.dp),
@@ -122,9 +122,9 @@ class KeyboardLayoutsActivity : ComponentActivity() {
                                     Icon(Icons.Default.Keyboard, null, tint = MaterialTheme.colorScheme.primary)
                                     Column(Modifier.weight(1f).padding(horizontal = 16.dp)) {
                                         Text(layout.displayName, style = MaterialTheme.typography.titleMedium)
-                                        Text("Include in toolbar cycle", style = MaterialTheme.typography.bodySmall)
+                                        Text("加入工具栏循环", style = MaterialTheme.typography.bodySmall)
                                     }
-                                    if (active) Icon(Icons.Default.Check, "Selected")
+                                    if (active) Icon(Icons.Default.Check, "已选择")
                                     Checkbox(
                                         checked = layout.name in cycleSelection,
                                         enabled = layout.name !in cycleSelection || cycleSelection.size > 1,

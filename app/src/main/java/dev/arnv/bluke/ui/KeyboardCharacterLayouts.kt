@@ -7,12 +7,12 @@ enum class KeyboardCharacterLayout(
     val displayName: String,
     val hostLayoutName: String,
 ) {
-    US_QWERTY("us_qwerty", "QWERTY", "English (US)"),
-    FRENCH_AZERTY("fr_azerty", "AZERTY", "French"),
-    GERMAN_QWERTZ("de_qwertz", "QWERTZ", "German"),
+    US_QWERTY("us_qwerty", "QWERTY", "英语（美国）"),
+    FRENCH_AZERTY("fr_azerty", "AZERTY", "法语"),
+    GERMAN_QWERTZ("de_qwertz", "QWERTZ", "德语"),
     DVORAK("dvorak", "Dvorak", "Dvorak"),
     COLEMAK("colemak", "Colemak", "Colemak"),
-    RUSSIAN_JCUKEN("ru_jcuken", "ЙЦУКЕН", "Russian");
+    RUSSIAN_JCUKEN("ru_jcuken", "ЙЦУКЕН", "俄语");
 
     companion object {
         fun fromPreference(value: String?): KeyboardCharacterLayout =

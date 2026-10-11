@@ -74,10 +74,10 @@ class AboutActivity : ComponentActivity() {
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
                         LargeTopAppBar(
-                            title = { Text("About") },
+                            title = { Text("关于") },
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
-                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
                                 }
                             },
                             colors = TopAppBarDefaults.largeTopAppBarColors(
@@ -110,15 +110,15 @@ class AboutActivity : ComponentActivity() {
                                     clickCount++
                                     if (clickCount == 5) {
                                         sharedPrefs.edit { putBoolean("is_developer_mode", true) }
-                                        android.widget.Toast.makeText(context, "You are now a developer!", android.widget.Toast.LENGTH_SHORT).show()
+                                        android.widget.Toast.makeText(context, "你已成为开发者！", android.widget.Toast.LENGTH_SHORT).show()
                                     } else if (clickCount > 5 && clickCount % 3 == 0) {
-                                        android.widget.Toast.makeText(context, "No need, you are already a developer.", android.widget.Toast.LENGTH_SHORT).show()
+                                        android.widget.Toast.makeText(context, "无需操作，你已经是开发者了。", android.widget.Toast.LENGTH_SHORT).show()
                                     }
                                 }
                         ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                                contentDescription = "App Logo",
+                                contentDescription = "应用图标",
                                 modifier = Modifier.fillMaxSize(),
                                 tint = MaterialTheme.colorScheme.onPrimary
                             )
@@ -132,7 +132,7 @@ class AboutActivity : ComponentActivity() {
                         )
                         
                         Text(
-                            text = "Version $versionName",
+                            text = "版本 $versionName",
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(bottom = 8.dp)
@@ -158,7 +158,7 @@ class AboutActivity : ComponentActivity() {
                                 ) {
                                     Icon(
                                         painter = painterResource(id = R.drawable.ic_github),
-                                        contentDescription = "GitHub Repository",
+                                        contentDescription = "GitHub 仓库",
                                         modifier = Modifier.size(18.dp),
                                         tint = MaterialTheme.colorScheme.onPrimaryContainer
                                     )
@@ -188,13 +188,13 @@ class AboutActivity : ComponentActivity() {
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.Email,
-                                        contentDescription = "Contact Email",
+                                        contentDescription = "联系邮箱",
                                         modifier = Modifier.size(18.dp),
                                         tint = MaterialTheme.colorScheme.onPrimaryContainer
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text(
-                                        text = "Email",
+                                        text = "邮箱",
                                         fontWeight = FontWeight.Bold,
                                         style = MaterialTheme.typography.titleMedium,
                                         fontSize = 14.sp
@@ -204,7 +204,7 @@ class AboutActivity : ComponentActivity() {
                         }
 
                         // Developer Heading and Card content wrapped in SettingsGroup for visual consistency
-                        SettingsGroup(title = "Developer") {
+                        SettingsGroup(title = "开发者") {
                             Column(modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp)) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                      Surface(
@@ -220,7 +220,7 @@ class AboutActivity : ComponentActivity() {
                                          ) {
                                              Icon(
                                                  painter = painterResource(id = R.drawable.ic_wordmark),
-                                                 contentDescription = "Wordmark logo",
+                                                 contentDescription = "文字标志",
                                                  tint = MaterialTheme.colorScheme.onPrimary,
                                                  modifier = Modifier.size(24.dp)
                                              )
@@ -266,7 +266,7 @@ class AboutActivity : ComponentActivity() {
                                     
                                     PlayfulSocialButton(
                                         onClick = { openUrl("https://buymeacoffee.com/arnavkr") },
-                                        label = "Buy Me a Coffee",
+                                        label = "请我喝咖啡",
                                         icon = {
                                             Icon(
                                                 imageVector = Icons.Default.Coffee,
@@ -282,29 +282,29 @@ class AboutActivity : ComponentActivity() {
                         }
 
                         SettingsCardGroup(
-                            title = "App",
+                            title = "应用",
                             items = listOf(
                                 SettingsItemData(
-                                    title = "Changelogs",
-                                    subtitle = "History of all the changes made to the app",
+                                    title = "更新日志",
+                                    subtitle = "查看应用的全部更新记录",
                                     icon = { Icon(Icons.Default.History, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = { openUrl("https://github.com/arnav-kr/Bluke/releases") }
                                 ),
                                 SettingsItemData(
-                                    title = "Licenses",
-                                    subtitle = "View the licenses that the app and libraries are using",
+                                    title = "许可证",
+                                    subtitle = "查看应用及其依赖库使用的许可证",
                                     icon = { Icon(Icons.Default.Policy, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = { startActivity(Intent(this@AboutActivity, LicensesActivity::class.java)) }
                                 ),
                                 SettingsItemData(
-                                    title = "Report issue",
-                                    subtitle = "Report any issue or bug you have encountered while using the app",
+                                    title = "报告问题",
+                                    subtitle = "报告使用应用时遇到的问题或错误",
                                     icon = { Icon(Icons.Default.BugReport, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = { openUrl("https://github.com/arnav-kr/Bluke/issues/new?template=bug_report.md") }
                                 ),
                                 SettingsItemData(
-                                    title = "Feature request",
-                                    subtitle = "If you have any ideas or suggestions for the app, let us know",
+                                    title = "功能建议",
+                                    subtitle = "如果你有任何想法或建议，欢迎告诉我们",
                                     icon = { Icon(Icons.Default.Lightbulb, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = { openUrl("https://github.com/arnav-kr/Bluke/issues/new?template=feature_request.md") }
                                 )

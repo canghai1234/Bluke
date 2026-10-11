@@ -31,14 +31,14 @@ enum class DeviceType(
     val tintColor: Color,
     val isSupported: Boolean
 ) {
-    COMPUTER("computer", "Computer", Icons.Default.Laptop, Color(0xFFE8DDFF), Color(0xFF65558F), true),
-    PHONE("phone", "Phone", Icons.Default.PhoneAndroid, Color(0xFFD6F0FF), Color(0xFF006494), true),
-    TV("tv", "Smart TV", Icons.Default.Tv, Color(0xFFE0F7FA), Color(0xFF006064), true),
-    AUDIO("audio", "Audio Device", Icons.Default.Headphones, Color(0xFFFBE7E9), Color(0xFFC00021), false),
-    MOUSE("mouse", "Input Accessory", Icons.Default.Mouse, Color(0xFFFFD8E4), Color(0xFFB11E4C), false),
-    GAMEPAD("gamepad", "Game Controller", Icons.Default.SportsEsports, Color(0xFFFFE9A6), Color(0xFF7D5200), false),
-    WATCH("watch", "Smartwatch", Icons.Default.Watch, Color(0xFFF3EDF7), Color(0xFF65558F), false),
-    DEFAULT("default", "Bluetooth Device", Icons.Default.Bluetooth, Color(0xFFE2F1FF), Color(0xFF0F5A9E), true)
+    COMPUTER("computer", "电脑", Icons.Default.Laptop, Color(0xFFE8DDFF), Color(0xFF65558F), true),
+    PHONE("phone", "手机", Icons.Default.PhoneAndroid, Color(0xFFD6F0FF), Color(0xFF006494), true),
+    TV("tv", "智能电视", Icons.Default.Tv, Color(0xFFE0F7FA), Color(0xFF006064), true),
+    AUDIO("audio", "音频设备", Icons.Default.Headphones, Color(0xFFFBE7E9), Color(0xFFC00021), false),
+    MOUSE("mouse", "输入设备", Icons.Default.Mouse, Color(0xFFFFD8E4), Color(0xFFB11E4C), false),
+    GAMEPAD("gamepad", "游戏手柄", Icons.Default.SportsEsports, Color(0xFFFFE9A6), Color(0xFF7D5200), false),
+    WATCH("watch", "智能手表", Icons.Default.Watch, Color(0xFFF3EDF7), Color(0xFF65558F), false),
+    DEFAULT("default", "蓝牙设备", Icons.Default.Bluetooth, Color(0xFFE2F1FF), Color(0xFF0F5A9E), true)
 }
 
 /**
@@ -253,7 +253,7 @@ fun DeviceRow(
                                         .padding(horizontal = 6.dp, vertical = 2.dp)
                                 ) {
                                     Text(
-                                        text = "UNSUPPORTED",
+                                        text = "不支持",
                                         style = MaterialTheme.typography.labelSmall,
                                         fontSize = 9.sp,
                                         fontWeight = FontWeight.Bold,
@@ -271,7 +271,7 @@ fun DeviceRow(
                                         .padding(horizontal = 6.dp, vertical = 2.dp)
                                 ) {
                                     Text(
-                                        text = "FAILED",
+                                        text = "失败",
                                         style = MaterialTheme.typography.labelSmall,
                                         fontSize = 9.sp,
                                         fontWeight = FontWeight.Bold,
@@ -322,8 +322,8 @@ fun DeviceRow(
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = if (isConnected) "Disconnect" 
-                           else "Connect",
+                    text = if (isConnected) "断开连接" 
+                           else "连接",
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.labelLarge
                 )

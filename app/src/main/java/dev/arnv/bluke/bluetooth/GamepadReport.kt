@@ -16,9 +16,9 @@ internal enum class GamepadDpadOutputMode(
     val label: String,
     val description: String,
 ) {
-    NATIVE_HAT("native_hat", "Native", "Windows/Linux games · standard HID hat"),
-    ANDROID("android", "Android", "Android games · Z/Rz right stick, Android buttons and HID hat. Switches live without reconnecting."),
-    WEB_BUTTONS("web_buttons", "Web", "Browser games · D-pad buttons 12–15");
+    NATIVE_HAT("native_hat", "原生", "Windows/Linux 游戏 · 标准 HID 方向帽"),
+    ANDROID("android", "Android", "Android 游戏 · Z/Rz 右摇杆、Android 按键和 HID 方向帽。可实时切换，无需重新连接。"),
+    WEB_BUTTONS("web_buttons", "网页", "浏览器游戏 · 方向键按钮 12–15");
 
     fun next(): GamepadDpadOutputMode = entries[(ordinal + 1) % entries.size]
 

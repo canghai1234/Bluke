@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Bluke</string>
+    <string name="bluetooth_session_channel">蓝牙连接</string>
+    <string name="bluetooth_session_notification">切换应用时保持蓝牙控制功能连接。</string>
+</resources>

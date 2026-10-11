@@ -158,10 +158,10 @@ fun VisualColorPicker(
                 hexText = normalized
                 parseOpaqueHexColor(normalized)?.let(onColorChange)
             },
-            label = { Text("Hex color") },
+            label = { Text("十六进制颜色") },
             singleLine = true,
             isError = parseOpaqueHexColor(hexText) == null,
-            supportingText = if (parseOpaqueHexColor(hexText) == null) ({ Text("Use #RRGGBB") }) else null,
+            supportingText = if (parseOpaqueHexColor(hexText) == null) ({ Text("格式：#RRGGBB") }) else null,
             trailingIcon = {
                 Box(
                     Modifier

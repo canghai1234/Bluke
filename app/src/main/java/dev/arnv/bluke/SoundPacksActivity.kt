@@ -126,7 +126,7 @@ class SoundPacksActivity : ComponentActivity() {
                         scope.launch {
                             val result = withContext(Dispatchers.IO) {
                                 contentResolver.openInputStream(uri)?.use(repository::importZip)
-                                    ?: SoundPackImportResult.Failure("Could not read the selected file.")
+                                    ?: SoundPackImportResult.Failure("无法读取所选文件。")
                             }
                             importing = false
                             when (result) {
@@ -135,10 +135,10 @@ class SoundPacksActivity : ComponentActivity() {
                                     selectedProfileId = customSoundProfileId(result.pack.id)
                                     cycleSelection = cycleSelection + customSoundProfileId(result.pack.id)
                                     saveSoundCycleSelection(preferences, cycleSelection)
-                                    snackbarHostState.showSnackbar("Imported and selected ${result.pack.name}.")
+                                    snackbarHostState.showSnackbar("已导入并选中 ${result.pack.name}。")
                                 }
                                 is SoundPackImportResult.Duplicate -> {
-                                    snackbarHostState.showSnackbar("${result.pack.name} is already imported.")
+                                    snackbarHostState.showSnackbar("${result.pack.name} 已经导入。")
                                 }
                                 is SoundPackImportResult.Failure -> {
                                     snackbarHostState.showSnackbar(result.message)
@@ -152,8 +152,8 @@ class SoundPacksActivity : ComponentActivity() {
                 pendingDeletion?.let { pack ->
                     AlertDialog(
                         onDismissRequest = { pendingDeletion = null },
-                        title = { Text("Delete ${pack.name}?") },
-                        text = { Text("This removes the imported pack from Bluke. Built-in sounds are not affected.") },
+                        title = { Text("删除 ${pack.name}？") },
+                        text = { Text("这会从 Bluke 中移除导入的音效包，不会影响内置音效。") },
                         confirmButton = {
                             TextButton(
                                 onClick = {
@@ -175,16 +175,16 @@ class SoundPacksActivity : ComponentActivity() {
                                             cycleSelection = nextCycle
                                             saveSoundCycleSelection(preferences, nextCycle)
                                             selectProfile(nextSelected)
-                                            snackbarHostState.showSnackbar("Deleted ${pack.name}.")
+                                            snackbarHostState.showSnackbar("已删除 ${pack.name}。")
                                         } else {
-                                            snackbarHostState.showSnackbar("Could not delete ${pack.name}.")
+                                            snackbarHostState.showSnackbar("无法删除 ${pack.name}。")
                                         }
                                     }
                                 },
-                            ) { Text("Delete") }
+                            ) { Text("删除") }
                         },
                         dismissButton = {
-                            TextButton(onClick = { pendingDeletion = null }) { Text("Cancel") }
+                            TextButton(onClick = { pendingDeletion = null }) { Text("取消") }
                         },
                     )
                 }
@@ -193,10 +193,10 @@ class SoundPacksActivity : ComponentActivity() {
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
                         LargeTopAppBar(
-                            title = { Text("Key sounds") },
+                            title = { Text("按键音效") },
                             navigationIcon = {
                                 IconButton(onClick = ::finish) {
-                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
                                 }
                             },
                             scrollBehavior = scrollBehavior,
@@ -220,7 +220,7 @@ class SoundPacksActivity : ComponentActivity() {
                                     Icon(Icons.Default.Add, contentDescription = null)
                                 }
                             },
-                            text = { Text(if (importing) "Importing…" else "Import pack") },
+                            text = { Text(if (importing) "正在导入……" else "导入音效包") },
                         )
                     },
                 ) { innerPadding ->
@@ -233,12 +233,12 @@ class SoundPacksActivity : ComponentActivity() {
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
                         Text(
-                            "Choose one sound profile for every key press. Imported Mechvibes packs live beside Bluke's built-in switch sounds and can be reached by the keyboard toolbar cycle.",
+                            "为每次按键选择一个声音配置。导入的 Mechvibes 音效包会与 Bluke 内置的轴体音效一起显示，也可以通过键盘工具栏循环访问。",
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                         Text(
-                            "Sound profiles",
+                            "声音配置",
                             style = MaterialTheme.typography.titleSmall,
                             color = MaterialTheme.colorScheme.primary,
                         )
@@ -278,7 +278,7 @@ class SoundPacksActivity : ComponentActivity() {
                         }
                         if (packs.isEmpty()) {
                             Text(
-                                "Imported packs will appear in this same list.",
+                                "导入的音效包会显示在此列表中。",
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -299,13 +299,13 @@ private sealed interface SoundChoice {
     data class BuiltIn(val switchType: SwitchType) : SoundChoice {
         override val id = builtInSoundProfileId(switchType)
         override val title = switchType.displayName
-        override val subtitle = "Built-in"
+        override val subtitle = "内置"
     }
 
     data class Imported(val pack: CustomSoundPack) : SoundChoice {
         override val id = customSoundProfileId(pack.id)
         override val title = pack.name
-        override val subtitle = "Imported Mechvibes pack"
+        override val subtitle = "导入的 Mechvibes 音效包"
     }
 }
 
@@ -367,7 +367,7 @@ private fun SoundProfileChoice(
                 )
             }
             if (selected) {
-                Icon(Icons.Default.Check, contentDescription = "Selected")
+                Icon(Icons.Default.Check, contentDescription = "已选中")
             }
             Checkbox(
                 checked = includedInCycle,
@@ -376,7 +376,7 @@ private fun SoundProfileChoice(
             )
             if (onDelete != null) {
                 IconButton(onClick = onDelete) {
-                    Icon(Icons.Default.Delete, contentDescription = "Delete $title")
+                    Icon(Icons.Default.Delete, contentDescription = "删除 $title")
                 }
             }
         }

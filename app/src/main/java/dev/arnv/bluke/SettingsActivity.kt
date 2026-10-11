@@ -50,10 +50,10 @@ class SettingsActivity : ComponentActivity() {
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
                         LargeTopAppBar(
-                            title = { Text("Settings") },
+                            title = { Text("设置") },
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
-                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
                                 }
                             },
                             colors = TopAppBarDefaults.largeTopAppBarColors(
@@ -73,27 +73,27 @@ class SettingsActivity : ComponentActivity() {
                     ) {
                         Spacer(Modifier.height(8.dp))
                         SettingsCardGroup(
-                            title = "Personalization",
+                            title = "个性化",
                             items = listOf(
                                 SettingsItemData(
-                                    title = "Look & Feel",
-                                    subtitle = "App colors, dark theme, haptics, and key sounds",
+                                    title = "外观与体验",
+                                    subtitle = "应用颜色、深色主题、触感反馈和按键音",
                                     icon = { Icon(Icons.Default.ColorLens, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = { 
                                         startActivity(Intent(this@SettingsActivity, LookAndFeelActivity::class.java))
                                     }
                                 ),
                                 SettingsItemData(
-                                    title = "Keyboard",
-                                    subtitle = "Typing behavior, layouts, themes, and key sounds",
+                                    title = "键盘",
+                                    subtitle = "输入行为、布局、主题和按键音",
                                     icon = { Icon(Icons.Default.Keyboard, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = {
                                         startActivity(Intent(this@SettingsActivity, KeyboardSettingsActivity::class.java))
                                     }
                                 ),
                                 SettingsItemData(
-                                    title = "Controller",
-                                    subtitle = "Gamepad behavior and compatibility",
+                                    title = "手柄",
+                                    subtitle = "手柄行为与兼容性",
                                     icon = { Icon(Icons.Default.Gamepad, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = {
                                         startActivity(Intent(this@SettingsActivity, ControllerSettingsActivity::class.java))
@@ -102,11 +102,11 @@ class SettingsActivity : ComponentActivity() {
                             )
                         )
                         SettingsCardGroup(
-                            title = "Controls & connection",
+                            title = "控制与连接",
                             items = listOf(
                                 SettingsItemData(
-                                    title = "Behavior",
-                                    subtitle = "Bluetooth discovery, reconnect, and remote controls",
+                                    title = "行为",
+                                    subtitle = "蓝牙发现、重新连接和远程控制",
                                     icon = { Icon(Icons.Default.Settings, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = { 
                                         startActivity(Intent(this@SettingsActivity, BehaviorActivity::class.java))
@@ -115,19 +115,19 @@ class SettingsActivity : ComponentActivity() {
                             )
                         )
                         SettingsCardGroup(
-                            title = "Support",
+                            title = "支持",
                             items = listOf(
                                 SettingsItemData(
-                                    title = "Help & troubleshooting",
-                                    subtitle = "Pairing repair, controller setup, browser games, and limitations",
+                                    title = "帮助与故障排除",
+                                    subtitle = "配对修复、手柄设置、浏览器游戏和使用限制",
                                     icon = { Icon(Icons.AutoMirrored.Filled.HelpOutline, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = {
                                         startActivity(Intent(this@SettingsActivity, HelpActivity::class.java))
                                     }
                                 ),
                                 SettingsItemData(
-                                    title = "About",
-                                    subtitle = "Version, contributors, licenses, and support",
+                                    title = "关于",
+                                    subtitle = "版本、贡献者、许可证和支持",
                                     icon = { Icon(Icons.Default.Info, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = { 
                                         startActivity(Intent(this@SettingsActivity, AboutActivity::class.java))
@@ -136,8 +136,8 @@ class SettingsActivity : ComponentActivity() {
                             ).let { baseList ->
                                 if (isDevMode) {
                                     baseList + SettingsItemData(
-                                        title = "Developer options",
-                                        subtitle = "Testing and debugging controls",
+                                        title = "开发者选项",
+                                        subtitle = "测试与调试控制",
                                         icon = { Icon(Icons.Default.Code, null, tint = MaterialTheme.colorScheme.primary) },
                                         onClick = { 
                                             startActivity(Intent(this@SettingsActivity, DeveloperOptionsActivity::class.java))

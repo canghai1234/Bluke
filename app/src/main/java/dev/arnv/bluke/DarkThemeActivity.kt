@@ -37,10 +37,10 @@ class DarkThemeActivity : ComponentActivity() {
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
                         LargeTopAppBar(
-                            title = { Text("Dark theme") },
+                            title = { Text("深色主题") },
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
-                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
                                 }
                             },
                             colors = TopAppBarDefaults.largeTopAppBarColors(
@@ -63,7 +63,7 @@ class DarkThemeActivity : ComponentActivity() {
                         SettingsCardGroup(
                             items = listOf(
                                 SettingsItemData(
-                                    title = "System",
+                                    title = "跟随系统",
                                     action = {
                                         RadioButton(
                                             selected = themeMode == 0,
@@ -79,7 +79,7 @@ class DarkThemeActivity : ComponentActivity() {
                                     }
                                 ),
                                 SettingsItemData(
-                                    title = "Off",
+                                    title = "关闭",
                                     action = {
                                         RadioButton(
                                             selected = themeMode == 1,
@@ -95,7 +95,7 @@ class DarkThemeActivity : ComponentActivity() {
                                     }
                                 ),
                                 SettingsItemData(
-                                    title = "On",
+                                    title = "开启",
                                     action = {
                                         RadioButton(
                                             selected = themeMode == 2,
@@ -114,11 +114,11 @@ class DarkThemeActivity : ComponentActivity() {
                         )
 
                         SettingsCardGroup(
-                            title = "Additional settings",
+                            title = "其他设置",
                             items = listOf(
                                 SettingsItemData(
-                                    title = "High contrast dark mode",
-                                    subtitle = "Pitch black dark theme for devices with OLED display",
+                                    title = "高对比度深色模式",
+                                    subtitle = "适用于 OLED 屏幕设备的纯黑深色主题",
                                     icon = { Icon(Icons.Default.Contrast, null, tint = MaterialTheme.colorScheme.primary) },
                                     action = {
                                         Switch(

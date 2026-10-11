@@ -25,13 +25,13 @@ enum class KeyboardGeometry(
     val displayName: String,
     internal val legacySource: KeyboardLayoutType,
 ) {
-    CLASSIC_75("Classic 75%", KeyboardLayoutType.OLIVIA_75),
-    STANDARD_65("Standard 65%", KeyboardLayoutType.CAFE_65),
+    CLASSIC_75("经典 75%", KeyboardLayoutType.OLIVIA_75),
+    STANDARD_65("标准 65%", KeyboardLayoutType.CAFE_65),
     HHKB_60("HHKB 60%", KeyboardLayoutType.HHKB_60),
-    BALANCED_65("Balanced 65%", KeyboardLayoutType.MIZU_65),
-    INLINE_75("Inline 75%", KeyboardLayoutType.LASER_75),
-    COMPACT_75("Compact 75%", KeyboardLayoutType.OBLIVION_75),
-    EXTENDED_65("Extended 65%", KeyboardLayoutType.EIGHT_ZERO_ZERO_EIGHT_65);
+    BALANCED_65("均衡 65%", KeyboardLayoutType.MIZU_65),
+    INLINE_75("内嵌 75%", KeyboardLayoutType.LASER_75),
+    COMPACT_75("紧凑 75%", KeyboardLayoutType.OBLIVION_75),
+    EXTENDED_65("扩展 65%", KeyboardLayoutType.EIGHT_ZERO_ZERO_EIGHT_65);
 
     companion object {
         fun fromPreference(value: String?): KeyboardGeometry =

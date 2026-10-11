@@ -31,6 +31,19 @@ import kotlinx.coroutines.launch
 
 import androidx.core.content.edit
 
+private fun paletteStyleDisplayName(value: String): String = when (value) {
+    "Tonal Spot" -> "色调焦点"
+    "Vibrant" -> "鲜艳"
+    "Expressive" -> "表现力"
+    "Rainbow" -> "彩虹"
+    "Fruit Salad" -> "水果沙拉"
+    "Fidelity" -> "保真"
+    "Content" -> "内容"
+    "Neutral" -> "中性"
+    "Monochrome" -> "单色"
+    else -> value
+}
+
 class LookAndFeelActivity : ComponentActivity() {
     private val themeModeState = mutableIntStateOf(0)
 
@@ -60,10 +73,10 @@ class LookAndFeelActivity : ComponentActivity() {
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
                         LargeTopAppBar(
-                            title = { Text("Look & Feel") },
+                            title = { Text("外观与体验") },
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
-                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
                                 }
                             },
                             colors = TopAppBarDefaults.largeTopAppBarColors(
@@ -188,11 +201,11 @@ class LookAndFeelActivity : ComponentActivity() {
                         }
 
                         SettingsCardGroup(
-                            title = "Color Palette",
+                            title = "颜色方案",
                             items = listOf(
                                 SettingsItemData(
-                                    title = "Dynamic colors",
-                                    subtitle = "Automatically set the app theme according to the device wallpaper",
+                                    title = "动态取色",
+                                    subtitle = "根据设备壁纸自动设置应用主题颜色",
                                     icon = { Icon(Icons.Default.FormatPaint, null, tint = MaterialTheme.colorScheme.primary) },
                                     action = {
                                         Switch(
@@ -206,8 +219,8 @@ class LookAndFeelActivity : ComponentActivity() {
                                     }
                                 ),
                                 SettingsItemData(
-                                    title = "Palette style",
-                                    subtitle = paletteStyleState,
+                                    title = "方案风格",
+                                    subtitle = paletteStyleDisplayName(paletteStyleState),
                                     icon = { Icon(Icons.Default.Palette, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = { showPaletteDialog = true }
                                 )
@@ -217,7 +230,7 @@ class LookAndFeelActivity : ComponentActivity() {
                         if (showPaletteDialog) {
                             AlertDialog(
                                 onDismissRequest = { showPaletteDialog = false },
-                                title = { Text("Palette style") },
+                                title = { Text("方案风格") },
                                 text = {
                                     Column {
                                         listOf("Tonal Spot", "Vibrant", "Expressive", "Rainbow", "Fruit Salad", "Fidelity", "Content", "Neutral", "Monochrome").forEach { option ->
@@ -231,29 +244,29 @@ class LookAndFeelActivity : ComponentActivity() {
                                             ) {
                                                 RadioButton(selected = option == paletteStyleState, onClick = null)
                                                 Spacer(Modifier.width(16.dp))
-                                                Text(option)
+                                                Text(paletteStyleDisplayName(option))
                                             }
                                         }
                                     }
                                 },
                                 confirmButton = {
-                                    TextButton(onClick = { showPaletteDialog = false }) { Text("Confirm") }
+                                    TextButton(onClick = { showPaletteDialog = false }) { Text("确定") }
                                 },
                                 dismissButton = {
-                                    TextButton(onClick = { showPaletteDialog = false }) { Text("Cancel") }
+                                    TextButton(onClick = { showPaletteDialog = false }) { Text("取消") }
                                 }
                             )
                         }
                         
                         SettingsCardGroup(
-                            title = "Additional settings",
+                            title = "其他设置",
                             items = listOf(
                                 SettingsItemData(
-                                    title = "Dark theme",
+                                    title = "深色主题",
                                     subtitle = when(themeMode) {
-                                        0 -> "System"
-                                        1 -> "Off"
-                                        else -> "On"
+                                        0 -> "跟随系统"
+                                        1 -> "关闭"
+                                        else -> "开启"
                                     },
                                     icon = { Icon(Icons.Default.DarkMode, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = { 
@@ -261,8 +274,8 @@ class LookAndFeelActivity : ComponentActivity() {
                                     }
                                 ),
                                 SettingsItemData(
-                                    title = "Haptics & Vibration",
-                                    subtitle = "Interactive haptics for touch feedback",
+                                    title = "触感与振动",
+                                    subtitle = "触摸操作时提供触感反馈",
                                     icon = { Icon(Icons.Default.Vibration, null, tint = MaterialTheme.colorScheme.primary) },
                                     action = {
                                         Switch(
@@ -275,8 +288,8 @@ class LookAndFeelActivity : ComponentActivity() {
                                     }
                                 ),
                                 SettingsItemData(
-                                    title = "Enable sounds",
-                                    subtitle = "Play sound effect on key press",
+                                    title = "启用声音",
+                                    subtitle = "按键时播放音效",
                                     icon = { Icon(Icons.AutoMirrored.Filled.VolumeUp, null, tint = MaterialTheme.colorScheme.primary) },
                                     action = {
                                         Switch(
