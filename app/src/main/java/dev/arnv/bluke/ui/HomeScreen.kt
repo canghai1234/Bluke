@@ -665,7 +665,6 @@ fun HomeScreen(
             InputSurfaceFrame(
                 rotationPreference = inputSurfaceRotationPreference,
                 isMultiWindow = isMultiWindow,
-                onCycleRotation = ::cycleInputSurfaceRotation,
             ) { layoutInfo ->
                 when (launchMode) {
                 1, 2, 4 -> {
@@ -847,7 +846,29 @@ fun HomeScreen(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(6.dp)
                             ) {
-                                // 1. Keyboard Status Lock LEDs Panel
+                                // 1. Manual input-surface rotation button. Keep it in the
+                                // toolbar so it does not cover the keyboard in split-screen.
+                                Box(
+                                    modifier = Modifier
+                                        .size(28.dp)
+                                        .clip(RoundedCornerShape(6.dp))
+                                        .background(Color.White.copy(alpha = 0.15f))
+                                        .clickable(
+                                            onClickLabel = appText("切换界面方向"),
+                                            onClick = ::cycleInputSurfaceRotation,
+                                        )
+                                        .testTag("rotation_cycle_btn"),
+                                    contentAlignment = Alignment.Center,
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.ScreenRotation,
+                                        contentDescription = appText("切换界面方向"),
+                                        tint = Color.White,
+                                        modifier = Modifier.size(14.dp),
+                                    )
+                                }
+
+                                // 2. Keyboard Status Lock LEDs Panel
                                 Row(
                                     modifier = Modifier
                                         .height(28.dp)
@@ -969,7 +990,7 @@ fun HomeScreen(
                                     }
                                 }
 
-                                // 2. Layout Selector Pill
+                                // 3. Layout Selector Pill
                                 Row(
                                     modifier = Modifier
                                         .height(28.dp)
@@ -1016,7 +1037,7 @@ fun HomeScreen(
                                     )
                                 }
 
-                                // 3. Switch Selector Pill
+                                // 4. Switch Selector Pill
                                 Row(
                                     modifier = Modifier
                                         .height(28.dp)
@@ -1057,7 +1078,7 @@ fun HomeScreen(
                                     )
                                 }
 
-                                // 4. Keyboard Theme Selector Pill
+                                // 5. Keyboard Theme Selector Pill
                                 Row(
                                     modifier = Modifier
                                         .height(28.dp)
@@ -1117,7 +1138,7 @@ fun HomeScreen(
                                     )
                                 }
 
-                                // 5. Mute Speaker Button (Squarish, height 28dp, radius 6dp)
+                                // 6. Mute Speaker Button (Squarish, height 28dp, radius 6dp)
                                 Box(
                                     modifier = Modifier
                                         .size(28.dp)

@@ -3,23 +3,13 @@ package dev.arnv.bluke.ui
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.requiredWidth
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ScreenRotation
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.unit.dp
 
 /**
  * The direction of the input surface inside the current application window.
@@ -66,7 +56,6 @@ private const val PORTRAIT_WINDOW_RATIO = 1.08f
 internal fun InputSurfaceFrame(
     rotationPreference: InputSurfaceRotationPreference,
     isMultiWindow: Boolean,
-    onCycleRotation: () -> Unit,
     content: @Composable (InputSurfaceLayoutInfo) -> Unit,
 ) {
     BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
@@ -100,30 +89,6 @@ internal fun InputSurfaceFrame(
                     },
             ) {
                 content(layoutInfo)
-            }
-
-            Surface(
-                onClick = onCycleRotation,
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .statusBarsPadding()
-                    .heightIn(min = 48.dp)
-                    .padding(8.dp),
-                shape = RoundedCornerShape(8.dp),
-                color = androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.58f),
-                contentColor = androidx.compose.ui.graphics.Color.White,
-            ) {
-                androidx.compose.foundation.layout.Row(
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ScreenRotation,
-                        contentDescription = appText("切换界面方向"),
-                        modifier = Modifier.padding(end = 4.dp),
-                    )
-                    Text(rotationPreference.label)
-                }
             }
         }
     }
