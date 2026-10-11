@@ -32,51 +32,51 @@ import kotlinx.coroutines.launch
 import androidx.core.content.edit
 
 private fun paletteStyleDisplayName(value: String): String = when (value) {
-    "Tonal Spot" -> "色调焦点"
-    "Vibrant" -> "鲜艳"
-    "Expressive" -> "表现力"
-    "Rainbow" -> "彩虹"
-    "Fruit Salad" -> "水果沙拉"
-    "Fidelity" -> "保真"
-    "Content" -> "内容"
-    "Neutral" -> "中性"
-    "Monochrome" -> "单色"
+    "Tonal Spot" -> appText("色调焦点")
+    "Vibrant" -> appText("鲜艳")
+    "Expressive" -> appText("表现力")
+    "Rainbow" -> appText("彩虹")
+    "Fruit Salad" -> appText("水果沙拉")
+    "Fidelity" -> appText("保真")
+    "Content" -> appText("内容")
+    "Neutral" -> appText("中性")
+    "Monochrome" -> appText("单色")
     else -> value
 }
 
-class LookAndFeelActivity : ComponentActivity() {
+class LookAndFeelActivity : LocalizedActivity() {
     private val themeModeState = mutableIntStateOf(0)
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         val sharedPrefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
         val isDynamicColorDefault = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
         themeModeState.intValue = sharedPrefs.getInt("theme_mode", 0)
-        
+
         setContent {
             MyApplicationTheme {
                 var dynamicColor by remember { mutableStateOf(sharedPrefs.getBoolean("dynamic_color", isDynamicColorDefault)) }
                 var accentColorIndex by remember { mutableIntStateOf(sharedPrefs.getInt("accent_color_index", 0)) }
                 var paletteStyleState by remember { mutableStateOf(sharedPrefs.getString("palette_style", "Tonal Spot") ?: "Tonal Spot") }
-                
+
                 var hapticsEnabled by remember { mutableStateOf(sharedPrefs.getBoolean("haptics_enabled", true)) }
                 var keySoundEnabled by remember { mutableStateOf(sharedPrefs.getBoolean("key_sound_enabled", true)) }
-                
+
                 var showPaletteDialog by remember { mutableStateOf(false) }
                 val themeMode by themeModeState
-                
+
                 val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
-                
+
                 Scaffold(
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
                         LargeTopAppBar(
-                            title = { Text("外观与体验") },
+                            title = { Text(appText("外观与体验")) },
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
-                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = appText("返回"))
                                 }
                             },
                             colors = TopAppBarDefaults.largeTopAppBarColors(
@@ -95,19 +95,19 @@ class LookAndFeelActivity : ComponentActivity() {
                         verticalArrangement = Arrangement.spacedBy(24.dp)
                     ) {
                         Spacer(Modifier.height(8.dp))
-                        
+
                         // Top illustration mock
                         Icon(
-                            Icons.Default.FormatPaint, 
-                            contentDescription = null, 
-                            modifier = Modifier.size(100.dp).align(Alignment.CenterHorizontally), 
+                            Icons.Default.FormatPaint,
+                            contentDescription = null,
+                            modifier = Modifier.size(100.dp).align(Alignment.CenterHorizontally),
                             tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
                         )
-                        
+
                         if (!dynamicColor || Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
                             val pageCount = (AccentColors.size + 3) / 4
                             val pagerState = androidx.compose.foundation.pager.rememberPagerState(pageCount = { pageCount })
-                            
+
                             Column(
                                 modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
@@ -156,9 +156,9 @@ class LookAndFeelActivity : ComponentActivity() {
                                         }
                                     }
                                 }
-                                
+
                                 Spacer(modifier = Modifier.height(16.dp))
-                                
+
                                 val cookieShape7 = getCookieShape(7)
                                 val pebbleShape = androidx.compose.foundation.shape.RoundedCornerShape(percent = 35)
                                 val archShapeRound = androidx.compose.foundation.shape.RoundedCornerShape(
@@ -201,17 +201,17 @@ class LookAndFeelActivity : ComponentActivity() {
                         }
 
                         SettingsCardGroup(
-                            title = "颜色方案",
+                            title = appText("颜色方案"),
                             items = listOf(
                                 SettingsItemData(
-                                    title = "动态取色",
-                                    subtitle = "根据设备壁纸自动设置应用主题颜色",
+                                    title = appText("动态取色"),
+                                    subtitle = appText("根据设备壁纸自动设置应用主题颜色"),
                                     icon = { Icon(Icons.Default.FormatPaint, null, tint = MaterialTheme.colorScheme.primary) },
                                     action = {
                                         Switch(
                                             checked = dynamicColor,
                                             enabled = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S,
-                                            onCheckedChange = { 
+                                            onCheckedChange = {
                                                 dynamicColor = it
                                                 sharedPrefs.edit { putBoolean("dynamic_color", it) }
                                             }
@@ -219,27 +219,27 @@ class LookAndFeelActivity : ComponentActivity() {
                                     }
                                 ),
                                 SettingsItemData(
-                                    title = "方案风格",
+                                    title = appText("方案风格"),
                                     subtitle = paletteStyleDisplayName(paletteStyleState),
                                     icon = { Icon(Icons.Default.Palette, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = { showPaletteDialog = true }
                                 )
                             )
                         )
-                        
+
                         if (showPaletteDialog) {
                             AlertDialog(
                                 onDismissRequest = { showPaletteDialog = false },
-                                title = { Text("方案风格") },
+                                title = { Text(appText("方案风格")) },
                                 text = {
                                     Column {
                                         listOf("Tonal Spot", "Vibrant", "Expressive", "Rainbow", "Fruit Salad", "Fidelity", "Content", "Neutral", "Monochrome").forEach { option ->
                                             Row(
                                                 verticalAlignment = Alignment.CenterVertically,
-                                                modifier = Modifier.fillMaxWidth().clickable { 
+                                                modifier = Modifier.fillMaxWidth().clickable {
                                                     paletteStyleState = option
                                                     sharedPrefs.edit { putString("palette_style", option) }
-                                                    showPaletteDialog = false 
+                                                    showPaletteDialog = false
                                                 }.padding(vertical = 8.dp)
                                             ) {
                                                 RadioButton(selected = option == paletteStyleState, onClick = null)
@@ -250,37 +250,37 @@ class LookAndFeelActivity : ComponentActivity() {
                                     }
                                 },
                                 confirmButton = {
-                                    TextButton(onClick = { showPaletteDialog = false }) { Text("确定") }
+                                    TextButton(onClick = { showPaletteDialog = false }) { Text(appText("确定")) }
                                 },
                                 dismissButton = {
-                                    TextButton(onClick = { showPaletteDialog = false }) { Text("取消") }
+                                    TextButton(onClick = { showPaletteDialog = false }) { Text(appText("取消")) }
                                 }
                             )
                         }
-                        
+
                         SettingsCardGroup(
-                            title = "其他设置",
+                            title = appText("其他设置"),
                             items = listOf(
                                 SettingsItemData(
-                                    title = "深色主题",
+                                    title = appText("深色主题"),
                                     subtitle = when(themeMode) {
-                                        0 -> "跟随系统"
-                                        1 -> "关闭"
-                                        else -> "开启"
+                                        0 -> appText("跟随系统")
+                                        1 -> appText("关闭")
+                                        else -> appText("开启")
                                     },
                                     icon = { Icon(Icons.Default.DarkMode, null, tint = MaterialTheme.colorScheme.primary) },
-                                    onClick = { 
+                                    onClick = {
                                         startActivity(Intent(this@LookAndFeelActivity, DarkThemeActivity::class.java))
                                     }
                                 ),
                                 SettingsItemData(
-                                    title = "触感与振动",
-                                    subtitle = "触摸操作时提供触感反馈",
+                                    title = appText("触感与振动"),
+                                    subtitle = appText("触摸操作时提供触感反馈"),
                                     icon = { Icon(Icons.Default.Vibration, null, tint = MaterialTheme.colorScheme.primary) },
                                     action = {
                                         Switch(
                                             checked = hapticsEnabled,
-                                            onCheckedChange = { 
+                                            onCheckedChange = {
                                                 hapticsEnabled = it
                                                 sharedPrefs.edit { putBoolean("haptics_enabled", it) }
                                             }
@@ -288,13 +288,13 @@ class LookAndFeelActivity : ComponentActivity() {
                                     }
                                 ),
                                 SettingsItemData(
-                                    title = "启用声音",
-                                    subtitle = "按键时播放音效",
+                                    title = appText("启用声音"),
+                                    subtitle = appText("按键时播放音效"),
                                     icon = { Icon(Icons.AutoMirrored.Filled.VolumeUp, null, tint = MaterialTheme.colorScheme.primary) },
                                     action = {
                                         Switch(
                                             checked = keySoundEnabled,
-                                            onCheckedChange = { 
+                                            onCheckedChange = {
                                                 keySoundEnabled = it
                                                 sharedPrefs.edit {
                                                     putBoolean("key_sound_enabled", it)

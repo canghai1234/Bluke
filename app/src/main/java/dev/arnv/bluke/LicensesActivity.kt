@@ -40,17 +40,17 @@ data class LibraryData(
     val githubUrl: String
 )
 
-class LicensesActivity : ComponentActivity() {
+class LicensesActivity : LocalizedActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MyApplicationTheme {
                 val context = LocalContext.current
-                
+
                 var searchQuery by remember { mutableStateOf("") }
                 var expandedLibraries by remember { mutableStateOf(setOf<String>()) }
-                
+
                 // Define the full list of real/detected project dependencies + KBSim core
                 val allLibraries = remember {
                     listOf(
@@ -96,7 +96,7 @@ class LicensesActivity : ComponentActivity() {
                         )
                     )
                 }
-                
+
                 // Filter libraries based on search query
                 val filteredLibraries = remember(searchQuery) {
                     if (searchQuery.isBlank()) {
@@ -114,10 +114,10 @@ class LicensesActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {
                         TopAppBar(
-                            title = { Text("许可证") },
+                            title = { Text(appText("许可证")) },
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
-                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = appText("返回"))
                                 }
                             }
                         )
@@ -164,41 +164,41 @@ class LicensesActivity : ComponentActivity() {
                                                 style = MaterialTheme.typography.titleLarge,
                                                 color = MaterialTheme.colorScheme.onPrimaryContainer
                                             )
-                                            Text("本应用", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f))
+                                            Text(appText("本应用"), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f))
                                         }
                                     }
-                                    
+
                                     Spacer(modifier = Modifier.height(16.dp))
-                                    
+
                                     Surface(
                                         color = MaterialTheme.colorScheme.primary,
                                         shape = RoundedCornerShape(12.dp)
                                     ) {
                                         Text("AGPL-3.0", modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp), color = MaterialTheme.colorScheme.onPrimary, fontWeight = FontWeight.Bold, fontSize = 12.sp)
                                     }
-                                    
+
                                     Spacer(modifier = Modifier.height(16.dp))
-                                    
+
                                     Text(
-                                        text = "本软件是自由软件：你可以根据自由软件基金会发布的 GNU Affero 通用公共许可证重新分发或修改它，可以选择使用许可证第 3 版或任何更高版本。",
+                                        text = appText("本软件是自由软件：你可以根据自由软件基金会发布的 GNU Affero 通用公共许可证重新分发或修改它，可以选择使用许可证第 3 版或任何更高版本。"),
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = MaterialTheme.colorScheme.onPrimaryContainer
                                     )
-                                    
+
                                     Spacer(modifier = Modifier.height(24.dp))
-                                    
+
                                     Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
                                         Text(
-                                            text = "在 GitHub 查看", 
-                                            color = MaterialTheme.colorScheme.primary, 
+                                            text = appText("在 GitHub 查看"),
+                                            color = MaterialTheme.colorScheme.primary,
                                             fontWeight = FontWeight.SemiBold,
                                             modifier = Modifier.clickable {
                                                 context.startActivity(Intent(Intent.ACTION_VIEW, "https://github.com/arnav-kr/Bluke".toUri()))
                                             }
                                         )
                                         Text(
-                                            text = "完整许可证文本", 
-                                            color = MaterialTheme.colorScheme.primary, 
+                                            text = appText("完整许可证文本"),
+                                            color = MaterialTheme.colorScheme.primary,
                                             fontWeight = FontWeight.SemiBold,
                                             modifier = Modifier.clickable {
                                                 context.startActivity(Intent(Intent.ACTION_VIEW, "https://raw.githubusercontent.com/arnav-kr/Bluke/main/LICENSE".toUri()))
@@ -210,14 +210,14 @@ class LicensesActivity : ComponentActivity() {
 
                             // Third-party libraries header
                             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                                Text("第三方库", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
+                                Text(appText("第三方库"), style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
                                 Spacer(modifier = Modifier.height(8.dp))
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Icon(Icons.AutoMirrored.Filled.List, contentDescription = null, modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text(
-                                         text = "检测到 ${filteredLibraries.size} 个库", 
-                                        style = MaterialTheme.typography.bodyMedium, 
+                                         text = appText("检测到 ${filteredLibraries.size} 个库"),
+                                        style = MaterialTheme.typography.bodyMedium,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
@@ -230,7 +230,7 @@ class LicensesActivity : ComponentActivity() {
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(horizontal = 16.dp),
-                                placeholder = { Text("搜索库、作者或许可证……") },
+                                placeholder = { Text(appText("搜索库、作者或许可证……")) },
                                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                                 shape = RoundedCornerShape(24.dp),
                                 singleLine = true,
@@ -244,7 +244,7 @@ class LicensesActivity : ComponentActivity() {
 
                             // Dynamic, expandable Library Cards list
                             Spacer(modifier = Modifier.height(4.dp))
-                            
+
                             Column(
                                 verticalArrangement = Arrangement.spacedBy(2.dp),
                                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
@@ -281,8 +281,8 @@ class LicensesActivity : ComponentActivity() {
                                                     contentAlignment = Alignment.Center
                                                 ) {
                                                     Text(
-                                                        text = lib.name.first().toString(), 
-                                                        color = MaterialTheme.colorScheme.onPrimaryContainer, 
+                                                        text = lib.name.first().toString(),
+                                                        color = MaterialTheme.colorScheme.onPrimaryContainer,
                                                         fontWeight = FontWeight.Bold
                                                     )
                                                 }
@@ -293,28 +293,28 @@ class LicensesActivity : ComponentActivity() {
                                                 }
                                                 Icon(
                                                     imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                                                    contentDescription = if (isExpanded) "收起" else "展开",
+                                                    contentDescription = if (isExpanded) appText("收起") else appText("展开"),
                                                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                                                 )
                                             }
-                                            
+
                                             if (isExpanded) {
                                                 Spacer(modifier = Modifier.height(12.dp))
                                                 HorizontalDivider(color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.12f))
                                                 Spacer(modifier = Modifier.height(12.dp))
-                                                
-                                                Text(text = "构件 ID", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+
+                                                Text(text = appText("构件 ID"), style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
                                                 Text(text = lib.artifactId, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurface)
                                                 Spacer(modifier = Modifier.height(8.dp))
-                                                
-                                                Text(text = "开发者", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+
+                                                Text(text = appText("开发者"), style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
                                                 Text(text = lib.author, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurface)
                                                 Spacer(modifier = Modifier.height(8.dp))
-                                                
-                                                Text(text = "许可证", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+
+                                                Text(text = appText("许可证"), style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
                                                 Text(text = lib.license, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurface)
                                                 Spacer(modifier = Modifier.height(12.dp))
-                                                
+
                                                 Row(
                                                     modifier = Modifier.fillMaxWidth(),
                                                     horizontalArrangement = Arrangement.End
@@ -322,7 +322,7 @@ class LicensesActivity : ComponentActivity() {
                                                     TextButton(onClick = {
                                                         context.startActivity(Intent(Intent.ACTION_VIEW, lib.githubUrl.toUri()))
                                                     }) {
-                                                        Text("在 GitHub 查看")
+                                                        Text(appText("在 GitHub 查看"))
                                                     }
                                                     Spacer(modifier = Modifier.width(8.dp))
                                                     TextButton(onClick = {
@@ -336,7 +336,7 @@ class LicensesActivity : ComponentActivity() {
                                                         }
                                                         context.startActivity(Intent(Intent.ACTION_VIEW, licenseUrl.toUri()))
                                                     }) {
-                                                        Text("完整许可证文本")
+                                                        Text(appText("完整许可证文本"))
                                                     }
                                                 }
                                             }

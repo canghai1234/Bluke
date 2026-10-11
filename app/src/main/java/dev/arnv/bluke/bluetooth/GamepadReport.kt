@@ -1,5 +1,7 @@
 package dev.arnv.bluke.bluetooth
 
+import dev.arnv.bluke.appText
+
 internal const val GAMEPAD_HAT_NEUTRAL = 0x0F
 internal const val GAMEPAD_DPAD_MODE_PREFERENCE = "gamepad_dpad_output_mode"
 internal const val GAMEPAD_DPAD_FIRST_BUTTON_INDEX = 12
@@ -13,12 +15,18 @@ private const val GAMEPAD_DPAD_BUTTON_MASK = 0x0F shl GAMEPAD_DPAD_FIRST_BUTTON_
 
 internal enum class GamepadDpadOutputMode(
     val preferenceValue: String,
-    val label: String,
-    val description: String,
+    private val labelSource: String,
+    private val descriptionSource: String,
 ) {
     NATIVE_HAT("native_hat", "原生", "Windows/Linux 游戏 · 标准 HID 方向帽"),
     ANDROID("android", "Android", "Android 游戏 · Z/Rz 右摇杆、Android 按键和 HID 方向帽。可实时切换，无需重新连接。"),
     WEB_BUTTONS("web_buttons", "网页", "浏览器游戏 · 方向键按钮 12–15");
+
+    val label: String
+        get() = appText(labelSource)
+
+    val description: String
+        get() = appText(descriptionSource)
 
     fun next(): GamepadDpadOutputMode = entries[(ordinal + 1) % entries.size]
 

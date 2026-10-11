@@ -26,16 +26,16 @@ import dev.arnv.bluke.ui.SettingsItemData
 import dev.arnv.bluke.ui.theme.MyApplicationTheme
 import kotlinx.coroutines.delay
 
-class DeveloperOptionsActivity : ComponentActivity() {
+class DeveloperOptionsActivity : LocalizedActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         setContent {
             MyApplicationTheme {
                 val context = LocalContext.current
                 val sharedPrefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-                
+
                 var isDevMode by remember { mutableStateOf(sharedPrefs.getBoolean("is_developer_mode", false)) }
                 var mockUpdatePopup by remember { mutableStateOf(sharedPrefs.getBoolean("mock_update_popup", false)) }
                 var mockBtDisabled by remember { mutableStateOf(sharedPrefs.getBoolean("mock_bt_disabled", false)) }
@@ -66,10 +66,10 @@ class DeveloperOptionsActivity : ComponentActivity() {
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
                         LargeTopAppBar(
-                            title = { Text("开发者选项") },
+                            title = { Text(appText("开发者选项")) },
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
-                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = appText("返回"))
                                 }
                             },
                             colors = TopAppBarDefaults.largeTopAppBarColors(
@@ -88,7 +88,7 @@ class DeveloperOptionsActivity : ComponentActivity() {
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         Spacer(Modifier.height(8.dp))
-                        
+
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -96,7 +96,7 @@ class DeveloperOptionsActivity : ComponentActivity() {
                             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
                         ) {
                             Text(
-                                text = "警告：这些设置仅供开发使用，可能导致应用异常、模拟错误或影响使用体验。",
+                                text = appText("警告：这些设置仅供开发使用，可能导致应用异常、模拟错误或影响使用体验。"),
                                 color = MaterialTheme.colorScheme.onErrorContainer,
                                 modifier = Modifier.padding(16.dp),
                                 style = MaterialTheme.typography.bodyMedium
@@ -111,10 +111,10 @@ class DeveloperOptionsActivity : ComponentActivity() {
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text("开发者模式", style = MaterialTheme.typography.titleMedium)
+                            Text(appText("开发者模式"), style = MaterialTheme.typography.titleMedium)
                             Switch(
                                 checked = isDevMode,
-                                onCheckedChange = { 
+                                onCheckedChange = {
                                     isDevMode = it
                                     sharedPrefs.edit { putBoolean("is_developer_mode", it) }
                                     if (!it) {
@@ -132,23 +132,23 @@ class DeveloperOptionsActivity : ComponentActivity() {
                                 }
                             )
                         }
-                        
+
                         HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
 
                         // Debug & Mocks
                         SettingsCardGroup(
                             items = listOf(
                                 SettingsItemData(
-                                    title = "开发者日志",
-                                    subtitle = "实时蓝牙数据包和系统日志",
+                                    title = appText("开发者日志"),
+                                    subtitle = appText("实时蓝牙数据包和系统日志"),
                                     icon = { Icon(Icons.AutoMirrored.Filled.ListAlt, null) },
-                                    onClick = { 
+                                    onClick = {
                                         startActivity(Intent(this@DeveloperOptionsActivity, DeveloperLogsActivity::class.java))
                                     }
                                 ),
                                 SettingsItemData(
-                                    title = "强制显示应用更新弹窗",
-                                    subtitle = "在主界面模拟应用更新",
+                                    title = appText("强制显示应用更新弹窗"),
+                                    subtitle = appText("在主界面模拟应用更新"),
                                     action = {
                                         Switch(
                                             checked = mockUpdatePopup,
@@ -160,8 +160,8 @@ class DeveloperOptionsActivity : ComponentActivity() {
                                     }
                                 ),
                                 SettingsItemData(
-                                    title = "强制显示手柄指南",
-                                    subtitle = "在主界面显示首次使用手柄指南",
+                                    title = appText("强制显示手柄指南"),
+                                    subtitle = appText("在主界面显示首次使用手柄指南"),
                                     action = {
                                         Switch(
                                             checked = mockGamepadGuide,
@@ -173,8 +173,8 @@ class DeveloperOptionsActivity : ComponentActivity() {
                                     },
                                 ),
                                 SettingsItemData(
-                                    title = "强制显示故障排除提示",
-                                    subtitle = "在主界面显示连接帮助卡片",
+                                    title = appText("强制显示故障排除提示"),
+                                    subtitle = appText("在主界面显示连接帮助卡片"),
                                     action = {
                                         Switch(
                                             checked = mockTroubleshootingNudge,
@@ -186,8 +186,8 @@ class DeveloperOptionsActivity : ComponentActivity() {
                                     },
                                 ),
                                 SettingsItemData(
-                                    title = "主界面错误状态",
-                                    subtitle = "强制界面进入指定错误状态",
+                                    title = appText("主界面错误状态"),
+                                    subtitle = appText("强制界面进入指定错误状态"),
                                     action = {
                                         var expanded by remember { mutableStateOf(false) }
                                         val errorOptions = listOf("None", "Bluetooth Disabled", "Device Unsupported", "HID Unsupported")
@@ -199,10 +199,10 @@ class DeveloperOptionsActivity : ComponentActivity() {
                                             else -> "None"
                                         }
                                         val currentSelectionLabel = when (currentSelection) {
-                                            "Bluetooth Disabled" -> "蓝牙已关闭"
-                                            "Device Unsupported" -> "设备不支持"
-                                            "HID Unsupported" -> "HID 不支持"
-                                            else -> "无"
+                                            "Bluetooth Disabled" -> appText("蓝牙已关闭")
+                                            "Device Unsupported" -> appText("设备不支持")
+                                            "HID Unsupported" -> appText("HID 不支持")
+                                            else -> appText("无")
                                         }
                                         Box {
                                             TextButton(onClick = { expanded = true }) {
@@ -214,10 +214,10 @@ class DeveloperOptionsActivity : ComponentActivity() {
                                                         text = {
                                                             Text(
                                                                 when (option) {
-                                                                    "Bluetooth Disabled" -> "蓝牙已关闭"
-                                                                    "Device Unsupported" -> "设备不支持"
-                                                                    "HID Unsupported" -> "HID 不支持"
-                                                                    else -> "无"
+                                                                    "Bluetooth Disabled" -> appText("蓝牙已关闭")
+                                                                    "Device Unsupported" -> appText("设备不支持")
+                                                                    "HID Unsupported" -> appText("HID 不支持")
+                                                                    else -> appText("无")
                                                                 }
                                                             )
                                                         },

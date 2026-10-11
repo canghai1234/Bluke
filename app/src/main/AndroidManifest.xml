@@ -39,8 +39,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
+
         <activity android:name=".SettingsActivity" android:theme="@style/Theme.MyApplication" />
+        <activity android:name=".LanguageSettingsActivity" android:theme="@style/Theme.MyApplication" />
+        <activity android:name=".DisplaySettingsActivity" android:theme="@style/Theme.MyApplication" />
         <activity android:name=".LookAndFeelActivity" android:theme="@style/Theme.MyApplication" />
         <activity android:name=".KeyboardThemesActivity" android:theme="@style/Theme.MyApplication" />
         <activity android:name=".KeyboardSettingsActivity" android:theme="@style/Theme.MyApplication" />

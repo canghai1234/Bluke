@@ -29,14 +29,14 @@ fun fnLegendForKey(keyCode: Int): String? = when (consumerControlForFnKey(keyCod
 }
 
 fun localizedFnLegendForKey(keyCode: Int): String? = when (consumerControlForFnKey(keyCode)) {
-    ConsumerControl.MUTE -> "静音"
-    ConsumerControl.VOLUME_DOWN -> "音量−"
-    ConsumerControl.VOLUME_UP -> "音量+"
-    ConsumerControl.PREVIOUS_TRACK -> "上一曲"
-    ConsumerControl.PLAY_PAUSE -> "播放"
-    ConsumerControl.NEXT_TRACK -> "下一曲"
-    ConsumerControl.BRIGHTNESS_DOWN -> "调暗"
-    ConsumerControl.BRIGHTNESS_UP -> "调亮"
-    ConsumerControl.SLEEP -> "睡眠"
+    ConsumerControl.MUTE -> appText("静音")
+    ConsumerControl.VOLUME_DOWN -> appText("音量−")
+    ConsumerControl.VOLUME_UP -> appText("音量+")
+    ConsumerControl.PREVIOUS_TRACK -> appText("上一曲")
+    ConsumerControl.PLAY_PAUSE -> appText("播放")
+    ConsumerControl.NEXT_TRACK -> appText("下一曲")
+    ConsumerControl.BRIGHTNESS_DOWN -> appText("调暗")
+    ConsumerControl.BRIGHTNESS_UP -> appText("调亮")
+    ConsumerControl.SLEEP -> appText("睡眠")
     null -> null
 }

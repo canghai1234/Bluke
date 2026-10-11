@@ -42,29 +42,29 @@ import dev.arnv.bluke.ui.SettingsItemData
 import dev.arnv.bluke.ui.theme.MyApplicationTheme
 import dev.arnv.bluke.ui.theme.getCookieShape
 
-class AboutActivity : ComponentActivity() {
+class AboutActivity : LocalizedActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         val versionName = try {
             val packageInfo = packageManager.getPackageInfo(packageName, 0)
             packageInfo.versionName ?: "1.0.1"
         } catch (_: Exception) {
             "1.0.1"
         }
-        
+
         setContent {
             MyApplicationTheme {
                 val context = LocalContext.current
                 fun openUrl(url: String) {
                     context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
                 }
-                
+
                 // Compute shapes separately to avoid sharing a stateful Shape instance across different sizes, which causes layout/shrinking bugs on activity resume.
                 val logoShape = getCookieShape(7)
                 val developerShape = getCookieShape(7)
-                
+
                 var clickCount by remember { mutableIntStateOf(0) }
                 val sharedPrefs = context.getSharedPreferences("app_prefs", MODE_PRIVATE)
 
@@ -74,10 +74,10 @@ class AboutActivity : ComponentActivity() {
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
                         LargeTopAppBar(
-                            title = { Text("关于") },
+                            title = { Text(appText("关于")) },
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
-                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = appText("返回"))
                                 }
                             },
                             colors = TopAppBarDefaults.largeTopAppBarColors(
@@ -97,7 +97,7 @@ class AboutActivity : ComponentActivity() {
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Spacer(modifier = Modifier.height(16.dp))
-                        
+
                         Surface(
                             shape = logoShape,
                             color = MaterialTheme.colorScheme.primary,
@@ -110,29 +110,29 @@ class AboutActivity : ComponentActivity() {
                                     clickCount++
                                     if (clickCount == 5) {
                                         sharedPrefs.edit { putBoolean("is_developer_mode", true) }
-                                        android.widget.Toast.makeText(context, "你已成为开发者！", android.widget.Toast.LENGTH_SHORT).show()
+                                        android.widget.Toast.makeText(context, appText("你已成为开发者！"), android.widget.Toast.LENGTH_SHORT).show()
                                     } else if (clickCount > 5 && clickCount % 3 == 0) {
-                                        android.widget.Toast.makeText(context, "无需操作，你已经是开发者了。", android.widget.Toast.LENGTH_SHORT).show()
+                                        android.widget.Toast.makeText(context, appText("无需操作，你已经是开发者了。"), android.widget.Toast.LENGTH_SHORT).show()
                                     }
                                 }
                         ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                                contentDescription = "应用图标",
+                                contentDescription = appText("应用图标"),
                                 modifier = Modifier.fillMaxSize(),
                                 tint = MaterialTheme.colorScheme.onPrimary
                             )
                         }
-                        
+
                         Text(
                             text = getString(R.string.app_name),
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
-                        
+
                         Text(
-                            text = "版本 $versionName",
+                            text = appText("版本 $versionName"),
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(bottom = 8.dp)
@@ -158,7 +158,7 @@ class AboutActivity : ComponentActivity() {
                                 ) {
                                     Icon(
                                         painter = painterResource(id = R.drawable.ic_github),
-                                        contentDescription = "GitHub 仓库",
+                                        contentDescription = appText("GitHub 仓库"),
                                         modifier = Modifier.size(18.dp),
                                         tint = MaterialTheme.colorScheme.onPrimaryContainer
                                     )
@@ -188,13 +188,13 @@ class AboutActivity : ComponentActivity() {
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.Email,
-                                        contentDescription = "联系邮箱",
+                                        contentDescription = appText("联系邮箱"),
                                         modifier = Modifier.size(18.dp),
                                         tint = MaterialTheme.colorScheme.onPrimaryContainer
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text(
-                                        text = "邮箱",
+                                        text = appText("邮箱"),
                                         fontWeight = FontWeight.Bold,
                                         style = MaterialTheme.typography.titleMedium,
                                         fontSize = 14.sp
@@ -204,7 +204,7 @@ class AboutActivity : ComponentActivity() {
                         }
 
                         // Developer Heading and Card content wrapped in SettingsGroup for visual consistency
-                        SettingsGroup(title = "开发者") {
+                        SettingsGroup(title = appText("开发者")) {
                             Column(modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp)) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                      Surface(
@@ -220,7 +220,7 @@ class AboutActivity : ComponentActivity() {
                                          ) {
                                              Icon(
                                                  painter = painterResource(id = R.drawable.ic_wordmark),
-                                                 contentDescription = "文字标志",
+                                                 contentDescription = appText("文字标志"),
                                                  tint = MaterialTheme.colorScheme.onPrimary,
                                                  modifier = Modifier.size(24.dp)
                                              )
@@ -240,7 +240,7 @@ class AboutActivity : ComponentActivity() {
                                         )
                                     }
                                 }
-                                
+
                                 Spacer(modifier = Modifier.height(16.dp))
                                 HorizontalDivider(color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.12f))
                                 Spacer(modifier = Modifier.height(16.dp))
@@ -263,10 +263,10 @@ class AboutActivity : ComponentActivity() {
                                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
                                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                                     )
-                                    
+
                                     PlayfulSocialButton(
                                         onClick = { openUrl("https://buymeacoffee.com/arnavkr") },
-                                        label = "请我喝咖啡",
+                                        label = appText("请我喝咖啡"),
                                         icon = {
                                             Icon(
                                                 imageVector = Icons.Default.Coffee,
@@ -282,35 +282,35 @@ class AboutActivity : ComponentActivity() {
                         }
 
                         SettingsCardGroup(
-                            title = "应用",
+                            title = appText("应用"),
                             items = listOf(
                                 SettingsItemData(
-                                    title = "更新日志",
-                                    subtitle = "查看应用的全部更新记录",
+                                    title = appText("更新日志"),
+                                    subtitle = appText("查看应用的全部更新记录"),
                                     icon = { Icon(Icons.Default.History, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = { openUrl("https://github.com/arnav-kr/Bluke/releases") }
                                 ),
                                 SettingsItemData(
-                                    title = "许可证",
-                                    subtitle = "查看应用及其依赖库使用的许可证",
+                                    title = appText("许可证"),
+                                    subtitle = appText("查看应用及其依赖库使用的许可证"),
                                     icon = { Icon(Icons.Default.Policy, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = { startActivity(Intent(this@AboutActivity, LicensesActivity::class.java)) }
                                 ),
                                 SettingsItemData(
-                                    title = "报告问题",
-                                    subtitle = "报告使用应用时遇到的问题或错误",
+                                    title = appText("报告问题"),
+                                    subtitle = appText("报告使用应用时遇到的问题或错误"),
                                     icon = { Icon(Icons.Default.BugReport, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = { openUrl("https://github.com/arnav-kr/Bluke/issues/new?template=bug_report.md") }
                                 ),
                                 SettingsItemData(
-                                    title = "功能建议",
-                                    subtitle = "如果你有任何想法或建议，欢迎告诉我们",
+                                    title = appText("功能建议"),
+                                    subtitle = appText("如果你有任何想法或建议，欢迎告诉我们"),
                                     icon = { Icon(Icons.Default.Lightbulb, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = { openUrl("https://github.com/arnav-kr/Bluke/issues/new?template=feature_request.md") }
                                 )
                             )
                         )
-                        
+
                         Spacer(modifier = Modifier.height(32.dp))
                     }
                 }

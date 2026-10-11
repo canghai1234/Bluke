@@ -567,13 +567,13 @@ private fun SlideNavigationColumn(
 ) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(gap)) {
         MultimediaActionButton(
-            RemoteAction.Key("上一张幻灯片", Icons.Default.KeyboardArrowUp, KeyboardLayouts.KEY_PAGEUP),
+            RemoteAction.Key(appText("上一张幻灯片"), Icons.Default.KeyboardArrowUp, KeyboardLayouts.KEY_PAGEUP),
             btManager,
             Modifier.weight(1f).fillMaxWidth(),
             triggerVibration = triggerVibration,
         )
         MultimediaActionButton(
-            RemoteAction.Key("下一张幻灯片", Icons.Default.KeyboardArrowDown, KeyboardLayouts.KEY_PAGEDOWN),
+            RemoteAction.Key(appText("下一张幻灯片"), Icons.Default.KeyboardArrowDown, KeyboardLayouts.KEY_PAGEDOWN),
             btManager,
             Modifier.weight(1f).fillMaxWidth(),
             triggerVibration = triggerVibration,
@@ -590,13 +590,13 @@ private fun SlideNavigationRow(
 ) {
     Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(gap)) {
         MultimediaActionButton(
-            RemoteAction.Key("上一张幻灯片", Icons.AutoMirrored.Filled.KeyboardArrowLeft, KeyboardLayouts.KEY_PAGEUP),
+            RemoteAction.Key(appText("上一张幻灯片"), Icons.AutoMirrored.Filled.KeyboardArrowLeft, KeyboardLayouts.KEY_PAGEUP),
             btManager,
             Modifier.weight(1f).fillMaxHeight(),
             triggerVibration = triggerVibration,
         )
         MultimediaActionButton(
-            RemoteAction.Key("下一张幻灯片", Icons.AutoMirrored.Filled.KeyboardArrowRight, KeyboardLayouts.KEY_PAGEDOWN),
+            RemoteAction.Key(appText("下一张幻灯片"), Icons.AutoMirrored.Filled.KeyboardArrowRight, KeyboardLayouts.KEY_PAGEDOWN),
             btManager,
             Modifier.weight(1f).fillMaxHeight(),
             triggerVibration = triggerVibration,
@@ -612,9 +612,9 @@ private fun MouseButtonRow(
     triggerVibration: (Long) -> Unit,
 ) {
     Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(gap)) {
-        MouseHoldButton("鼠标左键", 0x01, btManager, Modifier.weight(1f).fillMaxHeight(), triggerVibration)
-        MouseHoldButton("鼠标中键", 0x04, btManager, Modifier.weight(1f).fillMaxHeight(), triggerVibration)
-        MouseHoldButton("鼠标右键", 0x02, btManager, Modifier.weight(1f).fillMaxHeight(), triggerVibration)
+        MouseHoldButton(appText("鼠标左键"), 0x01, btManager, Modifier.weight(1f).fillMaxHeight(), triggerVibration)
+        MouseHoldButton(appText("鼠标中键"), 0x04, btManager, Modifier.weight(1f).fillMaxHeight(), triggerVibration)
+        MouseHoldButton(appText("鼠标右键"), 0x02, btManager, Modifier.weight(1f).fillMaxHeight(), triggerVibration)
     }
 }
 
@@ -626,9 +626,9 @@ private fun MouseButtonColumn(
     triggerVibration: (Long) -> Unit,
 ) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(gap)) {
-        MouseHoldButton("鼠标左键", 0x01, btManager, Modifier.weight(1f).fillMaxWidth(), triggerVibration)
-        MouseHoldButton("鼠标中键", 0x04, btManager, Modifier.weight(1f).fillMaxWidth(), triggerVibration)
-        MouseHoldButton("鼠标右键", 0x02, btManager, Modifier.weight(1f).fillMaxWidth(), triggerVibration)
+        MouseHoldButton(appText("鼠标左键"), 0x01, btManager, Modifier.weight(1f).fillMaxWidth(), triggerVibration)
+        MouseHoldButton(appText("鼠标中键"), 0x04, btManager, Modifier.weight(1f).fillMaxWidth(), triggerVibration)
+        MouseHoldButton(appText("鼠标右键"), 0x02, btManager, Modifier.weight(1f).fillMaxWidth(), triggerVibration)
     }
 }
 
@@ -707,10 +707,13 @@ private sealed interface RemoteAction {
     val icon: ImageVector?
 
     data class Consumer(
-        override val label: String,
+        private val labelSource: String,
         override val icon: ImageVector,
         val control: ConsumerControl,
-    ) : RemoteAction
+    ) : RemoteAction {
+        override val label: String
+            get() = appText(labelSource)
+    }
 
     data class Key(
         override val label: String,
@@ -772,10 +775,10 @@ private fun MultimediaUprightBar(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        UprightToolbarButton("关闭多媒体", onClose) {
+        UprightToolbarButton(appText("关闭多媒体"), onClose) {
             Icon(Icons.Default.Close, null, tint = Color.White, modifier = Modifier.size(13.dp))
         }
-        UprightToolbarButton("切换输入模式", onModeChange) {
+        UprightToolbarButton(appText("切换输入模式"), onModeChange) {
             Icon(Icons.Default.Mouse, null, tint = Color.White, modifier = Modifier.size(13.dp))
         }
         Box(
@@ -784,12 +787,12 @@ private fun MultimediaUprightBar(
                 .clip(CircleShape)
                 .background(if (isConnected) Color(0xFF39FF14) else Color(0xFFFF9800))
                 .semantics {
-                    contentDescription = if (isConnected) "主机已连接" else "主机离线"
+                    contentDescription = if (isConnected) appText("主机已连接") else appText("主机离线")
                 },
         )
         ReconnectHostButton(btManager, iconOnly = true)
         Spacer(Modifier.weight(1f))
-        UprightToolbarButton("指针灵敏度 ${sensitivity}x", onSensitivityChange) {
+        UprightToolbarButton(appText("指针灵敏度 ${sensitivity}x"), onSensitivityChange) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -798,7 +801,7 @@ private fun MultimediaUprightBar(
                 Text("${sensitivity}x", color = Color.White, fontSize = 7.sp, fontWeight = FontWeight.Bold)
             }
         }
-        UprightToolbarButton("滚动灵敏度 ${scrollSensitivity}x", onScrollSensitivityChange) {
+        UprightToolbarButton(appText("滚动灵敏度 ${scrollSensitivity}x"), onScrollSensitivityChange) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -808,7 +811,7 @@ private fun MultimediaUprightBar(
             }
         }
         UprightToolbarButton(
-            if (isVibrationEnabled) "关闭振动" else "开启振动",
+            if (isVibrationEnabled) appText("关闭振动") else appText("开启振动"),
             onToggleVibration,
         ) {
             Icon(
@@ -863,9 +866,9 @@ private fun MultimediaTopBar(
     val context = LocalContext.current
     val connectedDevice by btManager.connectedDevice.collectAsState()
     val hostLabel = try {
-        (connectedDevice ?: btManager.getReconnectTarget())?.name ?: "无主机"
+        (connectedDevice ?: btManager.getReconnectTarget())?.name ?: appText("无主机")
     } catch (_: SecurityException) {
-        if (isConnected) "主机" else "无主机"
+        if (isConnected) appText("主机") else appText("无主机")
     }
     Row(
         modifier = Modifier
@@ -881,9 +884,9 @@ private fun MultimediaTopBar(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             ToolbarPill(onClick = onClose) {
-                Icon(Icons.Default.Close, "关闭", tint = Color.White, modifier = Modifier.size(12.dp))
+                Icon(Icons.Default.Close, appText("关闭"), tint = Color.White, modifier = Modifier.size(12.dp))
                 Spacer(Modifier.width(4.dp))
-                Text("关闭", color = Color.White, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                Text(appText("关闭"), color = Color.White, fontSize = 10.sp, fontWeight = FontWeight.Bold)
             }
             ToolbarPill(
                 onClick = {
@@ -895,9 +898,9 @@ private fun MultimediaTopBar(
                     context.startActivity(Intent(context, QuickCycleActivity::class.java))
                 },
             ) {
-                Icon(Icons.Default.Mouse, "切换模式", tint = Color.White, modifier = Modifier.size(12.dp))
+                Icon(Icons.Default.Mouse, appText("切换模式"), tint = Color.White, modifier = Modifier.size(12.dp))
                 Spacer(Modifier.width(4.dp))
-                Text("多媒体", color = Color.White, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                Text(appText("多媒体"), color = Color.White, fontSize = 10.sp, fontWeight = FontWeight.Bold)
             }
             Box(
                 Modifier
@@ -905,13 +908,13 @@ private fun MultimediaTopBar(
                     .clip(CircleShape)
                     .background(if (isConnected) Color(0xFF39FF14) else Color(0xFFFF9800))
                     .semantics {
-                        contentDescription = if (isConnected) "主机已连接" else "主机离线"
+                        contentDescription = if (isConnected) appText("主机已连接") else appText("主机离线")
                     },
             )
             Text(hostLabel, color = Color.White, fontSize = 10.sp, fontWeight = FontWeight.Bold)
             ReconnectHostButton(btManager, iconOnly = true)
             if (!isConnected) {
-                Text("[离线]", color = Color.White.copy(alpha = 0.45f), fontSize = 9.sp)
+                Text(appText("[离线]"), color = Color.White.copy(alpha = 0.45f), fontSize = 9.sp)
             }
         }
 
@@ -920,12 +923,12 @@ private fun MultimediaTopBar(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             ToolbarPill(onClick = onSensitivityChange) {
-                Icon(Icons.Default.Speed, "灵敏度", tint = Color.White, modifier = Modifier.size(12.dp))
+                Icon(Icons.Default.Speed, appText("灵敏度"), tint = Color.White, modifier = Modifier.size(12.dp))
                 Spacer(Modifier.width(4.dp))
                 Text("${sensitivity}x", color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Bold)
             }
             ToolbarPill(onClick = onScrollSensitivityChange) {
-                Icon(Icons.Default.KeyboardArrowUp, "滚动速度", tint = Color.White, modifier = Modifier.size(12.dp))
+                Icon(Icons.Default.KeyboardArrowUp, appText("滚动速度"), tint = Color.White, modifier = Modifier.size(12.dp))
                 Spacer(Modifier.width(4.dp))
                 Text("${scrollSensitivity}x", color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Bold)
             }
@@ -938,7 +941,7 @@ private fun MultimediaTopBar(
                 Box(contentAlignment = Alignment.Center) {
                     Icon(
                         Icons.Default.Vibration,
-                        if (isVibrationEnabled) "关闭振动" else "开启振动",
+                        if (isVibrationEnabled) appText("关闭振动") else appText("开启振动"),
                         tint = if (isVibrationEnabled) Color.White else Color.White.copy(alpha = 0.4f),
                         modifier = Modifier.size(12.dp),
                     )

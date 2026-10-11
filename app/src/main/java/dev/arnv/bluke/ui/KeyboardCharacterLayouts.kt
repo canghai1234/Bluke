@@ -4,7 +4,7 @@ const val KEYBOARD_CHARACTER_LAYOUT_PREFERENCE = "keyboard_character_layout"
 
 enum class KeyboardCharacterLayout(
     val preferenceValue: String,
-    val displayName: String,
+    val displayNameSource: String,
     val hostLayoutName: String,
 ) {
     US_QWERTY("us_qwerty", "QWERTY", "英语（美国）"),
@@ -13,6 +13,9 @@ enum class KeyboardCharacterLayout(
     DVORAK("dvorak", "Dvorak", "Dvorak"),
     COLEMAK("colemak", "Colemak", "Colemak"),
     RUSSIAN_JCUKEN("ru_jcuken", "ЙЦУКЕН", "俄语");
+
+    val displayName: String
+        get() = appText(displayNameSource)
 
     companion object {
         fun fromPreference(value: String?): KeyboardCharacterLayout =

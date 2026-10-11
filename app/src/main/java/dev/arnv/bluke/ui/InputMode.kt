@@ -8,13 +8,16 @@ private const val INPUT_MODE_CYCLE_PREFERENCE = "cycle_connection_modes"
 enum class InputMode(
     val id: Int,
     val preferenceKey: String,
-    val displayName: String,
+    private val displayNameSource: String,
 ) {
     KEYBOARD(0, "keyboard", "键盘"),
     TOUCHPAD(1, "touchpad", "触控板"),
     GAMEPAD(2, "gamepad", "手柄"),
     MEDIA_PRESENTATION(4, "media_presentation", "多媒体"),
     ;
+
+    val displayName: String
+        get() = appText(displayNameSource)
 
     companion object {
         fun fromId(id: Int): InputMode = entries.firstOrNull { it.id == id } ?: KEYBOARD

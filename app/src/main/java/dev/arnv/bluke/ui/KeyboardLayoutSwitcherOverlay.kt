@@ -45,7 +45,7 @@ internal fun KeyboardLayoutSwitcherOverlay(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Text(
-                    text = "输入布局",
+                    text = appText("输入布局"),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.SemiBold,
                 )
@@ -72,7 +72,7 @@ internal fun KeyboardLayoutSwitcherOverlay(
                     }
                 }
                 Text(
-                    text = "主机输入源：${selectedLayout.hostLayoutName}",
+                    text = appText("主机输入源：${selectedLayout.hostLayoutName}"),
                     fontSize = 9.sp,
                     color = MaterialTheme.colorScheme.inverseOnSurface.copy(alpha = 0.72f),
                 )

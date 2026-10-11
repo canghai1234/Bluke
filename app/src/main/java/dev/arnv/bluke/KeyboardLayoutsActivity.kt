@@ -44,7 +44,7 @@ import dev.arnv.bluke.ui.selectedOrFirstEnabled
 import dev.arnv.bluke.ui.toggledCycleSelection
 import dev.arnv.bluke.ui.theme.MyApplicationTheme
 
-class KeyboardLayoutsActivity : ComponentActivity() {
+class KeyboardLayoutsActivity : LocalizedActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,8 +75,8 @@ class KeyboardLayoutsActivity : ComponentActivity() {
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
                         LargeTopAppBar(
-                            title = { Text("键盘布局") },
-                            navigationIcon = { IconButton(onClick = ::finish) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "返回") } },
+                            title = { Text(appText("键盘布局")) },
+                            navigationIcon = { IconButton(onClick = ::finish) { Icon(Icons.AutoMirrored.Filled.ArrowBack, appText("返回")) } },
                             scrollBehavior = scrollBehavior,
                         )
                     },
@@ -88,7 +88,7 @@ class KeyboardLayoutsActivity : ComponentActivity() {
                     ) {
                         item {
                             Text(
-                                "点击布局即可使用。点击键盘工具栏按钮时，只会循环切换已勾选的布局。",
+                                appText("点击布局即可使用。点击键盘工具栏按钮时，只会循环切换已勾选的布局。"),
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.padding(bottom = 12.dp),
@@ -122,9 +122,9 @@ class KeyboardLayoutsActivity : ComponentActivity() {
                                     Icon(Icons.Default.Keyboard, null, tint = MaterialTheme.colorScheme.primary)
                                     Column(Modifier.weight(1f).padding(horizontal = 16.dp)) {
                                         Text(layout.displayName, style = MaterialTheme.typography.titleMedium)
-                                        Text("加入工具栏循环", style = MaterialTheme.typography.bodySmall)
+                                        Text(appText("加入工具栏循环"), style = MaterialTheme.typography.bodySmall)
                                     }
-                                    if (active) Icon(Icons.Default.Check, "已选择")
+                                    if (active) Icon(Icons.Default.Check, appText("已选择"))
                                     Checkbox(
                                         checked = layout.name in cycleSelection,
                                         enabled = layout.name !in cycleSelection || cycleSelection.size > 1,

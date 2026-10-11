@@ -92,7 +92,7 @@ import dev.arnv.bluke.ui.theme.MyApplicationTheme
 import java.util.UUID
 import kotlin.math.roundToInt
 
-class KeyboardThemesActivity : ComponentActivity() {
+class KeyboardThemesActivity : LocalizedActivity() {
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -132,12 +132,12 @@ class KeyboardThemesActivity : ComponentActivity() {
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
                         LargeTopAppBar(
-                            title = { Text(if (editingTheme == null) "键盘主题" else "编辑键盘主题") },
+                            title = { Text(if (editingTheme == null) appText("键盘主题") else appText("编辑键盘主题")) },
                             navigationIcon = {
                                 IconButton(onClick = {
                                     if (editingTheme == null) finish() else editingTheme = null
                                 }) {
-                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = appText("返回"))
                                 }
                             },
                             scrollBehavior = scrollBehavior,
@@ -197,8 +197,8 @@ class KeyboardThemesActivity : ComponentActivity() {
                 pendingDelete?.let { themeToDelete ->
                     AlertDialog(
                         onDismissRequest = { pendingDelete = null },
-                        title = { Text("删除 ${themeToDelete.name}？") },
-                        text = { Text("这会删除自定义键盘主题，不会影响内置主题。") },
+                        title = { Text(appText("删除 ${themeToDelete.name}？")) },
+                        text = { Text(appText("这会删除自定义键盘主题，不会影响内置主题。")) },
                         confirmButton = {
                             TextButton(onClick = {
                                 repository.delete(themeToDelete.id)
@@ -211,10 +211,10 @@ class KeyboardThemesActivity : ComponentActivity() {
                                 repository.selectTheme(nextSelected)
                                 preferences.edit { putStringSet(CYCLE_KEYBOARD_THEMES_PREFERENCE, nextCycle) }
                                 pendingDelete = null
-                            }) { Text("删除") }
+                            }) { Text(appText("删除")) }
                         },
                         dismissButton = {
-                            TextButton(onClick = { pendingDelete = null }) { Text("取消") }
+                            TextButton(onClick = { pendingDelete = null }) { Text(appText("取消")) }
                         },
                     )
                 }
@@ -243,7 +243,7 @@ private fun KeyboardThemeLibrary(
     ) {
         item {
             Text(
-                text = "选择键盘外观。布局和字母排列彼此独立。",
+                text = appText("选择键盘外观。布局和字母排列彼此独立。"),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(bottom = 4.dp),
@@ -253,7 +253,7 @@ private fun KeyboardThemeLibrary(
             val selectedThemeName = (customThemes + KeyboardThemeCatalog.builtIns)
                 .firstOrNull { it.id == selectedThemeId }
                 ?.name
-                ?: "当前主题"
+                ?: appText("当前主题")
             FilledTonalButton(
                 onClick = onCreate,
                 modifier = Modifier.fillMaxWidth(),
@@ -266,16 +266,16 @@ private fun KeyboardThemeLibrary(
                     modifier = Modifier.weight(1f),
                     horizontalAlignment = Alignment.Start,
                 ) {
-                    Text("基于 $selectedThemeName 创建", style = MaterialTheme.typography.titleMedium)
+                    Text(appText("基于 $selectedThemeName 创建"), style = MaterialTheme.typography.titleMedium)
                     Text(
-                        "创建可编辑副本；原主题保持不变",
+                        appText("创建可编辑副本；原主题保持不变"),
                         style = MaterialTheme.typography.bodySmall,
                     )
                 }
             }
         }
         if (customThemes.isNotEmpty()) {
-            item { ThemeSectionTitle("我的主题") }
+            item { ThemeSectionTitle(appText("我的主题")) }
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     customThemes.forEachIndexed { index, theme ->
@@ -296,7 +296,7 @@ private fun KeyboardThemeLibrary(
                 }
             }
         }
-        item { ThemeSectionTitle("内置主题") }
+        item { ThemeSectionTitle(appText("内置主题")) }
         item {
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 KeyboardThemeCatalog.builtIns.forEachIndexed { index, theme ->
@@ -380,14 +380,14 @@ private fun KeyboardThemeCard(
             )
             Box {
                 IconButton(onClick = { menuExpanded = true }) {
-                    Icon(Icons.Default.MoreVert, contentDescription = "${theme.name} 的更多选项")
+                    Icon(Icons.Default.MoreVert, contentDescription = appText("${theme.name} 的更多选项"))
                 }
                 DropdownMenu(
                     expanded = menuExpanded,
                     onDismissRequest = { menuExpanded = false },
                 ) {
                     DropdownMenuItem(
-                        text = { Text("复制") },
+                        text = { Text(appText("复制")) },
                         leadingIcon = { Icon(Icons.Default.ContentCopy, contentDescription = null) },
                         onClick = {
                             menuExpanded = false
@@ -396,7 +396,7 @@ private fun KeyboardThemeCard(
                     )
                     onEdit?.let { edit ->
                         DropdownMenuItem(
-                            text = { Text("编辑") },
+                            text = { Text(appText("编辑")) },
                             leadingIcon = { Icon(Icons.Default.Edit, contentDescription = null) },
                             onClick = {
                                 menuExpanded = false
@@ -406,7 +406,7 @@ private fun KeyboardThemeCard(
                     }
                     onDelete?.let { delete ->
                         DropdownMenuItem(
-                            text = { Text("删除") },
+                            text = { Text(appText("删除")) },
                             leadingIcon = { Icon(Icons.Default.Delete, contentDescription = null) },
                             onClick = {
                                 menuExpanded = false
@@ -434,13 +434,16 @@ private fun KeyboardThemeSwatches(theme: KeyboardThemeDefinition) {
     }
 }
 
-private enum class ThemeEditTarget(val label: String) {
+private enum class ThemeEditTarget(private val labelSource: String) {
     CASE("外壳"),
     PLATE("背景"),
     ALPHA("字母键"),
     MODIFIER("控制键"),
     ACCENT("功能键"),
-    KEY("单个按键"),
+    KEY("单个按键");
+
+    val label: String
+        get() = appText(labelSource)
 }
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -512,24 +515,24 @@ private fun KeyboardThemeEditor(
         verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
         ThemeEditorSection(
-            title = "主题详情",
-            supportingText = "为这个仅用于键盘的主题设置一个容易识别的名称。",
+            title = appText("主题详情"),
+            supportingText = appText("为这个仅用于键盘的主题设置一个容易识别的名称。"),
         ) {
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it.take(40) },
-                label = { Text("主题名称") },
+                label = { Text(appText("主题名称")) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
             )
         }
 
         ThemeEditorSection(
-            title = "实时预览",
-            supportingText = "选择一种布局进行预览，不会改变键盘界面中保存的布局。",
+            title = appText("实时预览"),
+            supportingText = appText("选择一种布局进行预览，不会改变键盘界面中保存的布局。"),
         ) {
             Text(
-                "预览布局",
+                appText("预览布局"),
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -578,15 +581,15 @@ private fun KeyboardThemeEditor(
                 }
             }
             Text(
-                "点击按键可单独覆盖设置，也可以在下方编辑整个按键组。",
+                appText("点击按键可单独覆盖设置，也可以在下方编辑整个按键组。"),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
 
         ThemeEditorSection(
-            title = "自定义按键",
-            supportingText = "修改键盘外壳、背景、整个按键组或当前选中的按键。",
+            title = appText("自定义按键"),
+            supportingText = appText("修改键盘外壳、背景、整个按键组或当前选中的按键。"),
         ) {
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
@@ -601,7 +604,7 @@ private fun KeyboardThemeEditor(
                         label = {
                             Text(
                                 if (editTarget == ThemeEditTarget.KEY && selectedKey != null) {
-                                    "按键：${selectedKey?.legend?.ifEmpty { "空格" }}"
+                                    appText("按键：${selectedKey?.legend?.ifEmpty { "空格" }}")
                                 } else {
                                     editTarget.label
                                 },
@@ -613,24 +616,24 @@ private fun KeyboardThemeEditor(
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
             if (target == ThemeEditTarget.CASE) {
-                VisualColorPicker("键盘外壳", caseArgb) { caseArgb = it }
+                VisualColorPicker(appText("键盘外壳"), caseArgb) { caseArgb = it }
                 FilterChip(
                     selected = caseMetallic,
                     onClick = { caseMetallic = !caseMetallic },
-                    label = { Text("金属质感") },
+                    label = { Text(appText("金属质感")) },
                 )
             } else if (target == ThemeEditTarget.PLATE) {
-                VisualColorPicker("键盘背景", plateArgb) { plateArgb = it }
+                VisualColorPicker(appText("键盘背景"), plateArgb) { plateArgb = it }
             } else if (selectedStyle != null) {
-                VisualColorPicker("按键颜色", selectedStyle.backgroundArgb) { color ->
+                VisualColorPicker(appText("按键颜色"), selectedStyle.backgroundArgb) { color ->
                     updateTargetStyle { it.copy(backgroundArgb = color) }
                 }
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-                VisualColorPicker("按键文字颜色", selectedStyle.legendArgb) { color ->
+                VisualColorPicker(appText("按键文字颜色"), selectedStyle.legendArgb) { color ->
                     updateTargetStyle { it.copy(legendArgb = color) }
                 }
                 Text(
-                    "文字大小：${(selectedStyle.legendScale * 100).roundToInt()}%",
+                    appText("文字大小：${(selectedStyle.legendScale * 100).roundToInt()}%"),
                     style = MaterialTheme.typography.titleSmall,
                 )
                 Slider(
@@ -643,7 +646,7 @@ private fun KeyboardThemeEditor(
                         onClick = { selectedKey?.let { overrides.remove(it.styleId) } },
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        Text("将此按键恢复为按键组设置")
+                        Text(appText("将此按键恢复为按键组设置"))
                     }
                 }
             }
@@ -658,7 +661,7 @@ private fun KeyboardThemeEditor(
                 onClick = onCancel,
                 modifier = Modifier.weight(1f),
             ) {
-                Text("取消")
+                Text(appText("取消"))
             }
             Button(
                 enabled = name.isNotBlank(),
@@ -667,7 +670,7 @@ private fun KeyboardThemeEditor(
             ) {
                 Icon(Icons.Default.Palette, contentDescription = null)
                 Spacer(Modifier.width(8.dp))
-                Text("保存")
+                Text(appText("保存"))
             }
         }
         Spacer(Modifier.height(24.dp))

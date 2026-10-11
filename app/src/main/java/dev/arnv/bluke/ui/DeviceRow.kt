@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.sp
  */
 enum class DeviceType(
     val id: String,
-    val displayName: String,
+    private val displayNameSource: String,
     val icon: androidx.compose.ui.graphics.vector.ImageVector,
     val bgColor: Color,
     val tintColor: Color,
@@ -38,7 +38,10 @@ enum class DeviceType(
     MOUSE("mouse", "输入设备", Icons.Default.Mouse, Color(0xFFFFD8E4), Color(0xFFB11E4C), false),
     GAMEPAD("gamepad", "游戏手柄", Icons.Default.SportsEsports, Color(0xFFFFE9A6), Color(0xFF7D5200), false),
     WATCH("watch", "智能手表", Icons.Default.Watch, Color(0xFFF3EDF7), Color(0xFF65558F), false),
-    DEFAULT("default", "蓝牙设备", Icons.Default.Bluetooth, Color(0xFFE2F1FF), Color(0xFF0F5A9E), true)
+    DEFAULT("default", "蓝牙设备", Icons.Default.Bluetooth, Color(0xFFE2F1FF), Color(0xFF0F5A9E), true);
+
+    val displayName: String
+        get() = appText(displayNameSource)
 }
 
 /**
@@ -56,15 +59,15 @@ fun classifyDevice(name: String?, device: BluetoothDevice?): DeviceType {
     }
 
     // 1. Mouse / Pointer / Keyboard / Peripheral devices
-    if (devName.contains("mouse") || devName.contains("atk") || devName.contains("g305") || 
+    if (devName.contains("mouse") || devName.contains("atk") || devName.contains("g305") ||
         devName.contains("trackpad") || devName.contains("pointer") || devName.contains("mx master") ||
         devName.contains("keyboard") || devName.contains("keycap") || devName.contains("stylus") ||
         majorClass == 1280 || majorClass == BluetoothClass.Device.Major.PERIPHERAL) {
-        
+
         // Exclude gamepads reporting as peripheral accessories
-        if (devName.contains("controller") || devName.contains("gamepad") || devName.contains("xbox") || 
-            devName.contains("playstation") || devName.contains("ps4") || devName.contains("ps5") || 
-            devName.contains("switch") || devName.contains("joycon") || devName.contains("nintendo") || 
+        if (devName.contains("controller") || devName.contains("gamepad") || devName.contains("xbox") ||
+            devName.contains("playstation") || devName.contains("ps4") || devName.contains("ps5") ||
+            devName.contains("switch") || devName.contains("joycon") || devName.contains("nintendo") ||
             devName.contains("wireless controller")) {
             return DeviceType.GAMEPAD
         }
@@ -72,9 +75,9 @@ fun classifyDevice(name: String?, device: BluetoothDevice?): DeviceType {
     }
 
     // 2. Game controller / Gamepad
-    if (devName.contains("controller") || devName.contains("gamepad") || devName.contains("xbox") || 
-        devName.contains("playstation") || devName.contains("ps4") || devName.contains("ps5") || 
-        devName.contains("switch") || devName.contains("joycon") || devName.contains("nintendo") || 
+    if (devName.contains("controller") || devName.contains("gamepad") || devName.contains("xbox") ||
+        devName.contains("playstation") || devName.contains("ps4") || devName.contains("ps5") ||
+        devName.contains("switch") || devName.contains("joycon") || devName.contains("nintendo") ||
         devName.contains("wireless controller") || devName.contains("game") ||
         majorClass == BluetoothClass.Device.Major.TOY) {
         return DeviceType.GAMEPAD
@@ -88,16 +91,16 @@ fun classifyDevice(name: String?, device: BluetoothDevice?): DeviceType {
     val isTvOrDisplay = minorClass == BluetoothClass.Device.AUDIO_VIDEO_VIDEO_DISPLAY_AND_LOUDSPEAKER ||
                         minorClass == BluetoothClass.Device.AUDIO_VIDEO_VIDEO_MONITOR ||
                         minorClass == BluetoothClass.Device.AUDIO_VIDEO_SET_TOP_BOX
-    if (isTvOrDisplay || devName.contains("tv") || devName.contains("television") || 
-        devName.contains("shield") || devName.contains("chromecast") || devName.contains("firestick") || 
-        devName.contains("roku") || devName.contains("tizen") || devName.contains("webos") || 
+    if (isTvOrDisplay || devName.contains("tv") || devName.contains("television") ||
+        devName.contains("shield") || devName.contains("chromecast") || devName.contains("firestick") ||
+        devName.contains("roku") || devName.contains("tizen") || devName.contains("webos") ||
         devName.contains("bravia") || devName.contains("mibox") || devName.contains("mi box")) {
         return DeviceType.TV
     }
 
     // 3. Audio / Buds / Headphones (e.g. Earphones, audio receivers)
-    if (devName.contains("buds") || devName.contains("ear") || devName.contains("headphone") || 
-        devName.contains("headset") || devName.contains("audio") || devName.contains("speaker") || 
+    if (devName.contains("buds") || devName.contains("ear") || devName.contains("headphone") ||
+        devName.contains("headset") || devName.contains("audio") || devName.contains("speaker") ||
         devName.contains("sound") || devName.contains("music") || devName.contains("cmf") ||
         devName.contains("soundcore") || devName.contains("airpods") ||
         majorClass == BluetoothClass.Device.Major.AUDIO_VIDEO) {
@@ -105,23 +108,23 @@ fun classifyDevice(name: String?, device: BluetoothDevice?): DeviceType {
     }
 
     // 4. Smartwatch / Wearable
-    if (devName.contains("watch") || devName.contains("wear") || devName.contains("fitbit") || 
-        devName.contains("band") || devName.contains("garmin") || devName.contains("wearable") || 
+    if (devName.contains("watch") || devName.contains("wear") || devName.contains("fitbit") ||
+        devName.contains("band") || devName.contains("garmin") || devName.contains("wearable") ||
         majorClass == BluetoothClass.Device.Major.WEARABLE) {
         return DeviceType.WATCH
     }
 
     // 5. Computer / Laptop
-    if (devName.contains("laptop") || devName.contains("pc") || devName.contains("computer") || 
-        devName.contains("desktop") || devName.contains("mac") || devName.contains("linux") || 
-        devName.contains("windows") || devName.contains("host") || 
+    if (devName.contains("laptop") || devName.contains("pc") || devName.contains("computer") ||
+        devName.contains("desktop") || devName.contains("mac") || devName.contains("linux") ||
+        devName.contains("windows") || devName.contains("host") ||
         majorClass == BluetoothClass.Device.Major.COMPUTER) {
         return DeviceType.COMPUTER
     }
 
     // 6. Phone / Smartphone / Tablet
-    if (devName.contains("phone") || devName.contains("galaxy") || devName.contains("iphone") || 
-        devName.contains("pixel") || devName.contains("oneplus") || devName.contains("xiaomi") || 
+    if (devName.contains("phone") || devName.contains("galaxy") || devName.contains("iphone") ||
+        devName.contains("pixel") || devName.contains("oneplus") || devName.contains("xiaomi") ||
         devName.contains("redmi") || devName.contains("mobile") || devName.contains("tablet") ||
         majorClass == BluetoothClass.Device.Major.PHONE) {
         return DeviceType.PHONE
@@ -129,8 +132,8 @@ fun classifyDevice(name: String?, device: BluetoothDevice?): DeviceType {
 
     // 7. TV / Chromecast / Smart Screen
     // Checked above, fallback keyword search
-    if (devName.contains("tv") || devName.contains("shield") || devName.contains("appletv") || 
-        devName.contains("chromecast") || devName.contains("firestick") || devName.contains("television") || 
+    if (devName.contains("tv") || devName.contains("shield") || devName.contains("appletv") ||
+        devName.contains("chromecast") || devName.contains("firestick") || devName.contains("television") ||
         devName.contains("smart tv")) {
         return DeviceType.TV
     }
@@ -154,20 +157,20 @@ fun DeviceRow(
     device: BluetoothDevice? = null,
     onActionClick: () -> Unit
 ) {
-    val isError = statusText?.let { 
-        it.contains("Failed", ignoreCase = true) || 
-        it.contains("error", ignoreCase = true) || 
+    val isError = statusText?.let {
+        it.contains("Failed", ignoreCase = true) ||
+        it.contains("error", ignoreCase = true) ||
         it.contains("reject", ignoreCase = true) ||
         it.contains("timed out", ignoreCase = true) ||
         it.contains("refused", ignoreCase = true)
     } == true
-    val isWorking = (!isError && !isConnected && statusText?.let { 
-        it.contains("Connecting", ignoreCase = true) || 
+    val isWorking = (!isError && !isConnected && statusText?.let {
+        it.contains("Connecting", ignoreCase = true) ||
         it.contains("Pairing with", ignoreCase = true) ||
         it.contains("Waiting for", ignoreCase = true) ||
         it.contains("Switching to", ignoreCase = true)
     } == true) || (isConnected && statusText?.contains("disconnect", ignoreCase = true) == true)
-    
+
     // Categorize device to show specialized icons and capability badges
     val deviceType = classifyDevice(name, device)
 
@@ -204,8 +207,8 @@ fun DeviceRow(
                 ) {
                     if (isWorking) {
                         CircularProgressIndicator(
-                            modifier = Modifier.size(20.dp), 
-                            strokeWidth = 2.dp, 
+                            modifier = Modifier.size(20.dp),
+                            strokeWidth = 2.dp,
                             color = if (isConnected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.primary
                         )
                     } else {
@@ -217,9 +220,9 @@ fun DeviceRow(
                         )
                     }
                 }
-                
+
                 Spacer(modifier = Modifier.width(16.dp))
-                
+
                 Column {
                     Text(
                         text = name,
@@ -227,7 +230,7 @@ fun DeviceRow(
                         style = MaterialTheme.typography.titleMedium,
                         color = if (isConnected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
                     )
-                    
+
                     if (showAddress) {
                         Text(
                             text = address,
@@ -236,7 +239,7 @@ fun DeviceRow(
                             fontFamily = FontFamily.Monospace
                         )
                     }
-                    
+
                     // Compact Row of Status and Capability Tags
                     if (!isSupported || isError) {
                         Row(
@@ -253,7 +256,7 @@ fun DeviceRow(
                                         .padding(horizontal = 6.dp, vertical = 2.dp)
                                 ) {
                                     Text(
-                                        text = "不支持",
+                                        text = appText("不支持"),
                                         style = MaterialTheme.typography.labelSmall,
                                         fontSize = 9.sp,
                                         fontWeight = FontWeight.Bold,
@@ -271,7 +274,7 @@ fun DeviceRow(
                                         .padding(horizontal = 6.dp, vertical = 2.dp)
                                 ) {
                                     Text(
-                                        text = "失败",
+                                        text = appText("失败"),
                                         style = MaterialTheme.typography.labelSmall,
                                         fontSize = 9.sp,
                                         fontWeight = FontWeight.Bold,
@@ -283,9 +286,9 @@ fun DeviceRow(
                     }
                 }
             }
-            
+
             Spacer(modifier = Modifier.width(8.dp))
-            
+
             Button(
                 onClick = onActionClick,
                 enabled = isConnected || isSupported,
@@ -322,8 +325,8 @@ fun DeviceRow(
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = if (isConnected) "断开连接" 
-                           else "连接",
+                    text = if (isConnected) appText("断开连接")
+                           else appText("连接"),
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.labelLarge
                 )

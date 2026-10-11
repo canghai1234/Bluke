@@ -22,7 +22,7 @@ enum class KeyboardLayoutType(val displayName: String) {
 }
 
 enum class KeyboardGeometry(
-    val displayName: String,
+    private val displayNameSource: String,
     internal val legacySource: KeyboardLayoutType,
 ) {
     CLASSIC_75("经典 75%", KeyboardLayoutType.OLIVIA_75),
@@ -32,6 +32,9 @@ enum class KeyboardGeometry(
     INLINE_75("内嵌 75%", KeyboardLayoutType.LASER_75),
     COMPACT_75("紧凑 75%", KeyboardLayoutType.OBLIVION_75),
     EXTENDED_65("扩展 65%", KeyboardLayoutType.EIGHT_ZERO_ZERO_EIGHT_65);
+
+    val displayName: String
+        get() = appText(displayNameSource)
 
     companion object {
         fun fromPreference(value: String?): KeyboardGeometry =
@@ -400,18 +403,18 @@ object KeyboardLayouts {
 
     private fun parseKleString(kle: String): List<List<KeyLayoutInfo>> {
         val rows = mutableListOf<List<KeyLayoutInfo>>()
-        
+
         var index = 0
         val length = kle.length
-        
+
         var currentY = 0.0f
         var rowIndex = 0
         val styleIdOccurrences = mutableMapOf<Int, Int>()
-        
+
         // Key state modifiers
         var keyW = 1.0f
         var keyH = 1.0f
-        
+
         while (index < length) {
             // Find start of row '['
             while (index < length && kle[index] != '[') {
@@ -419,17 +422,17 @@ object KeyboardLayouts {
             }
             if (index >= length) break
             index++ // Skip '['
-            
+
             // Start of a new row: increment Y if not the first row
             if (rowIndex > 0) {
                 currentY += 1.0f
             } else {
                 currentY = 0.0f
             }
-            
+
             var currentX = 0.0f
             val currentRow = mutableListOf<KeyLayoutInfo>()
-            
+
             while (index < length) {
                 // Skip spaces and commas
                 while (index < length && (kle[index].isWhitespace() || kle[index] == ',')) {
@@ -442,7 +445,7 @@ object KeyboardLayouts {
                     rowIndex++
                     break // Row completed
                 }
-                
+
                 if (nextChar == '{') {
                     index++
                     val objStart = index
@@ -451,7 +454,7 @@ object KeyboardLayouts {
                     }
                     val objText = kle.substring(objStart, index)
                     index++ // Skip '}'
-                    
+
                     // Parse keys in json-like objText: e.g., w:2, x:0.5
                     val pairs = objText.split(",")
                     for (pair in pairs) {
@@ -483,18 +486,18 @@ object KeyboardLayouts {
                     }
                     val rawLegend = if (strStart < index) kle.substring(strStart, index) else ""
                     index++ // Skip quote char
-                    
+
                     val parts = rawLegend.split("\\n", "\n")
                     val mLegend = if (parts.isNotEmpty()) parts[0].replace("\\\"", "\"").replace("\\\\", "\\") else ""
                     val mSublegend = if (parts.size > 1) parts[1].replace("\\\"", "\"").replace("\\\\", "\\") else ""
-                    
+
                     val hasSub = mSublegend.isNotEmpty()
                     val pLegend = if (hasSub) mSublegend else mLegend
                     val pShifted = if (hasSub) mLegend else ""
-                    
+
                     val kCode = getKeycodeForLegend(pLegend)
                     val cat = getCategoryForLegend(pLegend)
-                    
+
                     currentRow.add(
                         KeyLayoutInfo(
                             styleId = "$kCode:${styleIdOccurrences.getOrDefault(kCode, 0)}",
@@ -509,7 +512,7 @@ object KeyboardLayouts {
                         )
                     )
                     styleIdOccurrences[kCode] = styleIdOccurrences.getOrDefault(kCode, 0) + 1
-                    
+
                     currentX += keyW
                     keyW = 1.0f
                     keyH = 1.0f

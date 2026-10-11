@@ -37,28 +37,28 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class DeveloperLogsActivity : ComponentActivity() {
+class DeveloperLogsActivity : LocalizedActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         setContent {
             MyApplicationTheme {
                 val context = LocalContext.current
                 val sharedPrefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
                 val scope = rememberCoroutineScope()
-                
+
                 val logs by DeveloperLogManager.logs.collectAsState()
                 var searchQuery by remember { mutableStateOf("") }
                 var isAutoSaveEnabled by remember { mutableStateOf(sharedPrefs.getBoolean("dev_auto_save_logs", false)) }
-                
+
                 val filteredLogs = remember(logs, searchQuery) {
                     if (searchQuery.isBlank()) logs
                     else logs.filter { it.message.contains(searchQuery, ignoreCase = true) || it.tag.contains(searchQuery, ignoreCase = true) }
                 }
 
                 val listState = rememberLazyListState()
-                
+
                 // Auto-scroll to bottom when new logs arrive if already near bottom
                 LaunchedEffect(filteredLogs.size) {
                     if (filteredLogs.isNotEmpty()) {
@@ -72,24 +72,24 @@ class DeveloperLogsActivity : ComponentActivity() {
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
                         TopAppBar(
-                            title = { Text("开发者日志") },
+                            title = { Text(appText("开发者日志")) },
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
-                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = appText("返回"))
                                 }
                             },
                             actions = {
                                 IconButton(onClick = { DeveloperLogManager.clearLogs() }) {
-                                    Icon(Icons.Default.Delete, contentDescription = "清除日志")
+                                    Icon(Icons.Default.Delete, contentDescription = appText("清除日志"))
                                 }
                                 IconButton(onClick = {
                                     val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                                     val logText = filteredLogs.joinToString("\n") { "[${it.timestamp}] [${it.type}] [${it.tag}] ${it.message}" }
-                                    val clip = ClipData.newPlainText("开发者日志", logText)
+                                    val clip = ClipData.newPlainText(appText("开发者日志"), logText)
                                     clipboard.setPrimaryClip(clip)
-                                    Toast.makeText(context, "已复制到剪贴板", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, appText("已复制到剪贴板"), Toast.LENGTH_SHORT).show()
                                 }) {
-                                    Icon(Icons.Default.ContentCopy, contentDescription = "复制")
+                                    Icon(Icons.Default.ContentCopy, contentDescription = appText("复制"))
                                 }
                                 IconButton(onClick = {
                                     scope.launch {
@@ -99,13 +99,13 @@ class DeveloperLogsActivity : ComponentActivity() {
                                             val file = File(downloadsDir, "bluke_logs_$timeStamp.txt")
                                             val logText = filteredLogs.joinToString("\n") { "[${it.timestamp}] [${it.type}] [${it.tag}] ${it.message}" }
                                             FileWriter(file).use { it.write(logText) }
-                                            Toast.makeText(context, "已保存到下载目录：${file.name}", Toast.LENGTH_LONG).show()
+                                            Toast.makeText(context, appText("已保存到下载目录：${file.name}"), Toast.LENGTH_LONG).show()
                                         } catch (e: Exception) {
-                                            Toast.makeText(context, "保存失败：${e.message}", Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(context, appText("保存失败：${e.message}"), Toast.LENGTH_SHORT).show()
                                         }
                                     }
                                 }) {
-                                    Icon(Icons.Default.Save, contentDescription = "保存到文件")
+                                    Icon(Icons.Default.Save, contentDescription = appText("保存到文件"))
                                 }
                             },
                             scrollBehavior = scrollBehavior
@@ -125,17 +125,17 @@ class DeveloperLogsActivity : ComponentActivity() {
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text("ADB 自动保存（files/bluke_dev_logs.txt）", style = MaterialTheme.typography.bodyMedium)
+                            Text(appText("ADB 自动保存（files/bluke_dev_logs.txt）"), style = MaterialTheme.typography.bodyMedium)
                             Switch(
                                 checked = isAutoSaveEnabled,
-                                onCheckedChange = { 
+                                onCheckedChange = {
                                     isAutoSaveEnabled = it
                                     sharedPrefs.edit { putBoolean("dev_auto_save_logs", it) }
                                     DeveloperLogManager.updateAutoSaveConfig(context)
                                 }
                             )
                         }
-                        
+
                         // Search bar
                         OutlinedTextField(
                             value = searchQuery,
@@ -143,12 +143,12 @@ class DeveloperLogsActivity : ComponentActivity() {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp),
-                            placeholder = { Text("筛选日志……") },
+                            placeholder = { Text(appText("筛选日志……")) },
                             singleLine = true
                         )
-                        
+
                         Spacer(Modifier.height(8.dp))
-                        
+
                         // Log list
                         LazyColumn(
                             state = listState,

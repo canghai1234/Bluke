@@ -14,6 +14,7 @@ class BlukeApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        AppLanguageManager.initialize(this)
         DeveloperLogManager.init(applicationContext)
         // Visibility belongs to the whole app, not just MainActivity (settings are activities too).
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {

@@ -331,19 +331,19 @@ fun GamepadView(
         val defaultRightY = 20f
         val defaultFaceX = 0f
         val defaultFaceY = 0f
-        
+
         dpadOffsetX = defaultDpadX
         dpadOffsetY = defaultDpadY
         dpadScale = 1f
-        
+
         leftStickOffsetX = defaultLeftX
         leftStickOffsetY = defaultLeftY
         leftStickScale = 1f
-        
+
         rightStickOffsetX = defaultRightX
         rightStickOffsetY = defaultRightY
         rightStickScale = 1f
-        
+
         faceButtonsOffsetX = defaultFaceX
         faceButtonsOffsetY = defaultFaceY
         faceButtonsScale = 1f
@@ -375,7 +375,7 @@ fun GamepadView(
         startOffsetX = 0f
         startOffsetY = 0f
         startScale = 1f
-        
+
         sharedPrefs.edit {
             remove("${config.id}_dpad_x")
             remove("${config.id}_dpad_y")
@@ -416,7 +416,7 @@ fun GamepadView(
         }
         pendingLayoutValues.clear()
         scope.launch { layoutRepository.clear(config.id) }
-            
+
         triggerVibration(50)
     }
 
@@ -427,13 +427,13 @@ fun GamepadView(
     if (!modeSwitchBusy && modeSwitchError != null) {
         AlertDialog(
             onDismissRequest = { btManager.dismissGamepadModeSwitchError() },
-            title = { Text("手柄模式切换中断") },
+            title = { Text(appText("手柄模式切换中断")) },
             text = { Text(localizedGamepadModeSwitchError(modeSwitchError.orEmpty())) },
             confirmButton = {
-                TextButton(onClick = { btManager.retryGamepadModeSwitch() }) { Text("重试") }
+                TextButton(onClick = { btManager.retryGamepadModeSwitch() }) { Text(appText("重试")) }
             },
             dismissButton = {
-                TextButton(onClick = { btManager.dismissGamepadModeSwitchError() }) { Text("关闭") }
+                TextButton(onClick = { btManager.dismissGamepadModeSwitchError() }) { Text(appText("关闭")) }
             },
         )
     }
@@ -454,7 +454,7 @@ fun GamepadView(
                     CircularProgressIndicator()
                     Text(
                         if (modeSwitchState == GamepadModeSwitchState.REGISTERING)
-                            "正在切换手柄模式……" else "正在重新连接设备……",
+                            appText("正在切换手柄模式……") else appText("正在重新连接设备……"),
                         style = MaterialTheme.typography.titleMedium,
                         textAlign = TextAlign.Center,
                     )
@@ -463,12 +463,12 @@ fun GamepadView(
         }
     }
     val isConnected = connectedDevNow != null
-    val deviceName = (connectedDevNow ?: btManager.getReconnectTarget())?.name ?: "无主机"
+    val deviceName = (connectedDevNow ?: btManager.getReconnectTarget())?.name ?: appText("无主机")
 
     var buttonMask by remember { mutableIntStateOf(0) }
     var dpadMask by remember { mutableIntStateOf(0) }
     var isGamepadDirty by remember { mutableStateOf(false) }
-    
+
     var leftStickX by remember { mutableFloatStateOf(0f) }
     var leftStickY by remember { mutableFloatStateOf(0f) }
     var rightStickX by remember { mutableFloatStateOf(0f) }
@@ -585,9 +585,9 @@ fun GamepadView(
                             .testTag("exit_gamepad_btn"),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(Icons.Default.Close, "退出", tint = Color.White, modifier = Modifier.size(10.dp))
+                        Icon(Icons.Default.Close, appText("退出"), tint = Color.White, modifier = Modifier.size(10.dp))
                         Spacer(Modifier.width(4.dp))
-                        Text("关闭", color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                        Text(appText("关闭"), color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Bold)
                     }
 
                     // Mode cycle
@@ -597,8 +597,8 @@ fun GamepadView(
                             .clip(RoundedCornerShape(6.dp))
                             .background(Color.White.copy(alpha = 0.15f))
                             .combinedClickable(
-                                onClickLabel = "下一个输入模式",
-                                onLongClickLabel = "配置输入模式循环",
+                                onClickLabel = appText("下一个输入模式"),
+                                onLongClickLabel = appText("配置输入模式循环"),
                                 onClick = {
                                     val enabledModes = sharedPrefs.enabledInputModes().map(InputMode::id)
                                     val idx = enabledModes.indexOf(launchMode)
@@ -614,8 +614,8 @@ fun GamepadView(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
-                        Icon(Icons.Default.SportsEsports, "切换模式", tint = Color.White, modifier = Modifier.size(11.dp))
-                        Text("手柄模式", color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                        Icon(Icons.Default.SportsEsports, appText("切换模式"), tint = Color.White, modifier = Modifier.size(11.dp))
+                        Text(appText("手柄模式"), color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Bold)
                     }
 
                     // Connection status
@@ -637,8 +637,8 @@ fun GamepadView(
                             .background(Color.White.copy(alpha = 0.15f))
                             .combinedClickable(
                                 enabled = !modeSwitchBusy,
-                                onClickLabel = "切换手柄兼容模式",
-                                onLongClickLabel = "配置手柄兼容性",
+                                onClickLabel = appText("切换手柄兼容模式"),
+                                onLongClickLabel = appText("配置手柄兼容性"),
                                 onClick = {
                                     val newMode = dpadOutputMode.next()
                                     if (btManager.changeGamepadMode(newMode)) triggerVibration(15)
@@ -663,7 +663,7 @@ fun GamepadView(
                             modifier = Modifier.size(11.dp)
                         )
                         Text(
-                            text = "模式：${dpadOutputMode.label}",
+                            text = appText("模式：${dpadOutputMode.label}"),
                             color = Color.White,
                             fontSize = 9.sp,
                             fontWeight = FontWeight.Bold
@@ -683,8 +683,8 @@ fun GamepadView(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
-                            Icon(Icons.Default.Refresh, "恢复默认", tint = Color.White, modifier = Modifier.size(11.dp))
-                            Text("恢复默认", color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                            Icon(Icons.Default.Refresh, appText("恢复默认"), tint = Color.White, modifier = Modifier.size(11.dp))
+                            Text(appText("恢复默认"), color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Bold)
                         }
                     }
 
@@ -705,12 +705,12 @@ fun GamepadView(
                     ) {
                         Icon(
                             imageVector = if (isEditMode) Icons.Default.Check else Icons.Default.Edit,
-                            contentDescription = "编辑布局",
+                            contentDescription = appText("编辑布局"),
                             tint = Color.White,
                             modifier = Modifier.size(12.dp)
                         )
                         Text(
-                            text = if (isEditMode) "完成" else "编辑布局",
+                            text = if (isEditMode) appText("完成") else appText("编辑布局"),
                             color = Color.White,
                             fontSize = 9.sp,
                             fontWeight = FontWeight.Bold
@@ -731,7 +731,7 @@ fun GamepadView(
                             .testTag("console_selector_pill"),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(Icons.Default.SportsEsports, "主机", tint = Color.White, modifier = Modifier.size(11.dp))
+                        Icon(Icons.Default.SportsEsports, appText("主机"), tint = Color.White, modifier = Modifier.size(11.dp))
                         Spacer(Modifier.width(4.dp))
                         Text(config.name, color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Bold)
                     }
@@ -752,9 +752,9 @@ fun GamepadView(
                         contentAlignment = Alignment.Center
                     ) {
                         if (isVibrationEnabled) {
-                            Icon(Icons.Default.Vibration, "触觉反馈", tint = Color.White, modifier = Modifier.size(12.dp))
+                            Icon(Icons.Default.Vibration, appText("触觉反馈"), tint = Color.White, modifier = Modifier.size(12.dp))
                         } else {
-                            Icon(painterResource(R.drawable.ic_vibration_off), "触觉反馈", tint = Color.White, modifier = Modifier.size(12.dp))
+                            Icon(painterResource(R.drawable.ic_vibration_off), appText("触觉反馈"), tint = Color.White, modifier = Modifier.size(12.dp))
                         }
                     }
                 }
@@ -1077,7 +1077,7 @@ fun GamepadView(
                                     GamepadBumperButton(config.leftBumper, true, pressButton, releaseButton)
                                 }
                             }
-                            
+
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 EditableComponentWrapper(
                                     isEditMode = isEditMode,
@@ -1271,7 +1271,7 @@ private fun GamepadBumperButton(
     } else {
         RoundedCornerShape(topStart = 6.dp, topEnd = 14.dp, bottomStart = 10.dp, bottomEnd = 6.dp)
     }
-    
+
     val innerShape = if (isLeft) {
         RoundedCornerShape(topStart = 12.dp, topEnd = 4.dp, bottomStart = 4.dp, bottomEnd = 8.dp)
     } else {
@@ -1458,7 +1458,7 @@ private fun GamepadFaceButton(
 
     // Base color of the disk itself (dark gray, themed to the background #28282A)
     val baseColor = Color(0xFF333336)
-    
+
     // Label/Symbol color (A, B, X, Y or △, ◯, ✕, ☐)
     val labelColor = button.color
 
@@ -1564,7 +1564,7 @@ private fun GamepadFaceButton(
                         val cy = size.height / 2f
                         val strokeW = 2.8.dp.toPx()
                         val radius = 6.5.dp.toPx()
-                        
+
                         when (button.label) {
                             "△" -> {
                                 val path = androidx.compose.ui.graphics.Path().apply {
@@ -1806,7 +1806,7 @@ private fun GamepadCenterButton(
                         val w = size.width
                         val h = size.height
                         val strokeW = 1.5.dp.toPx()
-                        
+
                         // Back window
                         drawRect(
                             color = Color.White.copy(alpha = 0.75f),
@@ -1825,7 +1825,7 @@ private fun GamepadCenterButton(
                 } else if (button.label == "SHARE") {
                     Icon(
                         imageVector = Icons.Default.IosShare,
-                        contentDescription = "分享",
+                        contentDescription = appText("分享"),
                         tint = Color.White.copy(alpha = 0.75f),
                         modifier = Modifier.size(11.dp)
                     )
@@ -1875,7 +1875,7 @@ private fun GamepadShareButton(
     ) {
         val outerShape = RoundedCornerShape(8.dp)
         val innerShape = RoundedCornerShape(6.dp)
-        
+
         // Button well
         Box(
             modifier = Modifier
@@ -1906,7 +1906,7 @@ private fun GamepadShareButton(
             Canvas(modifier = Modifier.fillMaxSize()) {
                 val w = size.width
                 val h = size.height
-                
+
                 val maxOffset = 0.6.dp.toPx()
                 val edgeOffset = if (isPressed) 0.3f.dp.toPx() else 1.5f.dp.toPx()
                 val faceOffset = if (isPressed) maxOffset else 0f
@@ -1948,7 +1948,7 @@ private fun GamepadShareButton(
             ) {
                 Icon(
                     imageVector = Icons.Default.IosShare,
-                        contentDescription = "分享",
+                        contentDescription = appText("分享"),
                     tint = Color.White.copy(alpha = 0.75f),
                     modifier = Modifier.size(12.dp)
                 )
@@ -2049,7 +2049,7 @@ private fun XboxLogoGuideButton(
                     style = Stroke(width = 0.8.dp.toPx())
                 )
             }
-            
+
             // Developer logo overlay centered on top face
             val faceOffset = if (isPressed) 0.dp else 0.6.dp
             Box(
@@ -2060,7 +2060,7 @@ private fun XboxLogoGuideButton(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                        contentDescription = "标志",
+                        contentDescription = appText("标志"),
                     tint = Color.White.copy(alpha = 0.85f),
                     modifier = Modifier.size(32.dp)
                 )
@@ -2146,7 +2146,7 @@ private fun PlayStationLogoButton(
                     radius = faceR,
                     center = Offset(r, r - faceOffset)
                 )
-                
+
                 // Bevel highlight (vertical gradient brush for better shading)
                 drawCircle(
                     brush = Brush.verticalGradient(
@@ -2161,7 +2161,7 @@ private fun PlayStationLogoButton(
                     style = Stroke(width = 0.8.dp.toPx())
                 )
             }
-            
+
             // Developer logo overlay centered on top face
             val faceOffset = if (isPressed) 0.dp else 0.6.dp
             Box(
@@ -2172,7 +2172,7 @@ private fun PlayStationLogoButton(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                        contentDescription = "标志",
+                        contentDescription = appText("标志"),
                     tint = Color.White.copy(alpha = 0.85f),
                     modifier = Modifier.size(32.dp)
                 )
@@ -2350,7 +2350,7 @@ private fun GamepadAnalogStick(
                             val change = event.changes.firstOrNull { it.id == pointerId } ?: break
 
                             if (!change.pressed) {
-                                val dragDistance = sqrt((change.position.x - down.position.x) * (change.position.x - down.position.x) + 
+                                val dragDistance = sqrt((change.position.x - down.position.x) * (change.position.x - down.position.x) +
                                                         (change.position.y - down.position.y) * (change.position.y - down.position.y))
 
                                 if (dragDistance < tapSlopPx && System.currentTimeMillis() - downTime < 250) {
@@ -2389,7 +2389,7 @@ private fun GamepadAnalogStick(
                 radius = w / 2f + 3.dp.toPx(),
                 style = Stroke(width = 0.8.dp.toPx())
             )
-            
+
             // Recessed well background
             drawCircle(
                 brush = Brush.verticalGradient(
@@ -2397,7 +2397,7 @@ private fun GamepadAnalogStick(
                 ),
                 radius = w / 2f - 1.dp.toPx()
             )
-            
+
             // Soft inner shadow ring inside the well for depth
             drawCircle(
                 color = Color.Black.copy(alpha = 0.45f),
@@ -2421,7 +2421,7 @@ private fun GamepadAnalogStick(
                 radius = size.width / 2f
             )
         }
-            
+
         // 3. Analog Stick Thumb (rendered on top, NOT clipped, with 3D tilt & press)
         Box(
             modifier = Modifier
@@ -2439,25 +2439,25 @@ private fun GamepadAnalogStick(
                 val cx = w / 2f
                 val cy = w / 2f
                 val r = w / 2f
-                
+
                 // Outer base edge (very dark ring)
                 drawCircle(
                     color = Color(0xFF161719),
                     radius = r
                 )
-                
+
                 // Outer ring highlight/shadow
                 drawCircle(
                     color = Color.White.copy(alpha = 0.08f),
                     radius = r - 0.5.dp.toPx(),
                     style = Stroke(width = 1.dp.toPx())
                 )
-                
+
                 // Shifting central elements for 3D parallax deflection and press look
                 val pressShift = if (clicked) 1.2.dp.toPx() else 0f
                 val cupCx = cx + stickOffsetX * 0.12f
                 val cupCy = cy + stickOffsetY * 0.12f + pressShift
-                
+
                 // Create paths for the knurled dome slope (between outer ring and inner cup)
                 val pathOuter = androidx.compose.ui.graphics.Path().apply {
                     addOval(androidx.compose.ui.geometry.Rect(center = Offset(cx, cy), radius = r - 1.dp.toPx()))
@@ -2470,7 +2470,7 @@ private fun GamepadAnalogStick(
                     pathOuter,
                     pathInner
                 )
-                
+
                 // Fill the dome slope with a soft vertical gradient for a flatter look
                 drawPath(
                     path = ringPath,
@@ -2478,20 +2478,20 @@ private fun GamepadAnalogStick(
                         colors = listOf(Color(0xFF38383B), Color(0xFF232325))
                     )
                 )
-                
+
                 // Flatter recessed cup gradient (no radial concentration in center)
                 val cupRadius = r * 0.58f
                 val concaveBrush = Brush.verticalGradient(
                     colors = listOf(Color(0xFF1B1C1E), Color(0xFF292A2E))
                 )
-                
+
                 // 3D Inner cup recessed background
                 drawCircle(
                     brush = concaveBrush,
                     radius = cupRadius,
                     center = Offset(cupCx, cupCy)
                 )
-                
+
                 // Bevel ring border (simple dark separator)
                 drawCircle(
                     color = Color(0xFF141517),
@@ -2499,7 +2499,7 @@ private fun GamepadAnalogStick(
                     center = Offset(cupCx, cupCy),
                     style = Stroke(width = 1.2.dp.toPx())
                 )
-                
+
                 // Bevel highlight (simple soft outline ring)
                 drawCircle(
                     color = Color.White.copy(alpha = 0.09f),
@@ -2533,16 +2533,16 @@ private fun GamepadDpad(
 ) {
     var activeDirection by remember { mutableIntStateOf(0) }
     val currentOnDpadChange by rememberUpdatedState(onDpadChange)
-    
+
     // Physical tilt based on pressed direction (pure pivot rotation)
     var targetRotX = 0f
     var targetRotY = 0f
-    
+
     if (activeDirection and 1 != 0) targetRotX = 12f  // UP: depresses top, raises bottom
     if (activeDirection and 2 != 0) targetRotX = -12f // DOWN: depresses bottom, raises top
     if (activeDirection and 4 != 0) targetRotY = -12f // LEFT: depresses left, raises right
     if (activeDirection and 8 != 0) targetRotY = 12f  // RIGHT: depresses right, raises left
-    
+
     val rotX by animateFloatAsState(targetValue = targetRotX, animationSpec = spring(stiffness = Spring.StiffnessHigh))
     val rotY by animateFloatAsState(targetValue = targetRotY, animationSpec = spring(stiffness = Spring.StiffnessHigh))
 
@@ -2591,7 +2591,7 @@ private fun GamepadDpad(
             val w = size.width
             val barWWell = w * 0.36f
             val startOffWell = (w - barWWell) / 2f
-            
+
             val path1 = androidx.compose.ui.graphics.Path().apply {
                 addRoundRect(
                     androidx.compose.ui.geometry.RoundRect(
@@ -2619,7 +2619,7 @@ private fun GamepadDpad(
                 path1,
                 path2
             )
-            
+
             // Fill plus-shaped well
             drawPath(
                 path = wellPath,
@@ -2644,7 +2644,7 @@ private fun GamepadDpad(
             val w = size.width
             val barW = w * 0.28f
             val startOff = (w - barW) / 2f
-            
+
             val cross1 = androidx.compose.ui.graphics.Path().apply {
                 addRoundRect(
                     androidx.compose.ui.geometry.RoundRect(
@@ -2672,16 +2672,16 @@ private fun GamepadDpad(
                 cross1,
                 cross2
             )
-            
+
             // Dynamic D-pad drop shadow offset (shifts in opposite direction of tilt)
             var shadowOffsetX = 0f
             var shadowOffsetY = 1.5f.dp.toPx()
-            
+
             if (activeDirection and 1 != 0) shadowOffsetY += 2f.dp.toPx()  // UP: shifts shadow down
             if (activeDirection and 2 != 0) shadowOffsetY -= 2f.dp.toPx()  // DOWN: shifts shadow up
             if (activeDirection and 4 != 0) shadowOffsetX += 2f.dp.toPx()  // LEFT: shifts shadow right
             if (activeDirection and 8 != 0) shadowOffsetX -= 2f.dp.toPx()  // RIGHT: shifts shadow left
-            
+
             withTransform({
                 translate(left = shadowOffsetX, top = shadowOffsetY)
             }) {
@@ -2706,10 +2706,10 @@ private fun GamepadDpad(
                 val w = size.width
                 val cx = w / 2f
                 val cy = w / 2f
-                
+
                 val barW = w * 0.28f
                 val startOff = (w - barW) / 2f
-                
+
                 val cross1 = androidx.compose.ui.graphics.Path().apply {
                     addRoundRect(
                         androidx.compose.ui.geometry.RoundRect(
@@ -2838,16 +2838,16 @@ private fun EditableComponentWrapper(
     content: @Composable () -> Unit
 ) {
     val density = LocalDensity.current.density
-    
+
     val currentOffsetX by rememberUpdatedState(offsetX)
     val currentOffsetY by rememberUpdatedState(offsetY)
     val currentScale by rememberUpdatedState(scale)
     val currentOnOffsetChange by rememberUpdatedState(onOffsetChange)
     val currentOnScaleChange by rememberUpdatedState(onScaleChange)
     val currentOnTransformEnd by rememberUpdatedState(onTransformEnd)
-    
+
     var layoutTopInWindowPx by remember { mutableFloatStateOf(0f) }
-    
+
     Box(
         modifier = Modifier
             .onGloballyPositioned { coordinates ->
@@ -2870,7 +2870,7 @@ private fun EditableComponentWrapper(
         contentAlignment = Alignment.Center
     ) {
         content()
-        
+
         if (isEditMode) {
             // 1. Overlay container with border that intercepts gestures for moving and pinch zoom
             Box(
@@ -2897,7 +2897,7 @@ private fun EditableComponentWrapper(
                             // 1. Update scale via pinch zoom
                             val newScale = (currentScale * zoom).coerceIn(0.6f, 1.8f)
                             currentOnScaleChange(newScale)
-                            
+
                             // 2. Update offset with scale factor correction and topbar constraint
                             val minY = 38f + 4f - layoutTopInWindowPx / density
                             val newX = currentOffsetX + (pan.x * currentScale) / density
@@ -2909,7 +2909,7 @@ private fun EditableComponentWrapper(
                         }
                     }
             )
-            
+
             // 2. Drag resize handle in bottom-right corner (Alternative scaling option)
             Box(
                 modifier = Modifier
@@ -2933,7 +2933,7 @@ private fun EditableComponentWrapper(
             ) {
                 Icon(
                     imageVector = Icons.Default.OpenInFull,
-                    contentDescription = "调整大小",
+                    contentDescription = appText("调整大小"),
                     tint = Color.White,
                     modifier = Modifier.size(11.dp)
                 )

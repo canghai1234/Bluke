@@ -23,11 +23,11 @@ import dev.arnv.bluke.ui.SettingsCardGroup
 import dev.arnv.bluke.ui.SettingsItemData
 import dev.arnv.bluke.ui.theme.MyApplicationTheme
 
-class SettingsActivity : ComponentActivity() {
+class SettingsActivity : LocalizedActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         setContent {
             MyApplicationTheme {
                 val sharedPrefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
@@ -43,17 +43,17 @@ class SettingsActivity : ComponentActivity() {
                     lifecycleOwner.lifecycle.addObserver(observer)
                     onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
                 }
-                
+
                 val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
                 Scaffold(
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
                         LargeTopAppBar(
-                            title = { Text("设置") },
+                            title = { Text(appText("设置")) },
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
-                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = appText("返回"))
                                 }
                             },
                             colors = TopAppBarDefaults.largeTopAppBarColors(
@@ -73,27 +73,48 @@ class SettingsActivity : ComponentActivity() {
                     ) {
                         Spacer(Modifier.height(8.dp))
                         SettingsCardGroup(
-                            title = "个性化",
+                            title = appText("显示与语言"),
                             items = listOf(
                                 SettingsItemData(
-                                    title = "外观与体验",
-                                    subtitle = "应用颜色、深色主题、触感反馈和按键音",
+                                    title = appText("语言"),
+                                    subtitle = appText(AppLanguageManager.current().label),
+                                    icon = { Icon(Icons.Default.Language, null, tint = MaterialTheme.colorScheme.primary) },
+                                    onClick = {
+                                        startActivity(Intent(this@SettingsActivity, LanguageSettingsActivity::class.java))
+                                    },
+                                ),
+                                SettingsItemData(
+                                    title = appText("方向设置"),
+                                    subtitle = appText("自动、顺时针或逆时针旋转输入界面"),
+                                    icon = { Icon(Icons.Default.ScreenRotation, null, tint = MaterialTheme.colorScheme.primary) },
+                                    onClick = {
+                                        startActivity(Intent(this@SettingsActivity, DisplaySettingsActivity::class.java))
+                                    },
+                                ),
+                            ),
+                        )
+                        SettingsCardGroup(
+                            title = appText("个性化"),
+                            items = listOf(
+                                SettingsItemData(
+                                    title = appText("外观与体验"),
+                                    subtitle = appText("应用颜色、深色主题、触感反馈和按键音"),
                                     icon = { Icon(Icons.Default.ColorLens, null, tint = MaterialTheme.colorScheme.primary) },
-                                    onClick = { 
+                                    onClick = {
                                         startActivity(Intent(this@SettingsActivity, LookAndFeelActivity::class.java))
                                     }
                                 ),
                                 SettingsItemData(
-                                    title = "键盘",
-                                    subtitle = "输入行为、布局、主题和按键音",
+                                    title = appText("键盘"),
+                                    subtitle = appText("输入行为、布局、主题和按键音"),
                                     icon = { Icon(Icons.Default.Keyboard, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = {
                                         startActivity(Intent(this@SettingsActivity, KeyboardSettingsActivity::class.java))
                                     }
                                 ),
                                 SettingsItemData(
-                                    title = "手柄",
-                                    subtitle = "手柄行为与兼容性",
+                                    title = appText("手柄"),
+                                    subtitle = appText("手柄行为与兼容性"),
                                     icon = { Icon(Icons.Default.Gamepad, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = {
                                         startActivity(Intent(this@SettingsActivity, ControllerSettingsActivity::class.java))
@@ -102,44 +123,44 @@ class SettingsActivity : ComponentActivity() {
                             )
                         )
                         SettingsCardGroup(
-                            title = "控制与连接",
+                            title = appText("控制与连接"),
                             items = listOf(
                                 SettingsItemData(
-                                    title = "行为",
-                                    subtitle = "蓝牙发现、重新连接和远程控制",
+                                    title = appText("行为"),
+                                    subtitle = appText("蓝牙发现、重新连接和远程控制"),
                                     icon = { Icon(Icons.Default.Settings, null, tint = MaterialTheme.colorScheme.primary) },
-                                    onClick = { 
+                                    onClick = {
                                         startActivity(Intent(this@SettingsActivity, BehaviorActivity::class.java))
                                     }
                                 ),
                             )
                         )
                         SettingsCardGroup(
-                            title = "支持",
+                            title = appText("支持"),
                             items = listOf(
                                 SettingsItemData(
-                                    title = "帮助与故障排除",
-                                    subtitle = "配对修复、手柄设置、浏览器游戏和使用限制",
+                                    title = appText("帮助与故障排除"),
+                                    subtitle = appText("配对修复、手柄设置、浏览器游戏和使用限制"),
                                     icon = { Icon(Icons.AutoMirrored.Filled.HelpOutline, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = {
                                         startActivity(Intent(this@SettingsActivity, HelpActivity::class.java))
                                     }
                                 ),
                                 SettingsItemData(
-                                    title = "关于",
-                                    subtitle = "版本、贡献者、许可证和支持",
+                                    title = appText("关于"),
+                                    subtitle = appText("版本、贡献者、许可证和支持"),
                                     icon = { Icon(Icons.Default.Info, null, tint = MaterialTheme.colorScheme.primary) },
-                                    onClick = { 
+                                    onClick = {
                                         startActivity(Intent(this@SettingsActivity, AboutActivity::class.java))
                                     }
                                 )
                             ).let { baseList ->
                                 if (isDevMode) {
                                     baseList + SettingsItemData(
-                                        title = "开发者选项",
-                                        subtitle = "测试与调试控制",
+                                        title = appText("开发者选项"),
+                                        subtitle = appText("测试与调试控制"),
                                         icon = { Icon(Icons.Default.Code, null, tint = MaterialTheme.colorScheme.primary) },
-                                        onClick = { 
+                                        onClick = {
                                             startActivity(Intent(this@SettingsActivity, DeveloperOptionsActivity::class.java))
                                         }
                                     )

@@ -69,7 +69,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class SoundPacksActivity : ComponentActivity() {
+class SoundPacksActivity : LocalizedActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -126,7 +126,7 @@ class SoundPacksActivity : ComponentActivity() {
                         scope.launch {
                             val result = withContext(Dispatchers.IO) {
                                 contentResolver.openInputStream(uri)?.use(repository::importZip)
-                                    ?: SoundPackImportResult.Failure("无法读取所选文件。")
+                                    ?: SoundPackImportResult.Failure(appText("无法读取所选文件。"))
                             }
                             importing = false
                             when (result) {
@@ -135,10 +135,10 @@ class SoundPacksActivity : ComponentActivity() {
                                     selectedProfileId = customSoundProfileId(result.pack.id)
                                     cycleSelection = cycleSelection + customSoundProfileId(result.pack.id)
                                     saveSoundCycleSelection(preferences, cycleSelection)
-                                    snackbarHostState.showSnackbar("已导入并选中 ${result.pack.name}。")
+                                    snackbarHostState.showSnackbar(appText("已导入并选中 ${result.pack.name}。"))
                                 }
                                 is SoundPackImportResult.Duplicate -> {
-                                    snackbarHostState.showSnackbar("${result.pack.name} 已经导入。")
+                                    snackbarHostState.showSnackbar(appText("${result.pack.name} 已经导入。"))
                                 }
                                 is SoundPackImportResult.Failure -> {
                                     snackbarHostState.showSnackbar(result.message)
@@ -152,8 +152,8 @@ class SoundPacksActivity : ComponentActivity() {
                 pendingDeletion?.let { pack ->
                     AlertDialog(
                         onDismissRequest = { pendingDeletion = null },
-                        title = { Text("删除 ${pack.name}？") },
-                        text = { Text("这会从 Bluke 中移除导入的音效包，不会影响内置音效。") },
+                        title = { Text(appText("删除 ${pack.name}？")) },
+                        text = { Text(appText("这会从 Bluke 中移除导入的音效包，不会影响内置音效。")) },
                         confirmButton = {
                             TextButton(
                                 onClick = {
@@ -175,16 +175,16 @@ class SoundPacksActivity : ComponentActivity() {
                                             cycleSelection = nextCycle
                                             saveSoundCycleSelection(preferences, nextCycle)
                                             selectProfile(nextSelected)
-                                            snackbarHostState.showSnackbar("已删除 ${pack.name}。")
+                                            snackbarHostState.showSnackbar(appText("已删除 ${pack.name}。"))
                                         } else {
-                                            snackbarHostState.showSnackbar("无法删除 ${pack.name}。")
+                                            snackbarHostState.showSnackbar(appText("无法删除 ${pack.name}。"))
                                         }
                                     }
                                 },
-                            ) { Text("删除") }
+                            ) { Text(appText("删除")) }
                         },
                         dismissButton = {
-                            TextButton(onClick = { pendingDeletion = null }) { Text("取消") }
+                            TextButton(onClick = { pendingDeletion = null }) { Text(appText("取消")) }
                         },
                     )
                 }
@@ -193,10 +193,10 @@ class SoundPacksActivity : ComponentActivity() {
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
                         LargeTopAppBar(
-                            title = { Text("按键音效") },
+                            title = { Text(appText("按键音效")) },
                             navigationIcon = {
                                 IconButton(onClick = ::finish) {
-                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = appText("返回"))
                                 }
                             },
                             scrollBehavior = scrollBehavior,
@@ -220,7 +220,7 @@ class SoundPacksActivity : ComponentActivity() {
                                     Icon(Icons.Default.Add, contentDescription = null)
                                 }
                             },
-                            text = { Text(if (importing) "正在导入……" else "导入音效包") },
+                            text = { Text(if (importing) appText("正在导入……") else appText("导入音效包")) },
                         )
                     },
                 ) { innerPadding ->
@@ -233,12 +233,12 @@ class SoundPacksActivity : ComponentActivity() {
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
                         Text(
-                            "为每次按键选择一个声音配置。导入的 Mechvibes 音效包会与 Bluke 内置的轴体音效一起显示，也可以通过键盘工具栏循环访问。",
+                            appText("为每次按键选择一个声音配置。导入的 Mechvibes 音效包会与 Bluke 内置的轴体音效一起显示，也可以通过键盘工具栏循环访问。"),
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                         Text(
-                            "声音配置",
+                            appText("声音配置"),
                             style = MaterialTheme.typography.titleSmall,
                             color = MaterialTheme.colorScheme.primary,
                         )
@@ -278,7 +278,7 @@ class SoundPacksActivity : ComponentActivity() {
                         }
                         if (packs.isEmpty()) {
                             Text(
-                                "导入的音效包会显示在此列表中。",
+                                appText("导入的音效包会显示在此列表中。"),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -299,13 +299,13 @@ private sealed interface SoundChoice {
     data class BuiltIn(val switchType: SwitchType) : SoundChoice {
         override val id = builtInSoundProfileId(switchType)
         override val title = switchType.displayName
-        override val subtitle = "内置"
+        override val subtitle = appText("内置")
     }
 
     data class Imported(val pack: CustomSoundPack) : SoundChoice {
         override val id = customSoundProfileId(pack.id)
         override val title = pack.name
-        override val subtitle = "导入的 Mechvibes 音效包"
+        override val subtitle = appText("导入的 Mechvibes 音效包")
     }
 }
 
@@ -367,7 +367,7 @@ private fun SoundProfileChoice(
                 )
             }
             if (selected) {
-                Icon(Icons.Default.Check, contentDescription = "已选中")
+                Icon(Icons.Default.Check, contentDescription = appText("已选中"))
             }
             Checkbox(
                 checked = includedInCycle,
@@ -376,7 +376,7 @@ private fun SoundProfileChoice(
             )
             if (onDelete != null) {
                 IconButton(onClick = onDelete) {
-                    Icon(Icons.Default.Delete, contentDescription = "删除 $title")
+                    Icon(Icons.Default.Delete, contentDescription = appText("删除 $title"))
                 }
             }
         }

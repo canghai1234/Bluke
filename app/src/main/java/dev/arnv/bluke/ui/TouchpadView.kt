@@ -51,10 +51,13 @@ import dev.arnv.bluke.data.KeyboardThemeRepository
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-enum class TrackpadButtonMode(val displayName: String) {
+enum class TrackpadButtonMode(private val displayNameSource: String) {
     CLICKPAD("点击板"),
     TWO_BUTTONS("双键 左/右"),
-    THREE_BUTTONS("三键 左/中/右")
+    THREE_BUTTONS("三键 左/中/右");
+
+    val displayName: String
+        get() = appText(displayNameSource)
 }
 
 @SuppressLint("MissingPermission")
@@ -70,7 +73,7 @@ fun TouchpadView(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    
+
     // Preferences & Config States
     var buttonMode by remember { mutableStateOf(TrackpadButtonMode.CLICKPAD) }
     var showNumpadLed by rememberSaveable { mutableStateOf(false) }
@@ -129,7 +132,7 @@ fun TouchpadView(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            
+
             // 1. Sleek Frosted Settings Bar for Touchpad (replaces standard Keyboard bar)
             Row(
                 modifier = Modifier
@@ -158,13 +161,13 @@ fun TouchpadView(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = "退出",
+                            contentDescription = appText("退出"),
                             tint = Color.White,
                             modifier = Modifier.size(10.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "关闭",
+                            text = appText("关闭"),
                             color = Color.White,
                             fontSize = 9.sp,
                             fontWeight = FontWeight.Bold
@@ -178,8 +181,8 @@ fun TouchpadView(
                             .clip(RoundedCornerShape(6.dp))
                             .background(Color.White.copy(alpha = 0.15f))
                             .combinedClickable(
-                                onClickLabel = "下一个输入模式",
-                                onLongClickLabel = "配置输入模式循环",
+                                onClickLabel = appText("下一个输入模式"),
+                                onLongClickLabel = appText("配置输入模式循环"),
                                 onClick = {
                                     val enabledModes = sharedPrefs.enabledInputModes().map(InputMode::id)
                                     val currentIndexInEnabled = enabledModes.indexOf(launchMode)
@@ -199,12 +202,12 @@ fun TouchpadView(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Mouse,
-                            contentDescription = "切换模式",
+                            contentDescription = appText("切换模式"),
                             tint = Color.White,
                             modifier = Modifier.size(11.dp)
                         )
                         Text(
-                            text = "触控板模式",
+                            text = appText("触控板模式"),
                             color = Color.White,
                             fontSize = 9.sp,
                             fontWeight = FontWeight.Bold
@@ -214,7 +217,7 @@ fun TouchpadView(
                     // Connection status
                     val connectedDevNow by btManager.connectedDevice.collectAsState()
                     val isConnected = connectedDevNow != null
-                    val deviceName = (connectedDevNow ?: btManager.getReconnectTarget())?.name ?: "无主机"
+                    val deviceName = (connectedDevNow ?: btManager.getReconnectTarget())?.name ?: appText("无主机")
                     val statusLedColor = if (isConnected) Color(0xFF39FF14) else Color(0xFFFF9800)
                     Box(
                         modifier = Modifier
@@ -258,7 +261,7 @@ fun TouchpadView(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
-                        Icon(Icons.Default.Keyboard, "修饰键位置", tint = Color.White, modifier = Modifier.size(12.dp))
+                        Icon(Icons.Default.Keyboard, appText("修饰键位置"), tint = Color.White, modifier = Modifier.size(12.dp))
                         Text(
                             modifierPosition.displayName,
                             color = Color.White,
@@ -284,20 +287,20 @@ fun TouchpadView(
                         if (showNumpadLed) {
                             Icon(
                                 imageVector = Icons.Default.Dialpad,
-                                contentDescription = "数字键盘指示灯",
+                                contentDescription = appText("数字键盘指示灯"),
                                 tint = Color.White,
                                 modifier = Modifier.size(12.dp)
                             )
                         } else {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_dialpad_off),
-                                contentDescription = "数字键盘指示灯",
+                                contentDescription = appText("数字键盘指示灯"),
                                 tint = Color.White,
                                 modifier = Modifier.size(12.dp)
                             )
                         }
                         Text(
-                            text = "数字键盘",
+                            text = appText("数字键盘"),
                             color = Color.White,
                             fontSize = 9.sp,
                             fontWeight = FontWeight.Bold
@@ -322,7 +325,7 @@ fun TouchpadView(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Mouse,
-                            contentDescription = "按键模式",
+                            contentDescription = appText("按键模式"),
                             tint = Color.White,
                             modifier = Modifier.size(12.dp)
                         )
@@ -352,7 +355,7 @@ fun TouchpadView(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Speed,
-                            contentDescription = "灵敏度",
+                            contentDescription = appText("灵敏度"),
                             tint = Color.White,
                             modifier = Modifier.size(12.dp)
                         )
@@ -382,7 +385,7 @@ fun TouchpadView(
                     ) {
                         Icon(
                             imageVector = Icons.Default.KeyboardDoubleArrowUp,
-                            contentDescription = "滚动速度",
+                            contentDescription = appText("滚动速度"),
                             tint = Color.White,
                             modifier = Modifier.size(12.dp)
                         )
@@ -414,14 +417,14 @@ fun TouchpadView(
                         if (isVibrationEnabled) {
                             Icon(
                                 imageVector = Icons.Default.Vibration,
-                                contentDescription = "触感振动",
+                                contentDescription = appText("触感振动"),
                                 tint = Color.White,
                                 modifier = Modifier.size(12.dp)
                             )
                         } else {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_vibration_off),
-                                contentDescription = "触感振动",
+                                contentDescription = appText("触感振动"),
                                 tint = Color.White,
                                 modifier = Modifier.size(12.dp)
                             )
@@ -465,7 +468,7 @@ fun TouchpadView(
                         .border(1.5.dp, Color.White.copy(alpha = 0.15f), RoundedCornerShape(10.dp))
                         .testTag("glass_touch_surface")
                 ) {
-                    
+
                     // Gesture and move touch capture layer
                     TouchGestureLayer(
                         btManager = btManager,
@@ -618,7 +621,7 @@ fun NumpadLedGrid(onKeyPress: (Int, Boolean) -> Unit) {
                 listOf("9", "6", "3", "%"),
                 listOf("/", "*", "-", "+")
             )
-            
+
             cols.forEach { col ->
                 Column(modifier = Modifier.weight(1f).fillMaxHeight()) {
                     col.forEach { char ->
@@ -657,7 +660,7 @@ fun NumpadLedGrid(onKeyPress: (Int, Boolean) -> Unit) {
                     }
                 }
             }
-            
+
             // 5th Column (Backspace, Enter, =)
             Column(modifier = Modifier.weight(1f).fillMaxHeight()) {
                 val keys5th = listOf(
@@ -689,7 +692,7 @@ fun NumpadLedGrid(onKeyPress: (Int, Boolean) -> Unit) {
                                 )
                             },
                         contentAlignment = Alignment.Center
-                    ) { 
+                    ) {
                         Text(
                             text = char,
                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
@@ -710,7 +713,7 @@ fun NumpadLedGrid(onKeyPress: (Int, Boolean) -> Unit) {
                 .padding(horizontal = 32.dp, vertical = 8.dp)
         ) {
             val strokeParams = 1.dp.toPx()
-            
+
             // 4 vertical lines (1/5, 2/5, 3/5, 4/5)
             for (i in 1..4) {
                 val x = size.width * (i / 5f)
@@ -828,7 +831,7 @@ fun TouchGestureLayer(
                         changes.forEach { change ->
                             if (change.pressed && !change.previousPressed) {
                                 pointerDownInfo[change.id] = change.uptimeMillis to change.position
-                                
+
                                 if (pointerDownInfo.size == 1) {
                                     tapDrag.down(change.uptimeMillis, change.position.x, change.position.y)
                                 } else {
@@ -841,7 +844,7 @@ fun TouchGestureLayer(
                             isTwoFingerActive = false
                             accumulatedScrollY = 0f
                             val pointer = changes.first { it.pressed }
-                            
+
                             if (lastActivePointerId != pointer.id || !pointer.previousPressed) {
                                 lastActivePointerId = pointer.id
                                 accumulatedX = 0f
@@ -924,7 +927,7 @@ fun TouchGestureLayer(
                         } else {
                             isTwoFingerActive = false
                             lastActivePointerId = null
-                            
+
                             val sendX = accumulatedX.roundToInt().coerceIn(-127, 127)
                             val sendY = accumulatedY.roundToInt().coerceIn(-127, 127)
                             if (sendX != 0 || sendY != 0) {
@@ -962,7 +965,7 @@ fun TouchGestureLayer(
                                         val dx = change.position.x - downInfo.second.x
                                         val dy = change.position.y - downInfo.second.y
                                         val distanceSq = dx * dx + dy * dy
-                                        
+
                                         if (TouchpadGesturePolicy.isTap(
                                             durationMillis = duration,
                                             distanceSquaredPx = distanceSq,
@@ -970,9 +973,9 @@ fun TouchGestureLayer(
                                         )) {
                                             if (downCount == 0) {
                                                 triggerVibration(20)
-                                                
+
                                                 val clickButton = if (maxPointersInTap >= 3) 4 else if (maxPointersInTap == 2) 2 else 1
-                                                
+
                                                 if (clickButton == 1) {
                                                     // Match main: defer the click so tap-then-drag holds a
                                                     // single press instead of starting with a double-click.

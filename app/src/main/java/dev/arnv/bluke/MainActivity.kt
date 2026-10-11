@@ -26,7 +26,7 @@ interface RemoteVolumeKeyHost {
     fun setRemoteVolumeKeyHandler(handler: ((keyCode: Int, isPressed: Boolean) -> Unit)?)
 }
 
-class MainActivity : ComponentActivity(), RemoteVolumeKeyHost {
+class MainActivity : LocalizedActivity(), RemoteVolumeKeyHost {
     private lateinit var btManager: BluetoothKeyboardManager
     private lateinit var soundSynth: KeyboardSoundSynthesizer
     private var remoteVolumeKeyHandler: ((keyCode: Int, isPressed: Boolean) -> Unit)? = null
@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity(), RemoteVolumeKeyHost {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         val sharedPrefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
         migrateSoundPreferences(sharedPrefs)
         migrateKeyboardCustomizationPreferences(sharedPrefs)

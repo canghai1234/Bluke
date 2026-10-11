@@ -19,28 +19,28 @@ import dev.arnv.bluke.ui.SettingsCardGroup
 import dev.arnv.bluke.ui.SettingsItemData
 import dev.arnv.bluke.ui.theme.MyApplicationTheme
 
-class DarkThemeActivity : ComponentActivity() {
+class DarkThemeActivity : LocalizedActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         val sharedPrefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
-        
+
         setContent {
             MyApplicationTheme {
                 var themeMode by remember { mutableIntStateOf(sharedPrefs.getInt("theme_mode", 0)) } // 0: System, 1: Off, 2: On
                 var highContrastMode by remember { mutableStateOf(sharedPrefs.getBoolean("high_contrast_mode", false)) }
-                
+
                 val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
-                
+
                 Scaffold(
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
                         LargeTopAppBar(
-                            title = { Text("深色主题") },
+                            title = { Text(appText("深色主题")) },
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
-                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = appText("返回"))
                                 }
                             },
                             colors = TopAppBarDefaults.largeTopAppBarColors(
@@ -59,11 +59,11 @@ class DarkThemeActivity : ComponentActivity() {
                         verticalArrangement = Arrangement.spacedBy(24.dp)
                     ) {
                         Spacer(Modifier.height(8.dp))
-                        
+
                         SettingsCardGroup(
                             items = listOf(
                                 SettingsItemData(
-                                    title = "跟随系统",
+                                    title = appText("跟随系统"),
                                     action = {
                                         RadioButton(
                                             selected = themeMode == 0,
@@ -79,7 +79,7 @@ class DarkThemeActivity : ComponentActivity() {
                                     }
                                 ),
                                 SettingsItemData(
-                                    title = "关闭",
+                                    title = appText("关闭"),
                                     action = {
                                         RadioButton(
                                             selected = themeMode == 1,
@@ -95,7 +95,7 @@ class DarkThemeActivity : ComponentActivity() {
                                     }
                                 ),
                                 SettingsItemData(
-                                    title = "开启",
+                                    title = appText("开启"),
                                     action = {
                                         RadioButton(
                                             selected = themeMode == 2,
@@ -114,16 +114,16 @@ class DarkThemeActivity : ComponentActivity() {
                         )
 
                         SettingsCardGroup(
-                            title = "其他设置",
+                            title = appText("其他设置"),
                             items = listOf(
                                 SettingsItemData(
-                                    title = "高对比度深色模式",
-                                    subtitle = "适用于 OLED 屏幕设备的纯黑深色主题",
+                                    title = appText("高对比度深色模式"),
+                                    subtitle = appText("适用于 OLED 屏幕设备的纯黑深色主题"),
                                     icon = { Icon(Icons.Default.Contrast, null, tint = MaterialTheme.colorScheme.primary) },
                                     action = {
                                         Switch(
                                             checked = highContrastMode,
-                                            onCheckedChange = { 
+                                            onCheckedChange = {
                                                 highContrastMode = it
                                                 sharedPrefs.edit { putBoolean("high_contrast_mode", it) }
                                             }

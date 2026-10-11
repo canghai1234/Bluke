@@ -47,7 +47,7 @@ import dev.arnv.bluke.ui.SettingsGroup
 import dev.arnv.bluke.ui.SettingsItemData
 import dev.arnv.bluke.ui.theme.MyApplicationTheme
 
-class KeyboardSettingsActivity : ComponentActivity() {
+class KeyboardSettingsActivity : LocalizedActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,10 +66,10 @@ class KeyboardSettingsActivity : ComponentActivity() {
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
                         LargeTopAppBar(
-                            title = { Text("键盘") },
+                            title = { Text(appText("键盘")) },
                             navigationIcon = {
                                 IconButton(onClick = ::finish) {
-                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = appText("返回"))
                                 }
                             },
                             scrollBehavior = scrollBehavior,
@@ -81,11 +81,11 @@ class KeyboardSettingsActivity : ComponentActivity() {
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
                         Spacer(Modifier.height(8.dp))
-                        SettingsGroup(title = "行为") {
+                        SettingsGroup(title = appText("行为")) {
                             Column(modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp)) {
-                                Text("按键触控范围", style = MaterialTheme.typography.titleMedium)
+                                Text(appText("按键触控范围"), style = MaterialTheme.typography.titleMedium)
                                 Text(
-                                    "范围越大，按键越容易点击，但也可能增加误触相邻按键的概率。",
+                                    appText("范围越大，按键越容易点击，但也可能增加误触相邻按键的概率。"),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
@@ -99,7 +99,7 @@ class KeyboardSettingsActivity : ComponentActivity() {
                                     steps = 9,
                                 )
                                 Text(
-                                    if (keySensitivity <= 3f) "精确" else if (keySensitivity >= 8f) "宽松" else "平衡",
+                                    if (keySensitivity <= 3f) appText("精确") else if (keySensitivity >= 8f) appText("宽松") else appText("平衡"),
                                     style = MaterialTheme.typography.labelLarge,
                                     color = MaterialTheme.colorScheme.primary,
                                 )
@@ -108,37 +108,37 @@ class KeyboardSettingsActivity : ComponentActivity() {
                         SettingsCardGroup(
                             items = listOf(
                                 SettingsItemData(
-                                    title = "输入布局",
-                                    subtitle = "${characterLayout.displayName} · 主机：${characterLayout.hostLayoutName}",
+                                    title = appText("输入布局"),
+                                    subtitle = appText("${characterLayout.displayName} · 主机：${characterLayout.hostLayoutName}"),
                                     icon = { Icon(Icons.Default.Keyboard, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = { dialog = KeyboardDialog.TYPING_LAYOUT },
                                 ),
                                 SettingsItemData(
-                                    title = "大写锁定",
-                                    subtitle = if (lockSyncMode == "host") "跟随主机指示灯" else "仅在本机记录状态",
+                                    title = appText("大写锁定"),
+                                    subtitle = if (lockSyncMode == "host") appText("跟随主机指示灯") else appText("仅在本机记录状态"),
                                     icon = { Icon(Icons.Default.Settings, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = { dialog = KeyboardDialog.CAPS_LOCK },
                                 ),
                             ),
                         )
                         SettingsCardGroup(
-                            title = "自定义",
+                            title = appText("自定义"),
                             items = listOf(
                                 SettingsItemData(
-                                    title = "布局",
-                                    subtitle = "选择键盘布局和工具栏循环选项",
+                                    title = appText("布局"),
+                                    subtitle = appText("选择键盘布局和工具栏循环选项"),
                                     icon = { Icon(Icons.Default.Keyboard, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = { startActivity(Intent(this@KeyboardSettingsActivity, KeyboardLayoutsActivity::class.java)) },
                                 ),
                                 SettingsItemData(
-                                    title = "主题",
-                                    subtitle = "键盘颜色、外壳和工具栏循环选项",
+                                    title = appText("主题"),
+                                    subtitle = appText("键盘颜色、外壳和工具栏循环选项"),
                                     icon = { Icon(Icons.Default.Palette, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = { startActivity(Intent(this@KeyboardSettingsActivity, KeyboardThemesActivity::class.java)) },
                                 ),
                                 SettingsItemData(
-                                    title = "按键音效包",
-                                    subtitle = "选择、导入并配置工具栏循环选项",
+                                    title = appText("按键音效包"),
+                                    subtitle = appText("选择、导入并配置工具栏循环选项"),
                                     icon = { Icon(Icons.Default.GraphicEq, null, tint = MaterialTheme.colorScheme.primary) },
                                     onClick = { startActivity(Intent(this@KeyboardSettingsActivity, SoundPacksActivity::class.java)) },
                                 ),
@@ -150,8 +150,8 @@ class KeyboardSettingsActivity : ComponentActivity() {
 
                 when (dialog) {
                     KeyboardDialog.TYPING_LAYOUT -> ChoiceDialog(
-                        title = "输入布局",
-                        explanation = "选择主机上对应的输入源，确保标点和符号保持一致。",
+                        title = appText("输入布局"),
+                        explanation = appText("选择主机上对应的输入源，确保标点和符号保持一致。"),
                         choices = KeyboardCharacterLayout.entries.map { it.displayName },
                         selectedIndex = KeyboardCharacterLayout.entries.indexOf(characterLayout),
                         onSelect = { index ->
@@ -162,9 +162,9 @@ class KeyboardSettingsActivity : ComponentActivity() {
                         onDismiss = { dialog = null },
                     )
                     KeyboardDialog.CAPS_LOCK -> ChoiceDialog(
-                        title = "大写锁定",
-                        explanation = "选择由哪里控制锁定键状态。",
-                        choices = listOf("主机控制", "本机控制"),
+                        title = appText("大写锁定"),
+                        explanation = appText("选择由哪里控制锁定键状态。"),
+                        choices = listOf(appText("主机控制"), appText("本机控制")),
                         selectedIndex = if (lockSyncMode == "host") 0 else 1,
                         onSelect = { index ->
                             lockSyncMode = if (index == 0) "host" else "device"
@@ -210,6 +210,6 @@ internal fun ChoiceDialog(
                 }
             }
         },
-        confirmButton = { TextButton(onClick = onDismiss) { Text("取消") } },
+        confirmButton = { TextButton(onClick = onDismiss) { Text(appText("取消")) } },
     )
 }

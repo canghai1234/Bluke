@@ -3,11 +3,14 @@ package dev.arnv.bluke.ui
 const val HARDWARE_VOLUME_REMOTE_PREFERENCE = "media_hardware_volume_remote"
 const val TOUCHPAD_MODIFIER_POSITION_PREFERENCE = "touchpad_modifier_position"
 
-enum class TouchpadModifierPosition(val preferenceValue: String, val displayName: String) {
+enum class TouchpadModifierPosition(val preferenceValue: String, private val displayNameSource: String) {
     OFF("off", "修饰键关闭"),
     LEFT("left", "修饰键在左侧"),
     RIGHT("right", "修饰键在右侧"),
     ;
+
+    val displayName: String
+        get() = appText(displayNameSource)
 
     fun next(): TouchpadModifierPosition = entries[(ordinal + 1) % entries.size]
 

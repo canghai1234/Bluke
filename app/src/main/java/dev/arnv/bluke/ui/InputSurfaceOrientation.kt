@@ -3,6 +3,7 @@ package dev.arnv.bluke.ui
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.requiredWidth
@@ -29,11 +30,14 @@ import androidx.compose.ui.unit.dp
  */
 internal enum class InputSurfaceRotationPreference(
     val preferenceValue: String,
-    val label: String,
+    private val labelSource: String,
 ) {
     AUTO("auto", "自动"),
     CLOCKWISE("clockwise", "顺时针"),
     COUNTERCLOCKWISE("counterclockwise", "逆时针");
+
+    val label: String
+        get() = appText(labelSource)
 
     fun next(): InputSurfaceRotationPreference = entries[(ordinal + 1) % entries.size]
 
@@ -103,6 +107,7 @@ internal fun InputSurfaceFrame(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .statusBarsPadding()
+                    .heightIn(min = 48.dp)
                     .padding(8.dp),
                 shape = RoundedCornerShape(8.dp),
                 color = androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.58f),
@@ -114,7 +119,7 @@ internal fun InputSurfaceFrame(
                 ) {
                     Icon(
                         imageVector = Icons.Default.ScreenRotation,
-                        contentDescription = "切换界面方向",
+                        contentDescription = appText("切换界面方向"),
                         modifier = Modifier.padding(end = 4.dp),
                     )
                     Text(rotationPreference.label)

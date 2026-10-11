@@ -51,10 +51,10 @@ internal fun ProfileNotSupportedScreen(
         Spacer(Modifier.height(24.dp))
         Text(
             text = when (bluetoothState) {
-                is BluetoothState.CheckingCapabilities -> "正在检查兼容性"
-                is BluetoothState.Unsupported -> "不支持蓝牙"
-                is BluetoothState.ProfileNotSupported -> "设备不兼容"
-                else -> "蓝牙已关闭"
+                is BluetoothState.CheckingCapabilities -> appText("正在检查兼容性")
+                is BluetoothState.Unsupported -> appText("不支持蓝牙")
+                is BluetoothState.ProfileNotSupported -> appText("设备不兼容")
+                else -> appText("蓝牙已关闭")
             },
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
@@ -64,21 +64,21 @@ internal fun ProfileNotSupportedScreen(
         Spacer(Modifier.height(12.dp))
         if (bluetoothState is BluetoothState.CheckingCapabilities) {
             Text(
-                text = "正在确认此手机固件是否提供蓝牙 HID Device 角色，这可能需要几秒钟。",
+                text = appText("正在确认此手机固件是否提供蓝牙 HID Device 角色，这可能需要几秒钟。"),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
             )
         } else if (bluetoothState is BluetoothState.ProfileNotSupported) {
             Text(
-                text = "多次尝试后，Bluke 仍无法访问蓝牙 HID Device 角色。此设备固件可能缺少或禁用了键盘、鼠标和手柄输出所需的角色。",
+                text = appText("多次尝试后，Bluke 仍无法访问蓝牙 HID Device 角色。此设备固件可能缺少或禁用了键盘、鼠标和手柄输出所需的角色。"),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                text = "兼容性取决于具体固件，而不仅是手机品牌或型号。在判定设备不支持前，请先重启蓝牙并重试。",
+                text = appText("兼容性取决于具体固件，而不仅是手机品牌或型号。在判定设备不支持前，请先重启蓝牙并重试。"),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.error,
                 textAlign = TextAlign.Center
@@ -86,8 +86,8 @@ internal fun ProfileNotSupportedScreen(
         } else {
             Text(
                 text = when (bluetoothState) {
-                    is BluetoothState.Unsupported -> "此设备没有蓝牙硬件。"
-                    else -> "请开启蓝牙以连接设备。"
+                    is BluetoothState.Unsupported -> appText("此设备没有蓝牙硬件。")
+                    else -> appText("请开启蓝牙以连接设备。")
                 },
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -102,13 +102,13 @@ internal fun ProfileNotSupportedScreen(
                 onClick = onEnableBluetooth,
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
-                Text("开启蓝牙")
+                Text(appText("开启蓝牙"))
             }
         } else if (bluetoothState is BluetoothState.ProfileNotSupported) {
             OutlinedButton(onClick = onRetry) {
                 Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(18.dp))
                 Spacer(Modifier.width(8.dp))
-                Text("重试")
+                Text(appText("重试"))
             }
         }
     }
