@@ -371,7 +371,7 @@ internal val EnglishTextCatalog: Map<String, String> = buildMap {
     put("将输入界面逆时针旋转 90°", "Rotate the input surface 90° counter-clockwise")
     put("自动、顺时针或逆时针旋转输入界面", "Rotate the input surface automatically, clockwise, or counter-clockwise")
     // Authoritative pairs recovered from the repository's original English UI.
-+    put("关于", "About")
+    put("关于", "About")
     put("返回", "Back")
     put("你已成为开发者！", "You are now a developer!")
     put("无需操作，你已经是开发者了。", "No need, you are already a developer.")
